@@ -1,0 +1,70 @@
+@startuml
+
+skinparam actorStyle awesome
+
+left to right direction
+
+actor User as u
+actor Admin as a
+actor Reader as r
+
+note right of a : Admin is also a User
+
+u <|-- a
+
+package Authenticate {
+  usecase "Register" as AC1
+  usecase "Login" as AC2
+  usecase "Forgot Password" as AC3
+  usecase "Logout" as AC4
+  usecase "Forget Me" as AC5
+}
+
+u --> AC2
+u --> AC3
+u --> AC4
+u --> AC5
+
+AC1 <-- r
+
+package Authorize {
+  usecase "Make Admin" as RC1
+}
+
+a --> RC1
+
+package Note {
+  usecase "Create" as NC1
+  usecase "Read" as NC2
+  usecase "Update" as NC3
+  usecase "Delete" as NC4
+  usecase "Tag" as NC5
+}
+
+u --> NC1
+u --> NC2
+u --> NC3
+u --> NC4
+u --> NC5
+
+NC2 <-- r
+
+package Interact {
+  usecase "Follow" as IC1
+  usecase "Unfollow" as IC2
+  usecase "Search" as IC3
+  usecase "Like" as IC4
+  usecase "Timeline" as IC5
+  usecase "Remind" as IC6
+}
+
+u --> IC1
+u --> IC2
+u --> IC3
+u --> IC4
+u --> IC5
+u --> IC6
+
+IC5 <-- r
+
+@enduml
