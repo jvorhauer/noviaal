@@ -1,0 +1,78 @@
+@startuml
+
+Note -- Person
+
+class Person {
+  UUID     id
+  String   email
+  String   password
+  Boolean  enabled
+  Boolean  expired
+  Date     born
+  Role     role
+  DateTime since
+}
+
+enum Role {
+  USER
+  ADMIN
+  READER
+}
+
+Person -- Role
+
+class Note {
+  String     title
+  String     body
+  Visibility visibility
+  DateTime   created
+}
+
+enum Visibility {
+  PRIVATE
+  FOLLOWERS
+  PUBLIC
+}
+
+Note -- Visibility
+
+Note -- Reminder
+Reminder -- Person
+
+class Reminder {
+  DateTime when
+  String reason
+}
+
+Note -- Like
+Like -- Person
+
+class Like {
+  DateTime when
+  String reason
+}
+
+Person -- Follow
+Follow -- Person
+
+class Follow {
+  Date   since
+  String reason
+}
+
+Note o-- Comment
+Comment o-- Comment
+
+class Comment {
+  DateTime when
+  String title
+  String body
+}
+
+Note -- Tag
+
+class Tag {
+  String name
+}
+
+@enduml
