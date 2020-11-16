@@ -1,0 +1,25 @@
+@startuml
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Container.puml
+
+LAYOUT_TOP_DOWN
+
+title Container diagram voor Noviaal
+
+Person(user, User, "Een geregistreerde gebruiker van Noviaal")
+
+Person(reader, Reader, "Een niet-geregistreerde gebruiker van Noviaal")
+
+System_Boundary(c1, "Noviaal") {
+  Container(web_app, "Web Applicatie", "Java, Spring MVC", "Biedt een simpele web interface tot de functionaliteit van Noviaal")
+  Container(api, "API", "Java, Spring Rest", "Biedt een REST API voor all functionaliteit van Noviaal")
+  ContainerDb(database, "Database", "PostgreSQL", "Opslag van alle gegevens van Noviaal")
+}
+
+Rel(user, web_app, "ontsluit", "https")
+Rel(reader, web_app, "ontsluit (beperkt)", "https")
+Rel(user, api, "ontsluit")
+Rel(web_app, database, "gebruikt")
+Rel(api, database, "gebruikt")
+
+@enduml
