@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="nl" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+  <meta charset="UTF-8">
+  <title>Welkom bij Noviaal</title>
+  <link rel="stylesheet" href="/css/main.css" th:href="@{/css/main.css}">
+</head>
+<body>
+  <div th:fragment="logout" sec:authorize="isAuthenticated()">
+    Logged in user: <span sec:authentication="name"></span><br />
+    Roles: <span sec:authentication="principal.authorities"></span><br />
+    <div>
+      <form action="#" th:action="@{/logout}" method="post">
+        <input type="submit" value="Logout" />
+      </form>
+    </div>
+  </div>
+  <h1>Welkom bij Noviaal</h1>
+  <p>
+    This is an unsecured page.
+  </p>
+  <ul>
+    <li>Ga naar <a href="/notes" th:href="@{/notes}">Noviaal Notes</a></li>
+  </ul>
+</body>
+</html>

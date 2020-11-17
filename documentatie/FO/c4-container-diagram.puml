@@ -3,6 +3,7 @@
 !includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Container.puml
 
 LAYOUT_TOP_DOWN
+LAYOUT_WITH_LEGEND()
 
 title Container diagram voor Noviaal
 
@@ -18,8 +19,8 @@ System_Boundary(c1, "Noviaal") {
 
 Rel(user, web_app, "ontsluit", "https")
 Rel(reader, web_app, "ontsluit (beperkt)", "https")
-Rel(user, api, "ontsluit")
-Rel(web_app, database, "gebruikt")
+Rel(user, api, "ontsluit", "https")
+Rel(web_app, api, "gebruikt")
 Rel(api, database, "gebruikt")
 
 @enduml

@@ -8,7 +8,7 @@ actor User as u
 actor Admin as a
 actor Reader as r
 
-note right of a : Admin is also a User
+note right of a : Admin is a special User
 
 u <|-- a
 
@@ -18,14 +18,17 @@ package Authenticate {
   usecase "Forgot Password" as AC3
   usecase "Logout" as AC4
   usecase "Forget Me" as AC5
+  usecase "Disable" as AC6
 }
 
 u --> AC2
 u --> AC3
 u --> AC4
 u --> AC5
-
 AC1 <-- r
+a --> AC5
+a --> AC2
+a --> AC4
 
 package Authorize {
   usecase "Make Admin" as RC1

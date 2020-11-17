@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+        crossorigin="anonymous">
+  <title>Note</title>
+</head>
+<body>
+  <main role="main" class="container">
+    <form th:action="@{/note}" th:object="${form}" method="post">
+      <label for="title">Titel:</label>
+      <input type="text" id="title" name="title" autofocus="autofocus" th:field="*{title}" /><br />
+      <label for="body">Body:</label>
+      <input type="text" id="body" name="body" th:field="*{body}" /><br />
+      <input type="submit" value="Save" />
+    </form>
+  </main>
+</body>
+</html>

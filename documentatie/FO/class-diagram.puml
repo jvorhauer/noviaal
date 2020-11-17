@@ -16,7 +16,6 @@ class Person {
 enum Role {
   USER
   ADMIN
-  READER
 }
 
 Person -- Role
@@ -41,6 +40,7 @@ Reminder -- Person
 
 class Reminder {
   DateTime when
+  DateTime created
   String reason
 }
 
@@ -48,7 +48,7 @@ Note -- Like
 Like -- Person
 
 class Like {
-  DateTime when
+  DateTime created
   String reason
 }
 
@@ -56,22 +56,24 @@ Person -- Follow
 Follow -- Person
 
 class Follow {
-  Date   since
-  String reason
+  Date     since
+  DateTime created
+  String   reason
 }
 
-Note o-- Comment
-Comment o-- Comment
+Note "1" o- "0..*" Comment
+Comment "1" o-- "0..*" Comment
 
 class Comment {
-  DateTime when
+  DateTime created
   String title
   String body
 }
 
-Note -- Tag
+Note "0..*" -- "0..*" Tag
 
 class Tag {
+  DateTime created
   String name
 }
 
