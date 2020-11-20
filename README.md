@@ -83,6 +83,13 @@ __TODO__ hoe flowt de gebruiker van controller naar service naar db en weer teru
 
 ### EndPoints
 
+Een overzicht van de endpoints die extern beschikbaar worden gemaakt voor gebruikers (web, html) en andere apps (API, http/json).
+
+#### Web (html, css, javascript over http)
+
+
+#### API (JSON over http)
+
 ####
 
 ## Niet-Functionele Eisen
@@ -120,15 +127,15 @@ Ook voor response tijden zijn geen eisen gegeven. Er zijn dus geen performance t
 
 ### Data recovery
 
-Er is geen backup of andere maatregelen ter behoud van de data in de database gepland.
+Er is geen backup van de database gepland.
 
 ### Hulpmiddelen etc.
 
-[Java](), meest recente Long Term Supported (LTS) versie (nu: 11)
-[Spring Boot](), versie 2.4.0
-[Spring Security](), versie 5.4.1
+[Java](https://jdk.java.net/11/), meest recente Long Term Supported (LTS) versie (nu: 11)
+[Spring Boot](https://spring.io/projects/spring-boot), versie 2.4.0
+[Spring Security](https://spring.io/projects/spring-security), versie 5.4.1
 
-[Maven](), versie 3.6.3
+[Maven](https://maven.apache.org), versie 3.6.3
 
 [TravisCI](https://travis-ci.com/getting_started)
 
@@ -136,25 +143,26 @@ Er is geen backup of andere maatregelen ter behoud van de data in de database ge
 
 Dit zijn mijn eigen notities en deze zijn niet officieel onderdeel van de project documentatie.
 
-De lol zit 'm in de event publisher en listener(s) combinatie: als een nieuwe note succesvol is bewaard in de database,
+De lol zit 'm in de event publisher en listener(s) combinatie: als een nieuwe notitie succesvol is bewaard in de database,
 dan wordt een event uitgestuurd om alle volgers van de schrijver van deze note te informeren.
 Daarna kunnen de 'luisteraars' naar zo'n event actie ondernemen, door bijvoorbeeld de lijst van meest recente notities automatisch op te halen.
 
 Ditzelfde mechanisme kan ook gebruikt worden om updates van notities, likes van notities en wellicht meer te luisteren.
 
 Dus:
-* Note aanmaken
-* Event uitsturen
+* Notitie aanmaken
 * Selecteer uit de database welke volgers van de auteur (User) van de note genotificeerd moeten worden
-* Emit een SSE event
+* Event uitsturen
 
 Query: haal user van note op, haal alle volgers op van gebruiker, stuur id van note naar al die volgers.
 
-### Links
+### Mogelijk nuttige links
 
 - [SSE using Spring](https://dzone.com/articles/server-sent-events-using-spring)
 - [Spring Events](https://www.baeldung.com/spring-events)
 - [Spring Security - Sample](https://github.com/spring-projects/spring-security/blob/5.4.1/samples/boot/helloworld/)
 - [Spring Security - JPA](https://www.codejava.net/frameworks/spring-boot/spring-boot-security-authentication-with-jpa-hibernate-and-mysql)
+- [Spring Security - Authentication](https://docs.spring.io/spring-security/site/docs/5.4.1/reference/html5/#servlet-authentication)
+- [Registratie en Login](https://medium.com/@kamer.dev/spring-boot-user-registration-and-login-43a33ea19745)
 
 - [ManyToOne done right](https://vladmihalcea.com/the-best-way-to-map-a-onetomany-association-with-jpa-and-hibernate/)

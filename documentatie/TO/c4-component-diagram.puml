@@ -7,20 +7,21 @@ LAYOUT_WITH_LEGEND()
 title Componenten diagram voor Noviaal
 
 Person(person, "Gebruiker")
+Person(admin, "Administrator")
 
 Container_Boundary(noviaal, "Noviaal Applicatie") {
   Component(authc, "Authenticatie", "Spring Security", "Verzorgt veilige login en logout")
-  Component(usersc, "Gebruikers Controller", "Spring MVC", "Levert registratie mogelijkheid")
-  Component(notesc, "Notities Controller", "Spring MVC", "Maak nieuwe notities of update bestaabde, like een notitie, voeg een tag toe")
-  Component(searchc, "Zoek Controller", "Spring MVC", "Zoek in gebruikers, notities of tags")
+  Component(usersc, "GebruikersController", "Spring MVC", "Levert registratie, vergeet-mij en blokkeer mogelijkheid")
+  Component(notesc, "NotitiesController", "Spring MVC", "Maak nieuwe notities of update bestaabde, like een notitie, voeg een tag toe")
+  Component(searchc, "ZoekController", "Spring MVC", "Zoek in gebruikers, notities of tags")
 
-  Component(userss, "Users Service", "Spring/Java", "CRU")
-  Component(notess, "Notitie Service", "Spring/Java", "CRUD")
-  Component(likess, "Likes Service", "Spring/Java", "CRD")
-  Component(reminderss, "Reminders Service", "Spring/Java/Quartz", "CRUD")
-  Component(commentss, "Comments Service", "Spring/Java", "CRUD")
+  Component(userss, "UsersService", "Spring/Java", "CRU")
+  Component(notess, "NotesService", "Spring/Java", "CRUD")
+  Component(likess, "LikesService", "Spring/Java", "CRD")
+  Component(reminderss, "RemindersService", "Spring/Java/Quartz", "CRUD")
+  Component(commentss, "CommentsService", "Spring/Java", "CRUD")
 
-  Component(timelines, "TimeLine Service", "Spring/Java", "ServerSide Events")
+  Component(timelines, "TimeLineService", "Spring/Java", "ServerSide Events")
 
   Rel(authc, userss, "gebruikt")
   Rel(usersc, userss, "gebruikt")
@@ -32,7 +33,7 @@ Container_Boundary(noviaal, "Noviaal Applicatie") {
   Rel(notess, timelines, "triggers")
 }
 
-ComponentDb(db, "Database", "PostgreSQL", "Persistente gegevens opslag")
+ComponentDb(db, "Database", "PostgreSQL", "Langdurige gegevens opslag")
 
 Rel(notess, db, "JDBC")
 Rel(userss, db, "JDBC")
@@ -41,9 +42,10 @@ Rel(reminderss, db, "JDBC")
 Rel(commentss, db, "JDBC")
 Rel(timelines, db, "JDBC")
 
-Rel(person, authc, "https")
-Rel(person, usersc, "https")
-Rel(person, notesc, "https")
-Rel(person, searchc, "https")
+Rel(person, authc, "http")
+Rel(person, usersc, "http")
+Rel(person, notesc, "http")
+Rel(person, searchc, "http")
+Rel(admin, usersc, "http")
 
 @enduml

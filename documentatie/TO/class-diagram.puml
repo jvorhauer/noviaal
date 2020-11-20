@@ -1,16 +1,18 @@
-@startuml
+@startuml class-diagram
 
-Note -- Person
+title Noviaal Class Diagram
 
-class Person {
-  UUID     id
-  String   email
-  String   password
-  Boolean  enabled
-  Boolean  expired
-  Date     born
-  Role     role
-  DateTime since
+Note -- User
+
+class User {
+  - UUID     id
+  - String   email
+  - String   password
+  - String   name
+  - Boolean  enabled
+  - Date     born
+  - Role     role
+  - DateTime since
 }
 
 enum Role {
@@ -18,63 +20,54 @@ enum Role {
   ADMIN
 }
 
-Person -- Role
+User -- Role
 
 class Note {
-  String     title
-  String     body
-  Visibility visibility
-  DateTime   created
+  - String     title
+  - String     body
+  - Boolean    private
+  - DateTime   created
+  - DateTime   updated
 }
-
-enum Visibility {
-  PRIVATE
-  FOLLOWERS
-  PUBLIC
-}
-
-Note -- Visibility
 
 Note -- Reminder
-Reminder -- Person
+Reminder -- User
 
 class Reminder {
-  DateTime when
-  DateTime created
-  String reason
+  - DateTime when
+  - DateTime created
+  - String reason
 }
 
 Note -- Like
-Like -- Person
+Like -- User
 
 class Like {
-  DateTime created
-  String reason
+  - DateTime created
+  - String reason
 }
 
-Person -- Follow
-Follow -- Person
+User -- Follow
+Follow -- User
 
 class Follow {
-  Date     since
-  DateTime created
-  String   reason
+  - DateTime since
+  - DateTime created
+  - String   reason
 }
 
 Note "1" o- "0..*" Comment
-Comment "1" o-- "0..*" Comment
 
 class Comment {
-  DateTime created
-  String title
-  String body
+  - DateTime created
+  - String body
 }
 
 Note "0..*" -- "0..*" Tag
 
 class Tag {
-  DateTime created
-  String name
+  - DateTime created
+  - String name
 }
 
 @enduml

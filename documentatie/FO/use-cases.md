@@ -22,45 +22,205 @@ Een Note is een tekst met een titel. Een Note kan publiekelijk zichtbaar zijn, z
 
 ### Commentaar (comments)
 
-Bij een Note kunnen Users aantekeningen maken, behalve als de Note privé is. Commentaar kan ook weer op commentaar gegeven worden, zodat er een hierarchie van commentaar kan zijn.
+Bij een Note kunnen Users aantekeningen maken, behalve als de Note privé is. Bij een notitie wordt het commentaar getoond, dat bestaat uit tekst, de datum/tijd en de auteur van het commentaar.
 
 ### Reminder
 
-Een User kan een herinnering, datum en tijd, zetten op een bepaalde Note.
+Een User kan een herinnering, in de vorm van datum/tijd, zetten op een bepaalde notitie.
 
 ### Like
 
 Een User kan een Note liken. Liked notes kunnen opgehaald worden. Liked notes kunnen ge-unliked worden.
 
-
-
 ## Use Cases
 
 ### Authenticatie
 
-#### Links
-
-* [Spring Security - Authentication](https://docs.spring.io/spring-security/site/docs/5.4.1/reference/html5/#servlet-authentication)
-* [Registratie en Login](https://medium.com/@kamer.dev/spring-boot-user-registration-and-login-43a33ea19745)
-
-ID  | AC1
+AC1 | Registreer nieuwe gebruiker
 ---:|---
-Naam | Registreer nieuwe gebruiker
 Beschrijving | Om alle functionaliteit van Noviaal te gebruiken moet een persoon eerst registreren
 Actoren | Reader
 Voorwaarden | Een persoon registreert met een uniek email adres, een naam en een wachtwoord
 Happy flow | Een nog niet geregistreerde gebruiker maakt duidelijk dat hij of zij wil registreren. De aanstaande User voert een email adres in, een naam (geheel vrij, maar wel verplicht) en een password (twee maal). De nieuwe User wordt vastgelegd in de database.
 
-ID  | AC2
+AC2 | Login
 ---:|---
-Naam | Login
 Beschrijving | Een eerder geregistreerde gebruiker logt in door zijn of haar email adres en password in te voeren.
-Actoren | User
+Actoren | User en Admin
 Voorwaarden | Om in te kunnen loggen moet een User eerder geregistreerd zijn en de juiste combinatie van email adres en password invoeren
 Happy Flow | Gebruiker voert email en password in en logt in
 Alternatieve flow | Verkeerde email en/of password ingevoerd, de gebruiker keert terug naar een leeg inlog scherm met een foutmelding.
+__NB__ | van gebruikers wordt bijgehouden wanneer ze hebben ingelogd.
 
-ID  | AC3
+
+AC3 | Password vergeten
 ---:|---
-Naam |
+Beschrijving | Een eerder geregistreerde gebruiker is het password van het account vergeten. Het password wordt op verzoek gemaild naar het email adres van het account
+Actoren | User en Admin
+Voorwaarden | zelfde als inloggen
+Happy Flow | De gebruiker geeft aan dat het password opgestuurd moet worden en dan wordt het password opgestuurd.
+__NB__ | Dit is onveilig. Zie ook de niet-functionele eisen: omdat de applicatie alleen lokaal draait en niet bedoeld is om publiekelijk te delen, is een complete en vergaande veiligheid niet een vereiste.
 
+AC4 | Uitloggen
+---:|---
+Beschrijving | een ingelogde gebruiker kan uitloggen en daarmee de lopende sessie beeindigen.
+Actoren | User en Admin
+Voorwaarden | de gebruiker is ingelogd
+Happy Flow | Ingelogde gebruiker geeft aan dat uitgelogd moet worden. De gebruiker-sessie wordt beeindigd. De gebruiker is nu een Reader
+
+AC5 |  Forget Me (beeindig account)
+---:|---
+Beschrijving | Indien een geregistreerde gebruiker geen account meer wil bij Noviaal dan kan dat account vergeten worden: ieder spoor van dat account wordt dan verwijderd uit de persistente opslag (de database).
+Actoren | User
+Voorwaarden | de gebruiker heeft een account en is ingelogd
+Happy Flow | de ingelogde gebruiker geeft aan dat het account vergeten moet worden. Alle notities, likes, reminders en comments worden eerst verwijderd, waarna het account zelf uit de database verwijderd wordt. Ook de
+__NB__ | het email adres van het vergeten account kan daarna hergebruikt worden voor een nieuw account (met een nieuw id)
+
+ID  | AC6
+---:|---
+Naam | Disable account
+Beschrijving | een account kan gedisabled worden, die gebruiker kan dan niet meer inloggen.
+Actoren | Admin
+Voorwaarden | de gebruiker waarvan het account ge-disabled gaat worden, mag niet ingelogd zijn, omdat dan de state van de lopende sessie onzeker wordt.
+Happy Flow | een admin gebruiker zoekt een gebruiker op email adres op en krijgt de mogelijkheid om die gebruiker te disablen.
+Alternatieve Flow | de gebruiker is ingelogd en dus krijgt de admin geen mogelijkheid om het betreffende account de disablen.
+__NB__ | deze use case doet geen uitspraak over waarom een account disabled gaat worden.
+
+GC1 | Toon gebruiker
+---:|---
+Beschrijving | Toon alle detailinformatie van een gebruiker
+Actoren | Gebruiker
+Voorwaarden | De gebruiker is ingelogd
+Happy Flow | Vanuit bijv. zoekresultaten kan een gebruiker een (andere) gebruiker selecteren en daarvan de detailinformatie zien. Ook worden de notities van die gebruiker getoond.
+Alternatieve Flow | een mogelijkheid wordt geboden aan ingelogde gebruikers om hun eigen details in te zien.
+
+### Notities
+
+NC1  | Creer nieuwe notitie
+---:|---
+Beschrijving | Maak een nieuwe Notitie en informeer alle volgers van dit feit
+Actoren | Gebruikers: auteur en volgers.
+Voorwaarden | Gebruiker is ingelogd.
+Happy Flow | de gebruiker vult een titel en tekst in en geeft aan dat een nieuwe notitie aangemaakt moet worden. De applicatie slaat de notitie op in het permanente geheugen (database) en stuurt een event aan de volgers van de ingelogde gebruiker dat er een nieuwe notitie ter beschikking is.
+Alternative Flow | het lukt niet om de nieuwe notitie in de database op te slaan: de auteur wordt geinformeerd over de fout, de volgers niet.
+Uitzondering | Indien de auteur aangeeft dat de notitie privé is, dan worden volgers niet geinformeerd over deze notitie
+
+NC2  | Lees een notitie
+---:|---
+Beschrijving | Een gebruiker heeft een notitie geselecteerd uit de TimeLine (zie Use Case IC6) of uit zoek resultaten (zie Use Case IC3). De notitie wordt gepresenteerd met auteur, datum & tijd van aanmaken en datum & tijd van laatste wijziging en titel en body.
+Actoren | Gebruiker, Reader
+Voorwaarden | gebruiker is ingelogd en heeft een notitie gekozen
+Happy Flow | een gevonden notitie wordt getoond
+
+NC3  | Update een notitie
+---:|---
+Beschrijving | Een auteur kan de titel en/of de body tekst van een bestaande notitie aanpassen en weer opslaan.
+Actoren | Gebruiker (auteur en volgers)
+Voorwaarden | gebruiker is ingelogd en heeft aangegeven, bijv. vanuit NC2, dat de betreffende notitie gewijzigd gaat worden
+Happy Flow | gebruiker wijzigt titel en/of body tekst en slaat deze op in de databse, volgers worden geinformeerd.
+Alternate Flow | gebruiker geeft aan de wijzigingsactie niet uit te willen voeren (cancel)
+Uitzondering | Indien de auteur aangeeft dat de notitie privé is, dan worden volgers niet geinformeerd over deze notitie
+
+NC4 | Verwijder notitie
+---:|---
+Beschrijving | Een auteur kan een bestaande notitie verwijderen
+Actoren | Gebruiker (auteur)
+Voorwaarden | gebruiker is ingelogd en heeft een notitie geselecteerd
+Happy Flow | de gebruiker geeft aan de notitie te willen verwijderen; de notitie, commentaar, likes en reminders woorder uit de permanente opslag (database) verwijderd.
+
+NC5 | Tag notitie
+---:|---
+Beschrijving | Een auteur kan een notitie voorzien van één of meer tags
+Actoren | gebruiker (auteur)
+Voorwaarden | gebruiker is ingelogd en heeft een notitie geselecteerd
+Happy Flow | gebruiker kiest één of meer tags uit de lijst van beschikbare tags en geeft aan deze selectie bij de notitie te willen opslaan. De keuze voor 0 of meer tags wordt opgeslagen in de permanente opslag (database).
+__NB__ | er wordt een beperkt aantal tags beschikbaar gesteld in Noviaal. In een latere versie kan dat aantal veranderen en/of onderhoudbaar gemaakt worden.
+
+### Interactie
+
+IC1 | Follow (volg)
+---:|---
+Beschrijving | Een gebruiker kan een andere gebruiker gaan volgen. De volgende gebruiker wordt op de hoogte gehouden van nieuwe en gewijzigde notities van de gevolgde gebruiker
+Actoren | Gebruiker (volger en gevolgde)
+Voorwaarden | gebruiker die wil gaan volgen is ingelogd en heeft een andere gebruiker geselecteerd.
+Happy Flow | Uit de zoekresultaten of via de auteur-link van een notitie is een te volgen gebruiker geselecteerd. De gebruiker geeft aan dat deze gebruiker gevolgd moet gaan worden.
+
+IC2 | Unfollow (beeindig volgen)
+---:|---
+Beschrijving | Een gebruiker kan een andere, gevolgde gebruiker unfollowen, waardoor deze gebruiker niet meer op hoogte wordt gehouden van events van die gebruiker
+Actoren | Gebruiker (volger, gevolgde)
+Voorwaarden | Gebruiker is ingelogd en volgt de andere gebruiker
+Happy Flow | De gebruiker geeft aan de gevolgde gebruiker niet meer te willen volgen. Dit kan bijv. vanaf OC5
+
+IC3 | Zoek
+---:|---
+Beschrijving | Zoek naar notities en gebruikers op basis van ingevoerde woorden.
+Actoren | Gebruiker, Reader
+Voorwaarden |
+Happy Flow |
+
+IC4 | Like
+---:|---
+Beschrijving |
+Actoren |
+Voorwaarden |
+Happy Flow |
+
+IC5 | Unlike
+---:|---
+Beschrijving |
+Actoren |
+Voorwaarden |
+Happy Flow |
+
+IC6 | TimeLine
+---:|---
+Beschrijving |
+Actoren |
+Voorwaarden |
+Happy Flow |
+
+IC7 | Remind
+---:|---
+Beschrijving |
+Actoren |
+Voorwaarden |
+Happy Flow |
+
+
+### Overzicht
+
+OC1 | Zoekresultaten
+---:|---
+Beschrijving | Toon notities en gebruikers die gevonden werden naar aanleiding van een zoek-actie (IC3)
+Actoren | Gebruiker
+Voorwaarden | Gebruier is ingelogd en heeft een zoekopdracht gegeven
+Happy Flow |
+
+OC2 | Eigen notities
+---:|---
+Beschrijving | De eigen notities worden getoond op het detailinformatie scherm van de ingelogde gebruiker
+Actoren | Gebruiker
+Voorwaarden | Gebruiker is ingelogd en heeft gekozen voor het tonen van zijn eigen profiel (GC1)
+Happy Flow |
+
+OC3 | Liked notities
+---:|---
+Beschrijving | Toon alle notities die de huidige gebruiker heeft geliked
+Actoren | Gebruiker
+Voorwaarden | Gerbuiker is ingelogd
+Happy Flow |
+
+OC4 | Reminders
+---:|---
+Beschrijving | Toon alle notities waarvoor de huidige gebruiker een reminder heeft gezet
+Actoren | Gebruiker
+Voorwaarden | Gebruiker is ingelogd
+Happy Flow |
+
+OC5 | Gevolgden
+---:|---
+Beschrijving | Toon een lijst met alle gebruikers die de ingelogde gebruiker volgen
+Actoren | Gebruiker (auteur, volgers)
+Voorwaarden | De gebruiker is ingelogd
+Happy Flow | De gebruiker kiest voor de lijst met volgers. Van iedere volger op de lijst zijn de details in te zien

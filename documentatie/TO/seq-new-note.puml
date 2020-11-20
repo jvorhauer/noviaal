@@ -1,6 +1,6 @@
 @startuml
 
-title Sequence Diagram - Nieuwe Notitie
+title Sequence Diagram - Nieuwe Notitie (NC1)
 
 actor User
 actor Volger
