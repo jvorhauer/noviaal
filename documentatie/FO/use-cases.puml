@@ -1,4 +1,4 @@
-@startuml
+@startuml use-cases
 
 skinparam actorStyle awesome
 
@@ -26,9 +26,7 @@ u --> AC3
 u --> AC4
 u --> AC5
 AC1 <-- r
-a --> AC5
-a --> AC2
-a --> AC4
+a --> AC6
 
 package Authorize {
   usecase "Make Admin" as RC1

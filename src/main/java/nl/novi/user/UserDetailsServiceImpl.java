@@ -23,8 +23,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
   @PostConstruct
   @Transactional
-  public void oink() {
-    log.info("oink: create two users");
+  public void postConstruct() {
+    log.info("postConstruct: create two users");
     var encpw = encoder.encode("password");
     var u1 = new User("nick@novi.nl", encpw);
     u1.setRole(Role.USER);

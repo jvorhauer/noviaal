@@ -43,19 +43,24 @@ Een User kan een Note liken. Liked notes kunnen opgehaald worden. Liked notes ku
 * [Spring Security - Authentication](https://docs.spring.io/spring-security/site/docs/5.4.1/reference/html5/#servlet-authentication)
 * [Registratie en Login](https://medium.com/@kamer.dev/spring-boot-user-registration-and-login-43a33ea19745)
 
-ID | AC1
----:|:---
+ID  | AC1
+---:|---
 Naam | Registreer nieuwe gebruiker
 Beschrijving | Om alle functionaliteit van Noviaal te gebruiken moet een persoon eerst registreren
 Actoren | Reader
 Voorwaarden | Een persoon registreert met een uniek email adres, een naam en een wachtwoord
 Happy flow | Een nog niet geregistreerde gebruiker maakt duidelijk dat hij of zij wil registreren. De aanstaande User voert een email adres in, een naam (geheel vrij, maar wel verplicht) en een password (twee maal). De nieuwe User wordt vastgelegd in de database.
 
-ID | AC2
----:|:---
+ID  | AC2
+---:|---
 Naam | Login
 Beschrijving | Een eerder geregistreerde gebruiker logt in door zijn of haar email adres en password in te voeren.
 Actoren | User
 Voorwaarden | Om in te kunnen loggen moet een User eerder geregistreerd zijn en de juiste combinatie van email adres en password invoeren
-Happy Flow |
+Happy Flow | Gebruiker voert email en password in en logt in
+Alternatieve flow | Verkeerde email en/of password ingevoerd, de gebruiker keert terug naar een leeg inlog scherm met een foutmelding.
+
+ID  | AC3
+---:|---
+Naam |
 
