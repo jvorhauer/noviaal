@@ -1,0 +1,20 @@
+@startuml
+
+title Zoek Notities en Gebruikers
+
+actor Gebruiker
+
+Gebruiker --> ZoekController: zoekwoord
+ZoekController --> NotesService: zoekwoord
+NotesService --> database: query
+database --> NotesService: resultaat lijst
+NotesService --> ZoekController: resultaat lijst
+
+ZoekController --> UsersService: zoekwoord
+UsersService --> database: query
+database --> UsersService: resultaat lijst
+UsersService --> ZoekController: resultaat lijst
+
+ZoekController --> Gebruiker: resultaat lijsten
+
+@enduml

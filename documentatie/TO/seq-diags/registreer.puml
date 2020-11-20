@@ -1,0 +1,12 @@
+@startuml
+
+actor Anoniem
+
+Anoniem --> GebruikersController: User formulier
+GebruikersController --> UsersService: nieuwe User
+UsersService --> database
+database --> UsersService: opgeslagen User
+UsersService --> GebruikersController: opgeslagen User
+GebruikersController --> Anoniem: bevestiging
+
+@enduml

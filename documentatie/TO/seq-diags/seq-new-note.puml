@@ -2,10 +2,9 @@
 
 title Sequence Diagram - Nieuwe Notitie (NC1)
 
-actor User
-actor Volger
+actor Gebruiker
 
-User -> NotesController: post een note
+Gebruiker -> NotesController: post een note
 NotesController -> NotesService: nieuwe note
 NotesService -> NotesRepository: sla note op in db
 NotesRepository -> Database: sla note op
@@ -14,6 +13,6 @@ NotesRepository --> NotesService: resultaat
 NotesService -> TimeLineService: informeer volgers
 TimeLineService -> Volger: nieuwe note
 NotesService --> NotesController: resultaat
-NotesController --> User: resultaat
+NotesController --> Gebruiker: resultaat
 
 @enduml
