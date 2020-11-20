@@ -2,7 +2,9 @@ package nl.novi.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import nl.novi.action.NoteService;
+import nl.novi.user.UserDetailsImpl;
 import nl.novi.view.NoteForm;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.stream.Collectors;
 
 @Controller
@@ -19,9 +22,11 @@ import java.util.stream.Collectors;
 public class NoteController {
 
   private final NoteService noteService;
+  private final UserDetailsService userDetailsService;
 
-  public NoteController(NoteService noteService) {
+  public NoteController(NoteService noteService, UserDetailsService userDetailsService) {
     this.noteService = noteService;
+    this.userDetailsService = userDetailsService;
   }
 
   @GetMapping("/note")
@@ -32,13 +37,12 @@ public class NoteController {
   }
 
   @PostMapping("/note")
-  public String post(@Valid @ModelAttribute NoteForm form, final BindingResult errors, final Model model) {
-    log.info("post: {}", form);
+  public String post(@Valid @ModelAttribute NoteForm form, BindingResult errors, Model model, Principal principal) {
+    log.info("post: {} by {}", form, principal.getName());
     if (!errors.hasErrors()) {
-      var note = noteService.create(form);
-      log.info("post: new note {}", note);
-      model.addAttribute("note", note);
+      noteService.create(form, principal.getName());
     } else {
+      model.addAttribute("error", "");
       log.error("post: {}", errors.getAllErrors().stream().map(ObjectError::toString).collect(Collectors.joining()));
     }
     return "redirect:/notes";

@@ -1,0 +1,49 @@
+@startuml
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+LAYOUT_TOP_DOWN
+LAYOUT_WITH_LEGEND()
+
+title Componenten diagram voor Noviaal
+
+Person(person, "Gebruiker")
+
+Container_Boundary(noviaal, "Noviaal Applicatie") {
+  Component(authc, "Authenticatie", "Spring Security", "Verzorgt veilige login en logout")
+  Component(usersc, "Gebruikers Controller", "Spring MVC", "Levert registratie mogelijkheid")
+  Component(notesc, "Notities Controller", "Spring MVC", "Maak nieuwe notities of update bestaabde, like een notitie, voeg een tag toe")
+  Component(searchc, "Zoek Controller", "Spring MVC", "Zoek in gebruikers, notities of tags")
+
+  Component(userss, "Users Service", "Spring/Java", "CRU")
+  Component(notess, "Notitie Service", "Spring/Java", "CRUD")
+  Component(likess, "Likes Service", "Spring/Java", "CRD")
+  Component(reminderss, "Reminders Service", "Spring/Java/Quartz", "CRUD")
+  Component(commentss, "Comments Service", "Spring/Java", "CRUD")
+
+  Component(timelines, "TimeLine Service", "Spring/Java", "ServerSide Events")
+
+  Rel(authc, userss, "gebruikt")
+  Rel(usersc, userss, "gebruikt")
+  Rel(notesc, notess, "gebruikt")
+  Rel(notesc, likess, "gebruikt")
+  Rel(notesc, reminderss, "gebruikt")
+  Rel(notesc, commentss, "gebruikt")
+  Rel(notesc, timelines, "gebruikt")
+  Rel(notess, timelines, "triggers")
+}
+
+ComponentDb(db, "Database", "PostgreSQL", "Persistente gegevens opslag")
+
+Rel(notess, db, "JDBC")
+Rel(userss, db, "JDBC")
+Rel(likess, db, "JDBC")
+Rel(reminderss, db, "JDBC")
+Rel(commentss, db, "JDBC")
+Rel(timelines, db, "JDBC")
+
+Rel(person, authc, "https")
+Rel(person, usersc, "https")
+Rel(person, notesc, "https")
+Rel(person, searchc, "https")
+
+@enduml
