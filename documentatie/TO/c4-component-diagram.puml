@@ -8,6 +8,7 @@ title Componenten diagram voor Noviaal
 
 Person(person, "Gebruiker")
 Person(admin, "Administrator")
+Person(reader, "Anoniem")
 
 Container_Boundary(noviaal, "Noviaal Applicatie") {
   Component(authc, "Authenticatie", "Spring Security", "Verzorgt veilige login en logout")
@@ -47,5 +48,8 @@ Rel(person, usersc, "http")
 Rel(person, notesc, "http")
 Rel(person, searchc, "http")
 Rel(admin, usersc, "http")
+Rel(reader, usersc, "http")
+Rel(reader, notesc, "http")
+Rel(reader, searchc, "http")
 
 @enduml

@@ -8,9 +8,9 @@ Noviaal maakt het mogelijk voor geregistreerde gebruikers om aantekeningen, Note
 
 Er worden drie rollen van gebruikers (Person) onderscheiden in het Noviaal systeem:
 
-1. __User__, de normale, geregistreerde gebruiker, die vrijwel alle functies kan uitvoeren.
+1. __User__, de geregistreerde gebruiker, die vrijwel alle functies kan uitvoeren.
 2. __Admin__, de super gebruiker, die rapportages kan aanmaken en bekijken.
-3. __Reader__, een niet-geregistreerde gebruiker, die alleen de publieke tijdlijn van Users kan zien.
+3. __Reader__, een niet-geregistreerde, dus *anonieme* gebruiker met zeer beperkte functionaliteit ter beschikking.
 
 Alles wat een User kan, kan een Admin ook.
 
@@ -41,7 +41,7 @@ AC1 | Registreer nieuwe gebruiker
 Beschrijving | Om alle functionaliteit van Noviaal te gebruiken moet een persoon eerst registreren
 Actoren | Reader
 Voorwaarden | Een persoon registreert met een uniek email adres, een naam en een wachtwoord
-Happy flow | Een nog niet geregistreerde gebruiker maakt duidelijk dat hij of zij wil registreren. De aanstaande User voert een email adres in, een naam (geheel vrij, maar wel verplicht) en een password (twee maal). De nieuwe User wordt vastgelegd in de database.
+Happy flow | Een nog niet geregistreerde gebruiker maakt duidelijk dat hij of zij wil registreren. De aanstaande User voert een email adres in, een naam (geheel vrij, maar wel verplicht) en een password (twee maal). De nieuwe User wordt vastgelegd in de database. De nieuwe gebruiker kan meteen inloggen en aan de slag (om een afhankelijkheid van een email server of ander bevestigingssignaal kanaal te voorkomen).
 
 AC2 | Login
 ---:|---
@@ -156,36 +156,37 @@ IC3 | Zoek
 ---:|---
 Beschrijving | Zoek naar notities en gebruikers op basis van ingevoerde woorden.
 Actoren | Gebruiker, Reader
-Voorwaarden |
-Happy Flow |
+Voorwaarden | Geen
+Happy Flow | De gebruiker of reader voert één zoekwoord in, de applicatie toont alle notities met dat woord in titel en/of body en gebruikers met dat woord in hun email adres of naam.
 
 IC4 | Like
 ---:|---
-Beschrijving |
-Actoren |
-Voorwaarden |
-Happy Flow |
+Beschrijving | 'Like' een getoonde notitie
+Actoren | Gebruiker
+Voorwaarden | Gebruiker is ingelogd en heeft een notitie geselecteerd (middels NC2)
+Happy Flow | De gebruiker geeft aan dat een getoonde notitie ge-liked moet worden. Noviaal slaat deze keuze op in de database.
 
 IC5 | Unlike
 ---:|---
-Beschrijving |
-Actoren |
-Voorwaarden |
-Happy Flow |
+Beschrijving | Stop met 'like'n van een notitie
+Actoren | Gebruiker
+Voorwaarden | gebruiker is ingelogd en heeft een gelikede notitie geselecteerd
+Happy Flow | De gebruiker geeft aan dat de getoonde, gelikede notitie niet meer geliked hoeft te worden. Noviaal verwijdert de like uit de database.
 
 IC6 | TimeLine
 ---:|---
-Beschrijving |
-Actoren |
-Voorwaarden |
-Happy Flow |
+Beschrijving | Toon notities van gevolgde gebruikers en eigen notities op volgorde van laatste wijzigingsdatum.
+Actoren | Gebruiker, Reader
+Voorwaarden | Geen
+Happy Flow | Dit is 'home' voor alle gebruikers en readers: meest recente notities bovenaan.
 
 IC7 | Remind
 ---:|---
-Beschrijving |
-Actoren |
-Voorwaarden |
-Happy Flow |
+Beschrijving | Bij een getoonde notitie wordt een reminder aangemaakt
+Actoren | Gebruiker
+Voorwaarden | Gebruiker is ingelogd en een notitie werd geselecteerd.
+Happy Flow | Bij de getoonde notitie wordt een reminder gezet: een datum en tijd waarop de gebruiker een melding krijgt dat deze notitie aandacht nodig heeft.
+__NB__ | hoe de reminder aan de gebruiker wordt gecommuniceerd weet ik nog niet... Ik denk nu door een update voor timeline te sturen en dan in de timeline de notitie laten opvallen, zodat duidelijk is dat er iets bijzonders mee aan de hand is.
 
 
 ### Overzicht
@@ -194,29 +195,33 @@ OC1 | Zoekresultaten
 ---:|---
 Beschrijving | Toon notities en gebruikers die gevonden werden naar aanleiding van een zoek-actie (IC3)
 Actoren | Gebruiker
-Voorwaarden | Gebruier is ingelogd en heeft een zoekopdracht gegeven
-Happy Flow |
+Voorwaarden | Een gebruiker (ingelogd of anoniem) heeft een zoekopdracht gegeven.
+Happy Flow | Met het ingevoerde zoekwoord wordt door de titels en bodies van notities en emails en namen van gebruikers gezocht. De lijst met resultaten wordt getoond.
+Alternatieve Flow | als er geen resultaten werden gevonden, dan wordt dat gemeld.
 
 OC2 | Eigen notities
 ---:|---
 Beschrijving | De eigen notities worden getoond op het detailinformatie scherm van de ingelogde gebruiker
 Actoren | Gebruiker
 Voorwaarden | Gebruiker is ingelogd en heeft gekozen voor het tonen van zijn eigen profiel (GC1)
-Happy Flow |
+Happy Flow | Alle eigen notities worden getoond, volgorde kan op datum/tijd of titel zijn.
+Alternatieve Flow | Als de huidige gebruiker nog geen notities heeft, dan wordt dat gemeld.
 
 OC3 | Liked notities
 ---:|---
 Beschrijving | Toon alle notities die de huidige gebruiker heeft geliked
 Actoren | Gebruiker
 Voorwaarden | Gerbuiker is ingelogd
-Happy Flow |
+Happy Flow | De notities die geliked zijn door de huidige gebruiker worden getoond
+Alternatieve Flow | Als er nog geen gelikede notities zijn, dan wordt dat gemeld.
 
 OC4 | Reminders
 ---:|---
 Beschrijving | Toon alle notities waarvoor de huidige gebruiker een reminder heeft gezet
 Actoren | Gebruiker
 Voorwaarden | Gebruiker is ingelogd
-Happy Flow |
+Happy Flow | De gebruiker selecteert deze optie, waarna alle notities met reminders getoond worden.
+Alternatieve Flow | als er nog geen reminders ingesteld zijn, dan wordt dat gemeld.
 
 OC5 | Gevolgden
 ---:|---
@@ -224,3 +229,4 @@ Beschrijving | Toon een lijst met alle gebruikers die de ingelogde gebruiker vol
 Actoren | Gebruiker (auteur, volgers)
 Voorwaarden | De gebruiker is ingelogd
 Happy Flow | De gebruiker kiest voor de lijst met volgers. Van iedere volger op de lijst zijn de details in te zien
+Alternatieve flow | Als nog niemand gevolgd wordt, dan wordt dat gemeld.

@@ -8,19 +8,22 @@ LAYOUT_WITH_LEGEND()
 title Container diagram voor Noviaal
 
 Person(user, User, "Een geregistreerde gebruiker van Noviaal")
-
 Person(reader, Reader, "Een niet-geregistreerde gebruiker van Noviaal")
+Person(admin, Administrator, "Een administrator van Noviaal")
 
 System_Boundary(c1, "Noviaal") {
   Container(web_app, "Web Applicatie", "Java, Spring MVC", "Biedt een simpele web interface tot de functionaliteit van Noviaal")
   Container(api, "API", "Java, Spring Rest", "Biedt een REST API voor all functionaliteit van Noviaal")
+  Container(services, "Services", "Java, Spring", "Verzorgt alle business logic")
   ContainerDb(database, "Database", "PostgreSQL", "Opslag van alle gegevens van Noviaal")
 }
 
-Rel(user, web_app, "ontsluit", "https")
-Rel(reader, web_app, "ontsluit (beperkt)", "https")
-Rel(user, api, "ontsluit", "https")
-Rel(web_app, api, "gebruikt")
-Rel(api, database, "gebruikt")
+Rel(user, web_app, "gegbruikt", "http")
+Rel(reader, web_app, "gebruikt (beperkt)", "http")
+Rel(admin, web_app, "gebruikt", "http")
+Rel(user, api, "gebruikt (basic auth!)", "http")
+Rel(api, services, "gebruikt", "Java")
+Rel(web_app, services, "gebruikt")
+Rel(services, database, "gebruikt")
 
 @enduml

@@ -33,6 +33,7 @@ package Gebruiker {
 }
 
 u --> GC1
+GC1 <-- r
 
 package Authorize {
   usecase "RC1: Make Admin" as RC1

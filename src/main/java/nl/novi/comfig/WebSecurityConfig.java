@@ -1,5 +1,6 @@
 package nl.novi.comfig;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -12,41 +13,34 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+@RequiredArgsConstructor
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
   private final UserDetailsService userDetailsService;
 
-  public SecurityConfig(UserDetailsService userDetailsService) {
-    this.userDetailsService = userDetailsService;
-  }
-
   @Bean
-  public BCryptPasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder();
-  }
+  public BCryptPasswordEncoder passwordEncoder() { return new BCryptPasswordEncoder(); }
 
   @Bean
   public DaoAuthenticationProvider authenticationProvider() {
-    DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+    final DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
     authProvider.setUserDetailsService(userDetailsService);
     authProvider.setPasswordEncoder(passwordEncoder());
     return authProvider;
   }
 
-  protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
+  protected void configure(final AuthenticationManagerBuilder auth) {
     auth.authenticationProvider(authenticationProvider());
   }
 
   @Override
   protected void configure(final HttpSecurity https) throws Exception {
-    https.authorizeRequests((authorize) -> authorize
-                                             .antMatchers("/css/**", "index").permitAll()
-                                             .antMatchers("/note/**").authenticated()
-                                             .antMatchers("/notes/**").authenticated()
-    )
-      .formLogin((formLogin) -> formLogin
-                                  .loginPage("/login")
-                                  .failureUrl("/login-error")
-      );
+    https.authorizeRequests(authorize -> authorize
+                                           .antMatchers("/css/**", "index").permitAll()
+                                           .antMatchers("/anon/**", "/register").permitAll()
+                                           .antMatchers("/admin/**").authenticated()
+                                           .antMatchers("/note/**").authenticated()
+                                           .antMatchers("/notes/**").authenticated())
+      .formLogin(formLogin -> formLogin.loginPage("/login").failureUrl("/login-error"));
   }
 }
