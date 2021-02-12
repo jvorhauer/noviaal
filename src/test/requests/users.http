@@ -1,0 +1,65 @@
+### Create Frodo:
+POST https://localhost:8080/api/auth/register
+Content-Type: application/json
+
+{
+  "name": "Frodo",
+  "email": "frodo@hobbiton.shire",
+  "password": "password"
+}
+
+
+### Create Frodo:
+POST https://localhost:8080/api/auth/register
+Content-Type: application/json
+
+{
+  "name": "Bilbo",
+  "email": "bilbo@hobbiton.shire",
+  "password": "password"
+}
+
+
+### Create Frodo:
+POST https://localhost:8080/api/auth/register
+Content-Type: application/json
+
+{
+  "name": "Pippin",
+  "email": "pippin@tuckborough.shire",
+  "password": "password"
+}
+
+### Login
+POST https://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "pippin@tuckborough.shire",
+  "password": "password"
+}
+
+> {% client.global.set("authorized", response.body.token); %}
+
+### Get all users:
+GET https://localhost:8080/api/users
+Authorization: Bearer {{ authorized }}
+
+
+
+### add note:
+POST https://localhost:8080/users/7a16f71f-90dd-4e2f-b034-2d0ef04c3b7f/notes
+Content-Type: application/json
+
+{
+  "title": "Note number One",
+  "body": "Nevermind that, my lad..."
+}
+
+
+### get notes for a user:
+GET https://localhost:8080/users/7a16f71f-90dd-4e2f-b034-2d0ef04c3b7f/notes
+
+
+### add follower:
+POST https://localhost:8080/users/a9e9f571-62f0-46d6-93cb-8109b250580e/follow/2ec59b9a-0d96-4deb-b117-8c50de3aebd0slack

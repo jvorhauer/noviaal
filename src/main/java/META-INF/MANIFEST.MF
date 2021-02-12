@@ -1,0 +1,32 @@
+Manifest-Version: 1.0
+Main-Class: nl.noviaal.NoviaalApplication
+Class-Path: spring-security-config-5.4.2.jar jakarta.activation-api-1.2.
+ 2.jar checker-qual-3.5.0.jar spring-boot-starter-aop-2.4.2.jar jul-to-s
+ lf4j-1.7.30.jar micrometer-core-1.6.3.jar spring-boot-2.4.2.jar istack-
+ commons-runtime-3.0.11.jar txw2-2.3.3.jar jakarta.activation-1.2.2.jar 
+ jackson-annotations-2.11.4.jar postgresql-42.2.18.jar spring-boot-start
+ er-tomcat-2.4.2.jar spring-orm-5.3.3.jar jaxb-runtime-2.3.3.jar spring-
+ boot-autoconfigure-2.4.2.jar jackson-datatype-jdk8-2.11.4.jar h2-1.4.20
+ 0.jar spring-boot-starter-actuator-2.4.2.jar spring-webmvc-5.3.3.jar sp
+ ring-boot-actuator-autoconfigure-2.4.2.jar log4j-api-2.13.3.jar spring-
+ boot-starter-2.4.2.jar antlr-2.7.7.jar spring-web-5.3.3.jar classmate-1
+ .5.1.jar slf4j-api-1.7.30.jar aspectjweaver-1.9.6.jar spring-boot-start
+ er-logging-2.4.2.jar jakarta.annotation-api-1.3.5.jar jackson-module-pa
+ rameter-names-2.11.4.jar spring-boot-starter-data-jpa-2.4.2.jar spring-
+ boot-starter-security-2.4.2.jar spring-data-commons-2.4.3.jar spring-jc
+ l-5.3.3.jar jackson-datatype-jsr310-2.11.4.jar jboss-logging-3.4.1.Fina
+ l.jar javassist-3.27.0-GA.jar hibernate-commons-annotations-5.1.2.Final
+ .jar spring-context-5.3.3.jar jackson-databind-2.11.4.jar spring-boot-s
+ tarter-json-2.4.2.jar HikariCP-3.4.5.jar logback-core-1.2.3.jar spring-
+ security-core-5.4.2.jar hibernate-core-5.4.27.Final.jar jakarta.el-3.0.
+ 3.jar spring-security-web-5.4.2.jar dom4j-2.1.3.jar HdrHistogram-2.1.12
+ .jar spring-aop-5.3.3.jar snakeyaml-1.27.jar tomcat-embed-websocket-9.0
+ .41.jar spring-boot-starter-jdbc-2.4.2.jar jackson-core-2.11.4.jar tomc
+ at-embed-core-9.0.41.jar spring-data-jpa-2.4.3.jar lombok-1.18.16.jar s
+ pring-boot-starter-web-2.4.2.jar spring-boot-actuator-2.4.2.jar spring-
+ tx-5.3.3.jar logback-classic-1.2.3.jar LatencyUtils-2.0.3.jar spring-ex
+ pression-5.3.3.jar log4j-to-slf4j-2.13.3.jar jakarta.persistence-api-2.
+ 2.3.jar spring-core-5.3.3.jar jandex-2.1.3.Final.jar jakarta.xml.bind-a
+ pi-2.3.3.jar spring-jdbc-5.3.3.jar spring-aspects-5.3.3.jar spring-bean
+ s-5.3.3.jar jakarta.transaction-api-1.3.3.jar byte-buddy-1.10.19.jar
+
