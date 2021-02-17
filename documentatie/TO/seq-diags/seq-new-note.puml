@@ -1,0 +1,18 @@
+@startuml
+
+title Sequence Diagram - Nieuwe Notitie (NC1)
+
+actor Gebruiker
+
+Gebruiker -> NotesController: post een note
+NotesController -> NotesService: nieuwe note
+NotesService -> NotesRepository: sla note op in db
+NotesRepository -> Database: sla note op
+Database --> NotesRepository: resultaat
+NotesRepository --> NotesService: resultaat
+NotesService -> TimeLineService: informeer volgers
+TimeLineService -> Volger: nieuwe note
+NotesService --> NotesController: resultaat
+NotesController --> Gebruiker: resultaat
+
+@enduml

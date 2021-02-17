@@ -1,0 +1,73 @@
+@startuml class-diagram
+
+title Noviaal Class Diagram
+
+Note -- User
+
+class User {
+  - UUID     id
+  - String   email
+  - String   password
+  - String   name
+  - Boolean  enabled
+  - Date     born
+  - Role     role
+  - DateTime since
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+User -- Role
+
+class Note {
+  - String     title
+  - String     body
+  - Boolean    private
+  - DateTime   created
+  - DateTime   updated
+}
+
+Note -- Reminder
+Reminder -- User
+
+class Reminder {
+  - DateTime when
+  - DateTime created
+  - String reason
+}
+
+Note -- Like
+Like -- User
+
+class Like {
+  - DateTime created
+  - String reason
+}
+
+User -- Follow
+Follow -- User
+
+class Follow {
+  - DateTime since
+  - DateTime created
+  - String   reason
+}
+
+Note "1" o- "0..*" Comment
+
+class Comment {
+  - DateTime created
+  - String body
+}
+
+Note "0..*" -- "0..*" Tag
+
+class Tag {
+  - DateTime created
+  - String name
+}
+
+@enduml

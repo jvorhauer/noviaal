@@ -1,0 +1,17 @@
+@startuml
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Context.puml
+
+LAYOUT_WITH_LEGEND()
+
+title Context van Noviaal
+
+Person(user, "Gebruiker", "Een geregistreerde gebruiker van Noviaal")
+
+Enterprise_Boundary(c0, "Noviaal") {
+  System(noviaal, "Noviaal - NOVI Sociaal", "Applicatie om Notities vast te leggen en te delen")
+}
+
+Rel_Neighbor(user, noviaal, "gebruikt")
+
+@enduml

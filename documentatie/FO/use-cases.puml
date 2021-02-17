@@ -1,0 +1,115 @@
+@startuml use-cases
+
+skinparam actorStyle awesome
+
+left to right direction
+
+actor User as u
+actor Admin as a
+actor Reader as r
+
+note right of a : Admin is a special User
+
+u <|-- a
+
+package Authenticate {
+  usecase "AC1: Register" as AC1
+  usecase "AC2: Login" as AC2
+  usecase "AC3: Forgot Password" as AC3
+  usecase "AC4: Logout" as AC4
+  usecase "AC5: Forget Me" as AC5
+  usecase "AC6: Disable" as AC6
+}
+
+u --> AC2
+u --> AC3
+u --> AC4
+u --> AC5
+AC1 <-- r
+a --> AC6
+
+package Gebruiker {
+  usecase "GC1: Toon" as GC1
+}
+
+u --> GC1
+GC1 <-- r
+
+package Authorize {
+  usecase "RC1: Make Admin" as RC1
+}
+
+a --> RC1
+
+package Notities {
+  usecase "NC1: Nieuwe" as NC1
+  usecase "NC2: Toon" as NC2
+  usecase "NC3: Wijzig" as NC3
+  usecase "NC4: Verwijder" as NC4
+  usecase "NC5: Tag" as NC5
+}
+
+u --> NC1
+u --> NC2
+u --> NC3
+u --> NC4
+u --> NC5
+NC2 .> NC3
+NC2 .> NC4
+NC3 .> NC5
+
+NC2 <-- r
+
+package Interactie {
+  usecase "IC1: Follow (volg)" as IC1
+  usecase "IC2: Unfollow (beeindig volgen)" as IC2
+  usecase "IC3: Zoek" as IC3
+  usecase "IC4: Like" as IC4
+  usecase "IC5: UnLike" as IC5
+  usecase "IC6: Timeline" as IC6
+  usecase "IC7: Remind" as IC7
+}
+
+u --> IC1
+u --> IC2
+u --> IC3
+u --> IC4
+u --> IC5
+u --> IC6
+u --> IC7
+
+IC3 .> NC2
+IC6 .> NC2
+IC7 .> NC2
+
+IC3 <-- r
+IC6 <-- r
+
+package Overzicht {
+  usecase "OC1: Zoekresultaten" as OC1
+  usecase "OC2: Eigen notities" as OC2
+  usecase "OC3: Liked notities" as OC3
+  usecase "OC4: Reminders" as OC4
+  usecase "OC5: Volgers" as OC5
+  usecase "OC6: Gevolgden" as OC6
+}
+
+u --> OC1
+u --> OC2
+u --> OC3
+u --> OC4
+u --> OC5
+u --> OC6
+
+OC1 <-- r
+
+IC1 --> OC1
+OC1 .> NC2
+OC1 .> GC1
+OC2 .> NC2
+OC3 .> NC2
+OC4 .> NC2
+OC5 .> GC1
+OC6 .> GC1
+
+@enduml

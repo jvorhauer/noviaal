@@ -1,0 +1,25 @@
+@startuml
+
+title Registratie Sequence Diagram
+
+actor Anoniem
+
+Anoniem --> GebruikersController: formulier
+GebruikersController --> UsersService: nieuwe User
+UsersService --> UsersService: valideer gekozen password
+UsersService --> GebruikersController: password niet ok
+GebruikersController --> Anoniem: password niet ok
+
+note left
+net zolang tot het
+password goed is
+end note
+
+Anoniem --> GebruikersController: formulier
+GebruikersController --> UsersService: nieuwe User met ok password
+UsersService --> database: User
+database --> UsersService: opgeslagen User
+UsersService --> GebruikersController: opgeslagen User
+GebruikersController --> Anoniem: bevestiging
+
+@enduml
