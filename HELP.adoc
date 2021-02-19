@@ -28,3 +28,15 @@ The following guides illustrate how to use some features concretely:
 * https://spring.io/guides/gs/handling-form-submission/[Handling Form Submission]
 * https://spring.io/guides/gs/accessing-data-jpa/[Accessing Data with JPA]
 * https://spring.io/guides/gs/actuator-service/[Building a RESTful Web Service with Spring Boot Actuator]
+* https://www.callicoder.com/spring-boot-file-upload-download-rest-api-example/[RESTful storing file]
+* https://vladmihalcea.com/how-to-inherit-properties-from-a-base-class-entity-using-mappedsuperclass-with-jpa-and-hibernate/[Mapped superclass and inheritance]
+* https://technicalsand.com/spring-boot-multipart-file-upload-example-postman/[File uploads in Spring Boot and Postman]
+* https://spring.io/guides/gs/rest-hateoas/[REST and HATEOS]
+
+[discrete]
+=== Testing
+
+Blogs, tutorials and tips & tricks on testing
+
+* https://rieckpil.de/howto-write-spring-boot-integration-tests-with-a-real-database/[integration tests: testcontainers, Spring Boot & PostgreSQL]
+* https://rieckpil.de/guide-to-testing-spring-boot-applications-with-mockmvc/[MockMvc, Spring Boot]
