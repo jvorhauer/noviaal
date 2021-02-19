@@ -1,7 +1,7 @@
 package nl.noviaal.model.response;
 
 import lombok.Value;
-import nl.noviaal.model.Note;
+import nl.noviaal.domain.Note;
 
 import java.time.format.DateTimeFormatter;
 

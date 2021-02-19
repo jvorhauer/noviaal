@@ -2,7 +2,7 @@ package nl.noviaal.model.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Value;
-import nl.noviaal.model.User;
+import nl.noviaal.domain.User;
 
 import java.time.format.DateTimeFormatter;
 

@@ -1,4 +1,4 @@
-package nl.noviaal.model;
+package nl.noviaal.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -14,9 +14,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -53,6 +51,9 @@ public class User {
   @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
   @JsonManagedReference
   private Set<Note> notes = new HashSet<>();
+
+  @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
+  private Set<Video> videos = new HashSet<>();
 
   @OneToMany(mappedBy = "followed", cascade = CascadeType.ALL, orphanRemoval = true, targetEntity = Follow.class)
   @JsonManagedReference

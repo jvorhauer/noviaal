@@ -1,13 +1,9 @@
 package nl.noviaal.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import nl.noviaal.exception.InvalidCommand;
 import nl.noviaal.exception.UserNotFoundException;
-import nl.noviaal.model.Follow;
-import nl.noviaal.model.Note;
-import nl.noviaal.model.User;
-import nl.noviaal.model.auth.UserDetailsImpl;
-import nl.noviaal.model.command.CreateNote;
+import nl.noviaal.domain.Follow;
+import nl.noviaal.domain.User;
 import nl.noviaal.model.response.NoteResponse;
 import nl.noviaal.model.response.UserResponse;
 import nl.noviaal.service.UserService;
@@ -16,22 +12,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Validator;
 import java.net.URI;
-import java.security.Principal;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+@Validated
 @RestController
 @RequestMapping("/api/users")
 @Slf4j
@@ -45,7 +39,7 @@ public class UserController extends AbstractController {
   }
 
 
-  @GetMapping("")
+  @GetMapping(path = {"", "/"})
   public List<UserResponse> findAll(Authentication auth) {
     log.info("user: {}", getUserEmail(auth));
     return userService.findAll()
@@ -53,8 +47,6 @@ public class UserController extends AbstractController {
              .map(UserResponse::fromUser)
              .collect(Collectors.toList());
   }
-
-
 
   @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   public UserResponse getById(@PathVariable("id") UUID id) {

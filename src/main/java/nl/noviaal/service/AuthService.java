@@ -2,7 +2,7 @@ package nl.noviaal.service;
 
 import lombok.extern.slf4j.Slf4j;
 import nl.noviaal.exception.EmailAddressInUseException;
-import nl.noviaal.model.User;
+import nl.noviaal.domain.User;
 import nl.noviaal.model.auth.JwtResponse;
 import nl.noviaal.model.auth.JwtUtils;
 import nl.noviaal.model.auth.UserDetailsImpl;

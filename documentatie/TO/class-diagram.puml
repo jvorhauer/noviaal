@@ -18,56 +18,65 @@ class User {
 enum Role {
   USER
   ADMIN
+  REPORTER
 }
 
 User -- Role
 
-class Note {
-  - String     title
-  - String     body
-  - Boolean    private
-  - DateTime   created
-  - DateTime   updated
+abstract class BaseItem {
+  - UUID id
+  - DateTime created
+  - DateTime updated
 }
 
-Note -- Reminder
-Reminder -- User
+together {
+  class Note extends BaseItem {
+    - String title
+    - String body
+  }
+
+  class Foto extends BaseItem {
+    - Blob foto
+  }
+
+  class Video extends BaseItem {
+    - Blob video
+    - Int length
+  }
+
+  class Bookmark extends BaseItem {
+    - URL url
+    - String remark
+  }
+}
 
 class Reminder {
   - DateTime when
   - DateTime created
   - String reason
 }
-
-Note -- Like
-Like -- User
+BaseItem -- Reminder
+Reminder -- User
 
 class Like {
   - DateTime created
   - String reason
 }
-
-User -- Follow
-Follow -- User
+BaseItem -- Like
+Like -- User
 
 class Follow {
   - DateTime since
   - DateTime created
   - String   reason
 }
-
-Note "1" o- "0..*" Comment
-
-class Comment {
-  - DateTime created
-  - String body
-}
-
-Note "0..*" -- "0..*" Tag
+User -- Follow
+Follow -- User
 
 class Tag {
   - DateTime created
   - String name
 }
+BaseItem -- Tag
 
 @enduml

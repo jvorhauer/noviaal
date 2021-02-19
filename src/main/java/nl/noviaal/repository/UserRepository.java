@@ -1,6 +1,6 @@
 package nl.noviaal.repository;
 
-import nl.noviaal.model.User;
+import nl.noviaal.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;

@@ -3,8 +3,8 @@ package nl.noviaal.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import nl.noviaal.model.Note;
-import nl.noviaal.model.User;
+import nl.noviaal.domain.Note;
+import nl.noviaal.domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
