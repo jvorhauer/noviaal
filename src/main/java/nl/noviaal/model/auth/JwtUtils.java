@@ -1,24 +1,26 @@
 package nl.noviaal.model.auth;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
+import java.security.Key;
 import java.util.Date;
 
 @Component
 @Slf4j
 public class JwtUtils {
 
-  @Value("${noviaal.jwt.secret}")
-  private String jwtSecret;
+  private static final Key KEY = Keys.secretKeyFor(SignatureAlgorithm.HS512);
 
   @Value("${noviaal.jwt.expiration.ms}")
   private int jwtExpirationMs;
@@ -31,20 +33,31 @@ public class JwtUtils {
              .setSubject((userPrincipal.getEmail()))
              .setIssuedAt(now)
              .setExpiration(new Date(now.getTime() + jwtExpirationMs))
-             .signWith(SignatureAlgorithm.HS512, jwtSecret)
+             .signWith(KEY)
              .compact();
   }
 
   public String getUserNameFromJwtToken(String token) {
-    return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
+    return parseJwtToken(token).getBody().getSubject();
   }
 
-  public boolean validateJwtToken(String authToken) {
+  private Jws<Claims> parseJwtToken(String token) {
+    return Jwts.parserBuilder()
+             .setSigningKey(KEY)
+             .build()
+             .parseClaimsJws(token);
+  }
+
+  public boolean validateJwtToken(String token) {
+    if (token == null) {
+      log.error("validateJwtToken: passed token is null");
+      return false;
+    }
     try {
-      Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
+      parseJwtToken(token);
       return true;
-    } catch (SignatureException e) {
-      log.error("Invalid JWT signature: {}", e.getMessage());
+    } catch (SecurityException e) {
+      log.error("Invalid JWT security: {}", e.getMessage());
     } catch (MalformedJwtException e) {
       log.error("Invalid JWT token: {}", e.getMessage());
     } catch (ExpiredJwtException e) {

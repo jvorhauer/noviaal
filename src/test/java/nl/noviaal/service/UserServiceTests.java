@@ -5,8 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import lombok.RequiredArgsConstructor;
 import nl.noviaal.exception.EmailAddressInUseException;
-import nl.noviaal.exception.UserNotFoundException;
-import nl.noviaal.model.User;
+import nl.noviaal.domain.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

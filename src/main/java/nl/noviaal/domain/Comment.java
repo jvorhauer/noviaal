@@ -1,11 +1,10 @@
-package nl.noviaal.model;
+package nl.noviaal.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
@@ -30,12 +29,6 @@ public class Comment {
   @Column(nullable = false)
   private String comment;
 
-  @ManyToOne
-  private Note note;
-
-  @ManyToOne
-  private User user;
-
   @PrePersist
   public void prePersist() {
     this.id = UUID.randomUUID();
@@ -52,10 +45,4 @@ public class Comment {
 
   public String getComment() { return comment; }
   public void setComment(String comment) { this.comment = comment; }
-
-  public Note getNote() { return note; }
-  public void setNote(Note note) { this.note = note; }
-
-  public User getUser() { return user; }
-  public void setUser(User user) { this.user = user; }
 }

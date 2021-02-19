@@ -2,7 +2,7 @@ package nl.noviaal.service;
 
 import lombok.RequiredArgsConstructor;
 import nl.noviaal.exception.NoteNotFoundException;
-import nl.noviaal.model.Note;
+import nl.noviaal.domain.Note;
 import nl.noviaal.repository.NoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
