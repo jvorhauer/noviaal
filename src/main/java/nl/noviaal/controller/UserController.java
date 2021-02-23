@@ -6,6 +6,7 @@ import nl.noviaal.model.response.NoteResponse;
 import nl.noviaal.model.response.UserResponse;
 import nl.noviaal.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -38,9 +39,9 @@ public class UserController extends AbstractController {
   }
 
   @GetMapping(path = {"", "/"})
-  public List<UserResponse> findAll(Authentication auth) {
+  public List<UserResponse> findAll(Authentication auth, Pageable pageable) {
     log.info("user: {}", getUserEmail(auth));
-    return userService.findAll()
+    return userService.findAll(pageable)
              .stream()
              .map(UserResponse::fromUser)
              .collect(Collectors.toList());

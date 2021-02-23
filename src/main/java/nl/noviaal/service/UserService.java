@@ -10,6 +10,10 @@ import nl.noviaal.domain.User;
 import nl.noviaal.repository.FollowRepository;
 import nl.noviaal.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,8 +32,13 @@ public class UserService {
 
 
   @Transactional(readOnly = true)
-  public List<User> findAll() {
-    return userRepository.findAll();
+  public Page<User> findAll(Pageable pageable) {
+    return userRepository.findAll(pageable);
+  }
+
+  @Transactional(readOnly = true)
+  public Page<User> findAll() {
+    return findAll(PageRequest.of(0, Integer.MAX_VALUE));
   }
 
   @Transactional

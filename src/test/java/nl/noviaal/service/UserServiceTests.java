@@ -21,20 +21,22 @@ public class UserServiceTests {
   private final UserTestSupportService support;
 
   @Test
-  void findAllWithEmptyDatabase() {
-    assertThat(userService.findAll()).hasSize(0);
+  void whenDatabaseIsEmpty_thenFindAll_shouldReturnEmptyUserList() {
+    assertThat(userService.findAll().getTotalElements()).isEqualTo(0L);
+    assertThat(userService.findAll().getContent()).hasSize(0);
   }
 
   @Test
-  void saveUserAndFindAllSuccessfully() {
+  void whenSaveOneUser_thenFindAll_shouldFindOne() {
     var user = new User("Frodo", "frodo@hobbiton.shire", "password");
     var saved = userService.save(user);
     assertThat(saved.getId()).isNotNull();
-    assertThat(userService.findAll()).hasSize(1);
+    assertThat(userService.findAll().getTotalElements()).isEqualTo(1);
+    assertThat(userService.findAll().getContent()).hasSize(1);
   }
 
   @Test
-  void saveUserAndSaveOtherUserWithSameEmailAgainShouldFailWithInvalidCommand() {
+  void whenSaveUserAndSaveOtherUserWithSameEmailAgain_thenSave_shouldFailWithInvalidCommand() {
     var user1 = new User("Frodo", "frodo@hobbiton.shire", "password");
     userService.save(user1);
     var user2 = new User("Bilbo", "frodo@hobbiton.shire", "password");
