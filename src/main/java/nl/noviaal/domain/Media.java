@@ -5,11 +5,10 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Lob;
 import javax.persistence.Table;
-import java.sql.Blob;
 
 @Entity
-@Table(name = "video")
-public class Video extends BaseItem {
+@Table(name = "media")
+public class Media extends BaseItem {
 
   private String name;
 
@@ -17,13 +16,13 @@ public class Video extends BaseItem {
 
   @Lob
   @Basic(fetch = FetchType.LAZY)
-  private byte[] video;
+  private byte[] content;
 
-  public Video() {}
-  public Video(String name, String ct, byte[] video) {
+  public Media() {}
+  public Media(String name, String ct, byte[] content) {
     this.name = name;
     this.contentType = ct;
-    this.video = video;
+    this.content = content;
   }
 
 
@@ -33,6 +32,6 @@ public class Video extends BaseItem {
   public void setContentType(String ct) { contentType = ct; }
   public String getContentType() { return contentType; }
 
-  public void setVideo(byte[] video) { this.video = video; }
-  public byte[] getVideo() { return video; }
+  public void setContent(byte[] video) { this.content = video; }
+  public byte[] getContent() { return content; }
 }

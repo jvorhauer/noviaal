@@ -77,9 +77,11 @@ public class BaseItem {
   public ZonedDateTime getCreated() { return created.atZone(ZoneId.of("CET")); }
   public void setCreated(ZonedDateTime created) { this.created = created.toInstant(); }
 
+  public void setComments(List<Comment> comments) { this.comments = comments; }
   public void addComment(Comment comment) { this.comments.add(comment); }
   public List<Comment> getComments() { return comments; }
 
+  public void setTags(Set<Tag> tags) { this.tags = tags; }
   public void addTag(Tag tag) { this.tags.add(tag); }
   public Set<Tag> getTags() { return tags; }
 

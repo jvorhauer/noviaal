@@ -1,12 +1,17 @@
 package nl.noviaal.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
@@ -29,6 +34,17 @@ public class Comment {
   @Column(nullable = false)
   private String comment;
 
+  @Min(0)
+  @Max(5)
+  @NotNull
+  @Column(nullable = false)
+  private Integer stars = 0;
+
+  @NotNull
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JsonBackReference
+  private User author;
+
   @PrePersist
   public void prePersist() {
     this.id = UUID.randomUUID();
@@ -45,4 +61,7 @@ public class Comment {
 
   public String getComment() { return comment; }
   public void setComment(String comment) { this.comment = comment; }
+
+  public void setStars(int stars) { this.stars = stars; }
+  public int getStars() { return stars; }
 }

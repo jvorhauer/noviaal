@@ -1,13 +1,13 @@
 package nl.noviaal.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import nl.noviaal.domain.Media;
 import nl.noviaal.domain.User;
-import nl.noviaal.domain.Video;
 import nl.noviaal.exception.UserNotFoundException;
-import nl.noviaal.exception.VideoNotFoundException;
-import nl.noviaal.model.response.VideoUploadResponse;
+import nl.noviaal.exception.MediaNotFoundException;
+import nl.noviaal.model.response.MediaUploadResponse;
 import nl.noviaal.service.UserService;
-import nl.noviaal.service.VideoService;
+import nl.noviaal.service.MediaService;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -26,36 +26,35 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/videos")
+@RequestMapping("/api/media")
 @Slf4j
-public class VideoController extends AbstractController {
+public class MediaController extends AbstractController {
 
-  private final VideoService videoService;
-  private final UserService userService;
+  private final MediaService mediaService;
 
-  public VideoController(VideoService videoService, UserService userService) {
-    this.videoService = videoService;
-    this.userService = userService;
+  public MediaController(MediaService mediaService, UserService userService) {
+    super(userService);
+    this.mediaService = mediaService;
   }
 
 
   @PostMapping(value = {"", "/"})
-  public VideoUploadResponse upload(@RequestParam("file") MultipartFile file, Authentication authentication) {
+  public MediaUploadResponse upload(@RequestParam("file") MultipartFile file, Authentication authentication) {
     var email = getUserEmail(authentication);
     log.info("upload: {} by {}", file.getOriginalFilename(), email);
     Optional<User> ouser = userService.findByEmail(email);
-    Video video = ouser.map(user -> videoService.store(file, user))
+    Media media = ouser.map(user -> mediaService.store(file, user))
                     .orElseThrow(() -> new UserNotFoundException(email));
-    return new VideoUploadResponse(video.getId(), video.getName(), video.getContentType(), file.getSize());
+    return new MediaUploadResponse(media.getId(), media.getName(), media.getContentType(), file.getSize());
   }
 
   @GetMapping("/{id}")
   public ResponseEntity<Resource> get(@PathVariable("id") UUID id) {
-    Video video = videoService.find(id).orElseThrow(() -> new VideoNotFoundException(id));
-    MediaType mt = MediaType.parseMediaType(video.getContentType());
+    Media media = mediaService.find(id).orElseThrow(() -> new MediaNotFoundException(id));
+    MediaType mt = MediaType.parseMediaType(media.getContentType());
     return ResponseEntity.ok()
              .contentType(mt)
-             .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + video.getName() + "\"")
-             .body(new ByteArrayResource(video.getVideo()));
+             .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + media.getName() + "\"")
+             .body(new ByteArrayResource(media.getContent()));
   }
 }

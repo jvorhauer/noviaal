@@ -34,12 +34,11 @@ public class UserService {
 
   @Transactional
   public User save(@Valid User user) {
-    if (userRepository.findByEmail(user.getEmail()).isEmpty()) {
-      return userRepository.save(user);
-    } else {
+    if (user.getId() == null && userRepository.findByEmail(user.getEmail()).isPresent()) {
       log.error("save: Email address {} already in use!", user.getEmail());
       throw new EmailAddressInUseException(user.getEmail());
     }
+    return userRepository.save(user);
   }
 
   @Transactional(readOnly = true)

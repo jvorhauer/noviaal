@@ -35,16 +35,15 @@ together {
     - String body
   }
 
-  class Foto extends BaseItem {
-    - Blob foto
-  }
-
-  class Video extends BaseItem {
-    - Blob video
-    - Int length
+  class Media extends BaseItem {
+    - Binary foto
+    - String name
+    - String contentType
+    - Long size
   }
 
   class Bookmark extends BaseItem {
+    - String title
     - URL url
     - String remark
   }
@@ -74,9 +73,16 @@ User -- Follow
 Follow -- User
 
 class Tag {
-  - DateTime created
   - String name
 }
 BaseItem -- Tag
+
+class Comment {
+  - DateTime created
+  - String comment
+  - Integer stars
+}
+BaseItem -- Comment
+User -- Comment
 
 @enduml

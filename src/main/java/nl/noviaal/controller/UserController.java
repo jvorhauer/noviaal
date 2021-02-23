@@ -1,9 +1,7 @@
 package nl.noviaal.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import nl.noviaal.exception.UserNotFoundException;
 import nl.noviaal.domain.Follow;
-import nl.noviaal.domain.User;
 import nl.noviaal.model.response.NoteResponse;
 import nl.noviaal.model.response.UserResponse;
 import nl.noviaal.service.UserService;
@@ -11,12 +9,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,13 +32,10 @@ import java.util.stream.Collectors;
 @Slf4j
 public class UserController extends AbstractController {
 
-  private final UserService userService;
-
   @Autowired
   public UserController(UserService userService) {
-    this.userService = userService;
+    super(userService);
   }
-
 
   @GetMapping(path = {"", "/"})
   public List<UserResponse> findAll(Authentication auth) {
@@ -51,19 +49,17 @@ public class UserController extends AbstractController {
   @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   public UserResponse getById(@PathVariable("id") UUID id) {
     log.info("getById: {}", id);
-    return userService.findById(id)
-             .map(UserResponse::fromUser)
-             .orElseThrow(() -> new UserNotFoundException(id));
+    return UserResponse.fromUser(findUserById(id));
   }
 
   @DeleteMapping("/{id}")
+  @Secured("ADMIN")
   public ResponseEntity<Object> delete(@PathVariable("id") UUID id) {
     log.info("delete: {}", id);
     var user = findUserById(id);
     userService.delete(user);
     return ResponseEntity.ok().body("deleted user with id " + id);
   }
-
 
   @GetMapping("/{id}/notes")
   public List<NoteResponse> notes(@PathVariable("id") UUID id) {
@@ -74,18 +70,18 @@ public class UserController extends AbstractController {
              .collect(Collectors.toList());
   }
 
-  @PostMapping("/{id}/follow/{followerId}")
-  public ResponseEntity<URI> follow(@PathVariable("id") UUID id, @PathVariable("followerId") UUID followerId) {
-    var user     = findUserById(id);
+  @PostMapping("/follow/{followerId}")
+  public ResponseEntity<URI> follow(@PathVariable("followerId") UUID followerId, Authentication authentication) {
+    var user     = findCurrentUser(authentication);
     var follower = findUserById(followerId);
     log.info("follow: {} starts following {}", follower.getName(), user.getName());
     userService.follow(user, follower);
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
-  @GetMapping("/{id}/followers")
-  public List<UserResponse> followers(@PathVariable("id") UUID id) {
-    return findUserById(id).getFollowers()
+  @GetMapping("/followers")
+  public List<UserResponse> followers(Authentication authentication) {
+    return findCurrentUser(authentication).getFollowers()
              .stream()
              .map(Follow::getFollower)
              .map(UserResponse::fromUser)
@@ -93,7 +89,24 @@ public class UserController extends AbstractController {
   }
 
 
-  private User findUserById(UUID id) {
-    return userService.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+  @PutMapping("/{id}/promote")
+  public ResponseEntity<?> promote(@PathVariable("id") UUID id, Authentication authentication) {
+    assertIsAdmin(authentication);
+    var user = findUserById(id);
+    user.setRoles("USER,ADMIN");
+    userService.save(user);
+    return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+  }
+
+  /**
+   * The Spring-provided annotations do not work as expected.
+   * One of the many reasons to avoid annotations like the plague: you can't debug them.
+   * @param authentication Authentication
+   */
+  private void assertIsAdmin(Authentication authentication) {
+    var admin = findCurrentUser(authentication);
+    if (!admin.getRoles().contains("ADMIN")) {
+      throw new AccessDeniedException("User " + admin.getName() + " is not an admin!");
+    }
   }
 }

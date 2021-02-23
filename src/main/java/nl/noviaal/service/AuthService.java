@@ -9,9 +9,12 @@ import nl.noviaal.model.auth.UserDetailsImpl;
 import nl.noviaal.repository.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -37,12 +40,13 @@ public class AuthService {
     SecurityContextHolder.getContext().setAuthentication(authenticated);
     String jwt = jwtUtils.generateJwtToken(authenticated);
     UserDetailsImpl userDetails = (UserDetailsImpl) authenticated.getPrincipal();
+    log.info("login: {}", userDetails);
     return new JwtResponse(
       jwt,
       userDetails.getId(),
       userDetails.getUsername(),
       userDetails.getEmail(),
-      "USER"
+      userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList())
     );
   }
 

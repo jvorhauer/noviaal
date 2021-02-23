@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import lombok.RequiredArgsConstructor;
 import nl.noviaal.exception.EmailAddressInUseException;
 import nl.noviaal.domain.User;
+import nl.noviaal.support.UserTestSupportService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,7 +44,7 @@ public class UserServiceTests {
   }
 
   @Test
-  void saveAndThenDeleteTheUserShouldNotFindThatUser() {
+  void whenSavedAndThenDelete_thenTheUserShouldNotFindThatUser() {
     var user = userService.save(new User("Frodo", "frodo@hobbiton.shire", "password"));
     var id = user.getId();
     assertThat(id).isNotNull();

@@ -18,6 +18,10 @@
   <name>noviaal</name>
   <description>Eindopdracht voor NOVI Backend 2020/21</description>
 
+  <scm>
+    <connection>scm:git:https://github.com/jvorhauer/noviaal.git</connection>
+  </scm>
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <java.version>11</java.version>

@@ -53,7 +53,7 @@ public class User {
   private Set<Note> notes = new HashSet<>();
 
   @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
-  private Set<Video> videos = new HashSet<>();
+  private Set<Media> media = new HashSet<>();
 
   @OneToMany(mappedBy = "followed", cascade = CascadeType.ALL, orphanRemoval = true, targetEntity = Follow.class)
   @JsonManagedReference

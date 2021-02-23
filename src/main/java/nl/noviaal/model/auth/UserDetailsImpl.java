@@ -1,6 +1,7 @@
 package nl.noviaal.model.auth;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.ToString;
 import nl.noviaal.domain.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -11,14 +12,13 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+@ToString
 public class UserDetailsImpl implements UserDetails {
 
   private final UUID id;
   private final String username;
   private final String email;
-
   private final String password;
-
   private final Collection<? extends GrantedAuthority> authorities;
 
   public UserDetailsImpl(

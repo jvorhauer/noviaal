@@ -2,13 +2,13 @@ package nl.noviaal.model.response;
 
 import java.util.UUID;
 
-public class VideoUploadResponse {
+public class MediaUploadResponse {
   private final UUID   id;
   private final String name;
   private final String contentType;
   private final Long   size;
 
-  public VideoUploadResponse(UUID id, String name, String contentType, Long size) {
+  public MediaUploadResponse(UUID id, String name, String contentType, Long size) {
     this.id = id;
     this.name = name;
     this.contentType = contentType;

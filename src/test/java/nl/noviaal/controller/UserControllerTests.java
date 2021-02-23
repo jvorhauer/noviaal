@@ -1,30 +1,77 @@
 package nl.noviaal.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import lombok.RequiredArgsConstructor;
-import nl.noviaal.service.UserTestSupportService;
-import org.junit.jupiter.api.BeforeEach;
+import lombok.extern.slf4j.Slf4j;
+import nl.noviaal.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithUserDetails;
+import org.springframework.test.web.servlet.MockMvc;
 
-import java.security.Principal;
-
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@AutoConfigureMockMvc
+@Slf4j
 public class UserControllerTests {
-  private final UserController userController;
-  private final UserTestSupportService support;
 
+  private final UserRepository userRepo;
+  private final MockMvc mockMvc;
 
-  @BeforeEach
-  void beforeEach() {
-    support.truncate();
+  @Test
+  @WithUserDetails("test@tester.com")
+  void givenLoggedInUser_getAllUsers_shouldSucceed() throws Exception {
+    mockMvc.perform(get("/api/users").accept(MediaType.APPLICATION_JSON))
+      .andExpect(status().isOk())
+      .andExpect(jsonPath("$.size()").value(3));
   }
 
   @Test
-  void testSomething() {
-    assertThat(userController.findAll(null)).isNotNull();
+  @WithUserDetails("test@tester.com")
+  void givenLoggedInUser_getThisUserById_shouldSucceed() throws Exception {
+    var ouser = userRepo.findByEmail("test@tester.com");
+    assertThat(ouser).isPresent();
+    var user = ouser.get();
+    mockMvc.perform(get("/api/users/" + user.getId()).accept(MediaType.APPLICATION_JSON))
+      .andExpect(status().isOk())
+      .andExpect(jsonPath("$.name").value("Tester"));
+  }
+
+  @Test
+  @WithUserDetails("test@tester.com")
+  void givenLoggedInUser_getOtherUserById_shouldSucceed() throws Exception {
+
+    var ouser = userRepo.findByEmail("an@other.com");
+    assertThat(ouser).isPresent();
+    var user = ouser.get();
+    mockMvc.perform(get("/api/users/" + user.getId()).accept(MediaType.APPLICATION_JSON))
+      .andExpect(status().isOk())
+      .andExpect(jsonPath("$.name").value("Another"));
+  }
+
+  @Test
+  @WithUserDetails("test@tester.com")
+  void givenLoggedInNormalUser_promoteOtherUser_shouldFail() throws Exception {
+    var ouser = userRepo.findByEmail("an@other.com");
+    assertThat(ouser).isPresent();
+    var user = ouser.get();
+    mockMvc.perform(put("/api/users/" + user.getId() + "/promote")).andExpect(status().is4xxClientError());
+  }
+
+  @Test
+  @WithUserDetails("admin@tester.com")
+  void givenLoggedInAdmin_promoteOtherUser_shouldSucceed() throws Exception {
+    var ouser = userRepo.findByEmail("an@other.com");
+    assertThat(ouser).isPresent();
+    var user = ouser.get();
+    mockMvc.perform(put("/api/users/" + user.getId() + "/promote")).andExpect(status().is2xxSuccessful());
   }
 }
