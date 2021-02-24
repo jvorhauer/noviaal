@@ -3,9 +3,11 @@ package nl.noviaal.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import nl.noviaal.config.ApplicationReadyListener;
 import nl.noviaal.domain.Note;
 import nl.noviaal.domain.User;
 import nl.noviaal.exception.NoteNotFoundException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 import java.util.UUID;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class NoteServiceTests {
 
   @Autowired
@@ -22,6 +24,14 @@ public class NoteServiceTests {
 
   @Autowired
   private UserService userService;
+
+  @Autowired
+  private ApplicationReadyListener applicationReadyListener;
+
+  @BeforeEach
+  void before() {
+    applicationReadyListener.initDataStore();
+  }
 
   @Test
   @Transactional

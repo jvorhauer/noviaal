@@ -4,8 +4,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import lombok.RequiredArgsConstructor;
+import nl.noviaal.config.ApplicationReadyListener;
 import nl.noviaal.domain.User;
 import nl.noviaal.exception.EmailAddressInUseException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,6 +19,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserServiceTests {
 
   private final UserService userService;
+  private final ApplicationReadyListener init;
+
+  @BeforeEach
+  void before() {
+    if (userService.findAll().getTotalElements() < 4) {
+      init.initDataStore();
+    }
+  }
 
   @Test
   void whenDatabaseInitial_thenFindAll_shouldReturnUserList() {
