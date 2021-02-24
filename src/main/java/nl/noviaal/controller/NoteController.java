@@ -1,10 +1,14 @@
 package nl.noviaal.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import nl.noviaal.domain.BaseItem;
+import nl.noviaal.domain.Comment;
 import nl.noviaal.domain.Note;
 import nl.noviaal.domain.User;
 import nl.noviaal.exception.InvalidCommand;
+import nl.noviaal.model.command.CreateComment;
 import nl.noviaal.model.command.CreateNote;
+import nl.noviaal.model.response.CommentCreatedResponse;
 import nl.noviaal.model.response.NoteResponse;
 import nl.noviaal.service.NoteService;
 import nl.noviaal.service.UserService;
@@ -19,7 +23,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Validator;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -40,7 +46,7 @@ public class NoteController extends AbstractController {
   }
 
   @PostMapping(value = {"", "/"})
-  public ResponseEntity<Object> addNote(@RequestBody CreateNote createNote, Authentication authentication) {
+  public ResponseEntity<NoteResponse> addNote(@RequestBody CreateNote createNote, Authentication authentication) {
     if (validator.validate(createNote).size() > 0) {
       log.error("addNote: invalid: {}", createNote);
       throw new InvalidCommand("CreateNote");
@@ -48,7 +54,9 @@ public class NoteController extends AbstractController {
     User user = findCurrentUser(authentication);
     Note note = new Note(createNote.getTitle(), createNote.getBody());
     userService.addNote(user, note);
-    return ResponseEntity.status(HttpStatus.CREATED).build();
+    Optional<Note> last = user.getNotes().stream().min(Comparator.comparing(BaseItem::getCreated));
+    return last.map(value -> ResponseEntity.status(HttpStatus.CREATED).body(NoteResponse.fromNote(value)))
+             .orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
   }
 
 
@@ -62,12 +70,30 @@ public class NoteController extends AbstractController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<NoteResponse> find(@PathVariable("id") UUID noteId) {
-    return ResponseEntity.ok().body(NoteResponse.fromNote(noteService.find(noteId)));
+  public NoteResponse find(@PathVariable("id") UUID noteId) {
+    return NoteResponse.fromNote(noteService.find(noteId));
   }
 
   @GetMapping("/user/{id}")
   public List<NoteResponse> findAllForSpecifiedUser(@PathVariable("id") UUID id) {
     return convertNotesToResponse(findUserById(id).getNotes());
+  }
+
+  @PostMapping("/{id}/comnments")
+  public ResponseEntity<CommentCreatedResponse> addCommentToNote(
+    @RequestBody CreateComment createComment,
+    @PathVariable("id") UUID id, Authentication authentication
+  ) {
+    if (validator.validate(createComment).size() > 0) {
+      log.error("addCommentToNote: invalid: {}", createComment);
+      throw new InvalidCommand("CreateComment");
+    }
+
+    User user = findCurrentUser(authentication);
+    Note note = noteService.find(id);
+    Comment comment = new Comment(createComment.getBody(), createComment.getStars() == null ? 0 : createComment.getStars());
+    return noteService.addCommentToNote(note, user, comment)
+             .map(c -> ResponseEntity.status(HttpStatus.CREATED).body(CommentCreatedResponse.ofComment(c)))
+             .orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
   }
 }

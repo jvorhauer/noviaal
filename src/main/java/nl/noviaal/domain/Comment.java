@@ -53,6 +53,14 @@ public class Comment {
     }
   }
 
+  public Comment() {}
+  public Comment(String comment) {
+    this.comment = comment;
+  }
+  public Comment(String comment, Integer stars) {
+    this(comment);
+    this.stars = stars;
+  }
 
   public UUID getId() { return id; }
 
@@ -64,4 +72,12 @@ public class Comment {
 
   public void setStars(int stars) { this.stars = stars; }
   public int getStars() { return stars; }
+
+  public User getAuthor() {
+    return author;
+  }
+
+  public void setAuthor(User author) {
+    this.author = author;
+  }
 }

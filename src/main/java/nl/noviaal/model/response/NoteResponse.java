@@ -4,6 +4,8 @@ import lombok.Value;
 import nl.noviaal.domain.Note;
 
 import java.time.format.DateTimeFormatter;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Value
 public class NoteResponse {
@@ -16,6 +18,7 @@ public class NoteResponse {
   String created;
   String author;
   String authorId;
+  Set<CommentResponse> comments;
 
 
   public static NoteResponse fromNote(Note note) {
@@ -25,7 +28,8 @@ public class NoteResponse {
       note.getBody(),
       note.getCreated().format(DTF),
       note.getAuthor().getName(),
-      note.getAuthor().getId().toString()
+      note.getAuthor().getId().toString(),
+      note.getComments().stream().map(CommentResponse::ofComment).collect(Collectors.toSet())
     );
   }
 }

@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import lombok.RequiredArgsConstructor;
+import nl.noviaal.domain.Comment;
 import nl.noviaal.domain.Note;
 import nl.noviaal.domain.User;
 import nl.noviaal.exception.NoteNotFoundException;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -57,5 +59,25 @@ public class NoteServiceTests {
     assertThatThrownBy(() -> noteService.find(nonExistingId))
       .isInstanceOf(NoteNotFoundException.class)
       .hasMessage("Note with id " + nonExistingId + " not found");
+  }
+
+  @Test
+  @Transactional
+  void whenAddingCommentToNote_thenReturnAddedNote() {
+    Optional<User> ouser = userService.findByEmail("tester@test.com");
+    assertThat(ouser).isPresent();
+    User user = ouser.get();
+    assertThat(user.getNotes()).isNotNull();
+    assertThat(user.getNotes()).hasSizeGreaterThanOrEqualTo(0);
+    user.addNote(new Note("test comment", "test comment body"));
+    var saved = userService.save(user);
+
+    var onote = saved.getNotes().stream().min(Comparator.comparing(Note::getCreated));
+    assertThat(onote).isPresent();
+    var note = onote.get();
+    assertThat(note.getComments()).isEmpty();
+
+    noteService.addCommentToNote(note, user, new Comment("geen commentaar", 3));
+    assertThat(note.getComments()).hasSize(1);
   }
 }
