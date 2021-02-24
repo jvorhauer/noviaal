@@ -1,25 +1,17 @@
-package nl.noviaal.config;
+package nl.noviaal.support;
 
 import nl.noviaal.domain.User;
 import nl.noviaal.repository.UserRepository;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.ApplicationListener;
-import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
-public class ApplicationReadyListener implements ApplicationListener<ApplicationReadyEvent> {
+public class Setup {
 
   private final UserRepository userRepo;
 
-  public ApplicationReadyListener(UserRepository userRepo) {
+  public Setup(UserRepository userRepo) {
     this.userRepo = userRepo;
-  }
-
-  @Override
-  public void onApplicationEvent(@NonNull ApplicationReadyEvent event) {
-    initDataStore();
   }
 
   @Transactional

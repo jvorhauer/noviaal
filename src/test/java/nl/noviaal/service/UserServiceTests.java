@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import nl.noviaal.config.ApplicationReadyListener;
 import nl.noviaal.domain.User;
 import nl.noviaal.exception.EmailAddressInUseException;
+import nl.noviaal.support.Setup;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +20,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserServiceTests {
 
   private final UserService userService;
-  private final ApplicationReadyListener init;
+  private final Setup setup;
 
   @BeforeEach
   void before() {
-    if (userService.findAll().getTotalElements() < 4) {
-      init.initDataStore();
-    }
+    setup.initDataStore();
   }
 
   @Test

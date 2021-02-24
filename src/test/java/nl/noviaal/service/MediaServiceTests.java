@@ -2,10 +2,12 @@ package nl.noviaal.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import lombok.RequiredArgsConstructor;
 import nl.noviaal.config.ApplicationReadyListener;
 import nl.noviaal.domain.Media;
 import nl.noviaal.domain.User;
 import nl.noviaal.repository.UserRepository;
+import nl.noviaal.support.Setup;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,20 +22,16 @@ import java.util.Optional;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class MediaServiceTests {
 
-  @Autowired
-  private MediaService mediaService;
-
-  @Autowired
-  private UserRepository userRepository;
-
-  @Autowired
-  private ApplicationReadyListener applicationReadyListener;
+  private final MediaService mediaService;
+  private final UserRepository userRepository;
+  private final Setup setup;
 
   @BeforeEach
   void before() {
-    applicationReadyListener.initDataStore();
+    setup.initDataStore();
   }
 
 

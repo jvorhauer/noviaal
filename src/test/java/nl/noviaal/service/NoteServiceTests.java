@@ -3,10 +3,11 @@ package nl.noviaal.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import nl.noviaal.config.ApplicationReadyListener;
+import lombok.RequiredArgsConstructor;
 import nl.noviaal.domain.Note;
 import nl.noviaal.domain.User;
 import nl.noviaal.exception.NoteNotFoundException;
+import nl.noviaal.support.Setup;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,20 +18,16 @@ import java.util.Optional;
 import java.util.UUID;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class NoteServiceTests {
 
-  @Autowired
-  private NoteService noteService;
-
-  @Autowired
-  private UserService userService;
-
-  @Autowired
-  private ApplicationReadyListener applicationReadyListener;
+  private final NoteService noteService;
+  private final UserService userService;
+  private final Setup setup;
 
   @BeforeEach
   void before() {
-    applicationReadyListener.initDataStore();
+    setup.initDataStore();
   }
 
   @Test

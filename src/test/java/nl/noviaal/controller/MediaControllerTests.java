@@ -6,6 +6,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import lombok.RequiredArgsConstructor;
+import nl.noviaal.support.Setup;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -23,6 +25,12 @@ import java.io.InputStream;
 public class MediaControllerTests {
 
   private final MockMvc mockMvc;
+  private final Setup setup;
+
+  @BeforeEach
+  void before() {
+    setup.initDataStore();
+  }
 
   @Test
   @WithUserDetails("test@tester.com")

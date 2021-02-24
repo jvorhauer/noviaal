@@ -3,8 +3,11 @@ package nl.noviaal.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import nl.noviaal.NoviaalApplication;
+import nl.noviaal.config.ApplicationReadyListener;
 import nl.noviaal.domain.Note;
 import nl.noviaal.domain.User;
+import nl.noviaal.support.Setup;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +20,23 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(
+  webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+  classes = NoviaalApplication.class
+)
 @Transactional
 public class UserRepositoryTests {
 
   @Autowired
   UserRepository userRepository;
+
+  @Autowired
+  Setup setup;
+
+  @BeforeEach
+  void before() {
+    setup.initDataStore();
+  }
 
   @Test
   void saveUserShouldResultInNonNullID() {

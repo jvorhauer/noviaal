@@ -6,6 +6,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 import lombok.RequiredArgsConstructor;
 import nl.noviaal.NoviaalApplication;
+import nl.noviaal.support.Setup;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,12 @@ import java.util.UUID;
 public class AuthControllerIntegrationTests {
 
   private final MockMvc mockMvc;
+  private final Setup setup;
+
+  @BeforeEach
+  void before() {
+    setup.initDataStore();
+  }
 
   @Test
   void createUserWithCorrectCommandJson() throws Exception {

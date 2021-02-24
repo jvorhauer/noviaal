@@ -10,6 +10,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import nl.noviaal.NoviaalApplication;
 import nl.noviaal.domain.User;
 import nl.noviaal.service.AuthService;
+import nl.noviaal.support.Setup;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -30,6 +32,14 @@ public class AuthControllerTests {
 
   @Autowired
   private MockMvc mockMvc;
+
+  @Autowired
+  private Setup setup;
+
+  @BeforeEach
+  void before() {
+    setup.initDataStore();
+  }
 
 
   @Test

@@ -16,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Optional;
 
 @SpringBootTest
 public class UserServiceWithMockTests {
@@ -43,7 +44,8 @@ public class UserServiceWithMockTests {
       .thenReturn(new PageImpl<>(Collections.singletonList(new User("tester", "tester@test.com", "password"))));
 
     assertThat(userService.findAll().getTotalElements()).isEqualTo(1);
-    assertThat(userService.findAll().get().findFirst()).isPresent();
-    assertThat(userService.findAll().get().findFirst().get().getEmail()).isEqualTo("tester@test.com");
+    Optional<User> ouser = userService.findAll().get().findFirst();
+    assertThat(ouser).isPresent();
+    assertThat(ouser.get().getEmail()).isEqualTo("tester@test.com");
   }
 }
