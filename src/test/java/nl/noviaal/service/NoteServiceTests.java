@@ -9,7 +9,9 @@ import nl.noviaal.exception.NoteNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @SpringBootTest
@@ -22,8 +24,13 @@ public class NoteServiceTests {
   private UserService userService;
 
   @Test
+  @Transactional
   void whenNewNoteSaved_thenFindAll_shouldFindOneNote() {
-    var user = userService.save(new User("Tester", "tester@test.com", "password"));
+    Optional<User> ouser = userService.findByEmail("tester@test.com");
+    assertThat(ouser).isPresent();
+    User user = ouser.get();
+    assertThat(user.getNotes()).isNotNull();
+    assertThat(user.getNotes()).hasSizeGreaterThanOrEqualTo(0);
     user.addNote(new Note("test title", "test body"));
     var saved = userService.save(user);
 

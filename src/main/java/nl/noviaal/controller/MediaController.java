@@ -2,18 +2,19 @@ package nl.noviaal.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import nl.noviaal.domain.Media;
-import nl.noviaal.domain.User;
-import nl.noviaal.exception.UserNotFoundException;
+import nl.noviaal.exception.MediaInvalidException;
 import nl.noviaal.exception.MediaNotFoundException;
+import nl.noviaal.model.response.MediaResponse;
 import nl.noviaal.model.response.MediaUploadResponse;
-import nl.noviaal.service.UserService;
 import nl.noviaal.service.MediaService;
+import nl.noviaal.service.UserService;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,8 +23,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Optional;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/media")
@@ -40,12 +42,25 @@ public class MediaController extends AbstractController {
 
   @PostMapping(value = {"", "/"})
   public MediaUploadResponse upload(@RequestParam("file") MultipartFile file, Authentication authentication) {
-    var email = getUserEmail(authentication);
-    log.info("upload: {} by {}", file.getOriginalFilename(), email);
-    Optional<User> ouser = userService.findByEmail(email);
-    Media media = ouser.map(user -> mediaService.store(file, user))
-                    .orElseThrow(() -> new UserNotFoundException(email));
-    return new MediaUploadResponse(media.getId(), media.getName(), media.getContentType(), file.getSize());
+    if (file == null) {
+      log.error("store: file is null");
+      throw new MediaInvalidException("Media file is null");
+    }
+    if (!StringUtils.hasText(file.getOriginalFilename())) {
+      log.error("store: original file name is null or empty");
+      throw new MediaInvalidException("Media file name is null or empty");
+    }
+    log.info("store: original file name: [{}]", file.getOriginalFilename());
+    var filename = StringUtils.cleanPath(file.getOriginalFilename());
+    if (filename.contains("..")) {
+      log.error("store: original file name contains illegal characters");
+      throw new MediaInvalidException("Media name contains characters that could be used for malicious purposes");
+    }
+
+    var user = findCurrentUser(authentication);
+    log.info("upload: {} by {}", filename, user.getEmail());
+    Media media = mediaService.store(file, user);
+    return MediaUploadResponse.ofMedia(media, file.getSize());
   }
 
   @GetMapping("/{id}")
@@ -56,5 +71,13 @@ public class MediaController extends AbstractController {
              .contentType(mt)
              .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + media.getName() + "\"")
              .body(new ByteArrayResource(media.getContent()));
+  }
+
+  @GetMapping("/{userId}/list")
+  public List<MediaResponse> listByUser(@PathVariable("userId") UUID userId) {
+    return findUserById(userId)
+             .getMedia().stream()
+             .map(MediaResponse::ofMedia)
+             .collect(Collectors.toList());
   }
 }

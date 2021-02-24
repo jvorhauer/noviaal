@@ -4,26 +4,24 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import lombok.RequiredArgsConstructor;
-import nl.noviaal.exception.EmailAddressInUseException;
 import nl.noviaal.domain.User;
-import nl.noviaal.support.UserTestSupportService;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import nl.noviaal.exception.EmailAddressInUseException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@Transactional
 public class UserServiceTests {
 
   private final UserService userService;
-  private final UserTestSupportService support;
 
   @Test
-  void whenDatabaseIsEmpty_thenFindAll_shouldReturnEmptyUserList() {
-    assertThat(userService.findAll().getTotalElements()).isEqualTo(0L);
-    assertThat(userService.findAll().getContent()).hasSize(0);
+  void whenDatabaseInitial_thenFindAll_shouldReturnUserList() {
+    assertThat(userService.findAll().getTotalElements()).isEqualTo(4L);
+    assertThat(userService.findAll().getContent()).hasSize(4);
   }
 
   @Test
@@ -31,8 +29,8 @@ public class UserServiceTests {
     var user = new User("Frodo", "frodo@hobbiton.shire", "password");
     var saved = userService.save(user);
     assertThat(saved.getId()).isNotNull();
-    assertThat(userService.findAll().getTotalElements()).isEqualTo(1);
-    assertThat(userService.findAll().getContent()).hasSize(1);
+    assertThat(userService.findAll().getTotalElements()).isEqualTo(5);
+    assertThat(userService.findAll().getContent()).hasSize(5);
   }
 
   @Test
@@ -52,16 +50,5 @@ public class UserServiceTests {
     assertThat(id).isNotNull();
     userService.delete(user);
     assertThat(userService.findById(id)).isEmpty();
-  }
-
-
-  @BeforeEach
-  public void before() {
-    support.truncate();
-  }
-
-  @AfterEach
-  public void after() {
-    support.truncate();
   }
 }

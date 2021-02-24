@@ -2,6 +2,7 @@ package nl.noviaal.controller;
 
 import nl.noviaal.exception.EmailAddressInUseException;
 import nl.noviaal.exception.InvalidCommand;
+import nl.noviaal.exception.MediaInvalidException;
 import nl.noviaal.exception.NoteNotFoundException;
 import nl.noviaal.exception.UserNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -45,6 +46,10 @@ public class ExceptionController {
     return exception(HttpStatus.UNAUTHORIZED, e);
   }
 
+  @ExceptionHandler(value = MediaInvalidException.class)
+  public ResponseEntity<?> exception(MediaInvalidException e) {
+    return exception(HttpStatus.BAD_REQUEST, e);
+  }
 
   private ResponseEntity<?> exception(HttpStatus status, RuntimeException e) {
     return ResponseEntity.status(status).body(e.getMessage());

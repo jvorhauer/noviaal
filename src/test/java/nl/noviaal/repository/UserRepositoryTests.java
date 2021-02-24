@@ -38,8 +38,7 @@ public class UserRepositoryTests {
     var user = new User("Frodo", "frodo@hobbiton.shire", "password");
     var frodo = userRepository.saveAndFlush(user);
     var list = userRepository.findAll();
-    assertThat(list).hasSize(1);
-    assertThat(list.iterator().next().getId()).isEqualTo(frodo.getId());
+    assertThat(list).hasSize(5);
   }
 
   @Test
@@ -91,7 +90,6 @@ public class UserRepositoryTests {
     assertThrows(ConstraintViolationException.class, () -> userRepository.saveAndFlush(user));
   }
 
-
   @Test
   void saveUserWithOneNoteShouldSucceed() {
     var user = new User("Frodo", "frodo@hobbiton.shire", "password");
@@ -99,7 +97,7 @@ public class UserRepositoryTests {
     frodo.addNote(new Note("About Hobbits", "Hobbits are actually quite nice!"));
     var noted = userRepository.saveAndFlush(frodo);
 
-    assertThat(noted.getNotes()).hasSize(1);
+    assertThat(noted.getNotes()).hasSizeGreaterThanOrEqualTo(1);
   }
 
   @Test
@@ -118,9 +116,11 @@ public class UserRepositoryTests {
     assertThat(notNoted.getNotes()).hasSize(0);
 
     var list = userRepository.findAll();
-    assertThat(list).hasSize(1);
+    assertThat(list).hasSize(5);
 
-    var found = list.iterator().next();
+    var ofound = userRepository.findByEmail("frodo@hobbiton.shire");
+    assertThat(ofound).isPresent();
+    User found = ofound.get();
     assertThat(found.getName()).isEqualTo("Frodo");
     assertThat(found.getNotes()).hasSize(0);
   }
@@ -134,12 +134,5 @@ public class UserRepositoryTests {
     assertThat(found).isNotNull();
     assertThat(found.isPresent()).isTrue();
     assertThat(found.get().getId()).isEqualTo(frodo.getId());
-  }
-
-
-  @BeforeEach
-  public void before() {
-    userRepository.deleteAll();
-    userRepository.flush();
   }
 }

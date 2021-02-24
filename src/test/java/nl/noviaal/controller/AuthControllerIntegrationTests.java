@@ -6,8 +6,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 import lombok.RequiredArgsConstructor;
 import nl.noviaal.NoviaalApplication;
-import nl.noviaal.support.UserTestSupportService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +15,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.net.URI;
 import java.util.UUID;
@@ -31,13 +28,6 @@ import java.util.UUID;
 public class AuthControllerIntegrationTests {
 
   private final MockMvc mockMvc;
-  private final UserTestSupportService support;
-
-  @BeforeEach
-  @Transactional
-  void beforeEach() {
-    support.truncate();
-  }
 
   @Test
   void createUserWithCorrectCommandJson() throws Exception {

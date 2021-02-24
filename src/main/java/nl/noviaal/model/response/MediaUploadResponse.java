@@ -1,5 +1,7 @@
 package nl.noviaal.model.response;
 
+import nl.noviaal.domain.Media;
+
 import java.util.UUID;
 
 public class MediaUploadResponse {
@@ -19,4 +21,8 @@ public class MediaUploadResponse {
   public String getName() { return name; }
   public String getContentType() { return contentType; }
   public Long getSize() { return size; }
+
+  public static MediaUploadResponse ofMedia(Media media, long size) {
+    return new MediaUploadResponse(media.getId(), media.getName(), media.getContentType(), size);
+  }
 }

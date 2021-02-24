@@ -73,13 +73,13 @@ public class UserService {
 
 
   @Transactional
-  public void follow(User user, User follower) {
-    log.info("follow: user {} starts following {}", follower.getName(), user.getName());
+  public Follow follow(User user, User follow) {
     log.info("follow: user {} has {} followers", user.getName(), user.getFollowers().size());
-    Follow follow = new Follow(user, follower);
-    Follow savedFollow = followRepository.save(follow);
+    Follow following = new Follow(user, follow);
+    Follow savedFollow = followRepository.save(following);
     user.addFollower(savedFollow);
     User savedUser = userRepository.save(user);
     log.info("follow: user {} now has {} follower(s)", savedUser.getName(), savedUser.getFollowers().size());
+    return savedFollow;
   }
 }

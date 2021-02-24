@@ -80,7 +80,6 @@ public class User {
     }
   }
 
-
   public void setId(UUID id) {
     if (this.id == null) {
       this.id = id;
@@ -112,6 +111,18 @@ public class User {
   public void deleteNote(Note note) {
     this.notes.remove(note);
     note.setAuthor(null);
+  }
+
+  public Set<Media> getMedia() {
+    return media;
+  }
+  public void addMedia(Media media) {
+    this.media.add(media);
+    media.setAuthor(this);
+  }
+  public void removeMedia(Media media) {
+    this.media.remove(media);
+    media.setAuthor(null);
   }
 
   public Set<Follow> getFollowers() { return this.followers; }

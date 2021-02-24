@@ -7,7 +7,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import nl.noviaal.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,6 @@ import org.springframework.test.web.servlet.MockMvc;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @AutoConfigureMockMvc
-@Slf4j
 public class UserControllerTests {
 
   private final UserRepository userRepo;
@@ -31,7 +29,7 @@ public class UserControllerTests {
   void givenLoggedInUser_getAllUsers_shouldSucceed() throws Exception {
     mockMvc.perform(get("/api/users").accept(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
-      .andExpect(jsonPath("$.size()").value(3));
+      .andExpect(jsonPath("$.size()").value(4));
   }
 
   @Test
@@ -48,7 +46,6 @@ public class UserControllerTests {
   @Test
   @WithUserDetails("test@tester.com")
   void givenLoggedInUser_getOtherUserById_shouldSucceed() throws Exception {
-
     var ouser = userRepo.findByEmail("an@other.com");
     assertThat(ouser).isPresent();
     var user = ouser.get();

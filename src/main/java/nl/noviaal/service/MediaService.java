@@ -26,21 +26,7 @@ public class MediaService {
 
   @Transactional
   public Media store(MultipartFile file, User user) {
-    if (file == null) {
-      log.error("store: file is null");
-      throw new MediaInvalidException("Media file is null");
-    }
-    if (!StringUtils.hasText(file.getOriginalFilename())) {
-      log.error("store: original file name is null or empty");
-      throw new MediaInvalidException("Media file name is null or empty");
-    }
-    log.info("store: original file name: [{}]", file.getOriginalFilename());
-    var filename = StringUtils.cleanPath(file.getOriginalFilename());
-    if (filename.contains("..")) {
-      log.error("store: original file name contains illegal characters");
-      throw new MediaInvalidException("Media name contains characters that could be used for malicious purposes");
-    }
-
+    String filename = file.getOriginalFilename();
     try {
       var video = new Media(filename, file.getContentType(), file.getBytes());
       video.setAuthor(user);

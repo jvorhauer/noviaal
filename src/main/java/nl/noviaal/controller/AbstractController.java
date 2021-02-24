@@ -32,4 +32,17 @@ public abstract class AbstractController {
     var email = getUserEmail(authentication);
     return userService.findByEmail(email).orElseThrow(() -> new UserNotFoundException(email));
   }
+
+  /**
+   * The Spring-provided annotations do not work as expected.
+   * One of the many reasons to avoid annotations like the plague: you can't debug them.
+   * @param authentication Authentication
+   * @throws AccessDeniedException if the logged in user does not have ADMIN role.
+   */
+  protected void assertIsAdmin(Authentication authentication) {
+    var admin = findCurrentUser(authentication);
+    if (!admin.getRoles().contains("ADMIN")) {
+      throw new AccessDeniedException("User " + admin.getName() + " is not an admin!");
+    }
+  }
 }
