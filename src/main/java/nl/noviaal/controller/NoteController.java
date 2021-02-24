@@ -79,7 +79,7 @@ public class NoteController extends AbstractController {
     return convertNotesToResponse(findUserById(id).getNotes());
   }
 
-  @PostMapping("/{id}/comnments")
+  @PostMapping("/{id}/comments")
   public ResponseEntity<CommentCreatedResponse> addCommentToNote(
     @RequestBody CreateComment createComment,
     @PathVariable("id") UUID id, Authentication authentication
@@ -91,7 +91,7 @@ public class NoteController extends AbstractController {
 
     User user = findCurrentUser(authentication);
     Note note = noteService.find(id);
-    Comment comment = new Comment(createComment.getBody(), createComment.getStars() == null ? 0 : createComment.getStars());
+    Comment comment = new Comment(createComment.getComment(), createComment.getStars() == null ? 0 : createComment.getStars());
     return noteService.addCommentToNote(note, user, comment)
              .map(c -> ResponseEntity.status(HttpStatus.CREATED).body(CommentCreatedResponse.ofComment(c)))
              .orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());

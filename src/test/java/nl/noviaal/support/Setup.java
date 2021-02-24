@@ -1,5 +1,6 @@
 package nl.noviaal.support;
 
+import nl.noviaal.domain.Note;
 import nl.noviaal.domain.User;
 import nl.noviaal.repository.UserRepository;
 import org.springframework.stereotype.Component;
@@ -20,9 +21,15 @@ public class Setup {
       userRepo.save(new User("Tester", "test@tester.com", "password"));
       userRepo.save(new User("Tester", "tester@test.com", "passwrd"));
       userRepo.save(new User("Another", "an@other.com", "password"));
+
       var admin = new User("Admin", "admin@tester.com", "password");
       admin.setRoles("USER,ADMIN");
-      userRepo.save(admin);
+//      admin.addNote(new Note("admin note", "as an admin I want a note"));
+      var saved = userRepo.saveAndFlush(admin);
+      var note = new Note("admin note", "as an admin I want a note");
+      saved.addNote(note);
+      note.setAuthor(saved);
+      userRepo.saveAndFlush(saved);
     }
   }
 }

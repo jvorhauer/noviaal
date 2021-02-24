@@ -77,7 +77,11 @@ public class NoteServiceTests {
     var note = onote.get();
     assertThat(note.getComments()).isEmpty();
 
-    noteService.addCommentToNote(note, user, new Comment("geen commentaar", 3));
+    var osaved = noteService.addCommentToNote(note, user, new Comment("geen commentaar", 3));
+    assertThat(osaved).isPresent();
+    assertThat(osaved.get().getComment()).isEqualTo("geen commentaar");
+    assertThat(osaved.get().getStars()).isEqualTo(3);
     assertThat(note.getComments()).hasSize(1);
+    assertThat(note.getComments().iterator().next().getStars()).isEqualTo(3);
   }
 }
