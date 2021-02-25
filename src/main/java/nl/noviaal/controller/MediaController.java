@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import nl.noviaal.domain.Media;
 import nl.noviaal.exception.MediaInvalidException;
 import nl.noviaal.exception.MediaNotFoundException;
-import nl.noviaal.model.response.MediaResponse;
+import nl.noviaal.model.response.ItemResponse;
 import nl.noviaal.model.response.MediaUploadResponse;
 import nl.noviaal.service.MediaService;
 import nl.noviaal.service.UserService;
@@ -74,10 +74,10 @@ public class MediaController extends AbstractController {
   }
 
   @GetMapping("/{userId}/list")
-  public List<MediaResponse> listByUser(@PathVariable("userId") UUID userId) {
+  public List<ItemResponse> listByUser(@PathVariable("userId") UUID userId) {
     return findUserById(userId)
              .getMedia().stream()
-             .map(MediaResponse::ofMedia)
+             .map(ItemResponse::ofItem)
              .collect(Collectors.toList());
   }
 }

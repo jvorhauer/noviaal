@@ -10,7 +10,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "note")
-public class Note extends BaseItem {
+public class Note extends Item {
 
   @Column(nullable = false, length = 255)
   private String title;

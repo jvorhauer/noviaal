@@ -21,7 +21,7 @@ public class Tag {
   private String name;
 
   @ManyToMany
-  private Set<BaseItem> items = new HashSet<>();
+  private Set<Item> items = new HashSet<>();
 
   @PrePersist
   public void prePersist() {
@@ -41,8 +41,8 @@ public class Tag {
     return name;
   }
 
-  public Set<BaseItem> getItems() { return items; }
-  public void addItem(BaseItem item) {
+  public Set<Item> getItems() { return items; }
+  public void addItem(Item item) {
     items.add(item);
     item.addTag(this);
   }

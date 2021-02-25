@@ -7,11 +7,14 @@ import nl.noviaal.service.UserService;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 
+import javax.validation.Validation;
+import javax.validation.Validator;
 import java.util.UUID;
 
 public abstract class AbstractController {
 
   protected final UserService userService;
+  private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
   public AbstractController(UserService userService) {
     this.userService = userService;
@@ -44,5 +47,9 @@ public abstract class AbstractController {
     if (!admin.getRoles().contains("ADMIN")) {
       throw new AccessDeniedException("User " + admin.getName() + " is not an admin!");
     }
+  }
+
+  protected <T> boolean validate(T t) {
+    return validator.validate(t).isEmpty();
   }
 }

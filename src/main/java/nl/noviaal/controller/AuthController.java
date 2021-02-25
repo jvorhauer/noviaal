@@ -31,7 +31,6 @@ public class AuthController {
   private final Validator validator;
   private final PasswordEncoder passwordEncoder;
 
-
   @Autowired
   public AuthController(AuthService authService, Validator validator, PasswordEncoder pe) {
     this.authService = authService;
@@ -39,17 +38,15 @@ public class AuthController {
     this.passwordEncoder = pe;
   }
 
-
   @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<JwtResponse> login(@RequestBody LoginUser loginRequest) {
-    if (validator.validate(loginRequest).size() > 0) {
+    if (!validator.validate(loginRequest).isEmpty()) {
       log.error("login: {}", loginRequest);
       throw new InvalidCommand("LoginUser");
     }
     var res = authService.login(loginRequest.getUsername(), loginRequest.getPassword());
     return ResponseEntity.ok(res);
   }
-
 
   @PostMapping(value = "/register")
   public ResponseEntity<URI> register(@RequestBody CreateUser createUser) {

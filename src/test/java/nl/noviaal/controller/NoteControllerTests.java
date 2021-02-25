@@ -58,7 +58,7 @@ public class NoteControllerTests {
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.size()").value(0));
 
-    mockMvc.perform(get("/api/users/notes"))
+    mockMvc.perform(get("/api/users/items"))
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.size()").value(0));
 
@@ -70,14 +70,14 @@ public class NoteControllerTests {
       .andReturn();
 
     String id = JsonPath.read(res.getResponse().getContentAsString(), "$.id");
-
+    System.out.println("id: " + id);
     mockMvc.perform(post("/api/notes/" + id + "/comments")
                       .contentType(MediaType.APPLICATION_JSON)
                       .content("{\"comment\":\"geen commentaar\",\"stars\":3}"))
       .andExpect(status().is2xxSuccessful())
       .andExpect(jsonPath("$.comment").value("geen commentaar"));
 
-    mockMvc.perform(get("/api/users/notes"))
+    mockMvc.perform(get("/api/users/items"))
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.size()").value(1));
 

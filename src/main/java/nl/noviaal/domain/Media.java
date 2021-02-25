@@ -8,7 +8,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "media")
-public class Media extends BaseItem {
+public class Media extends Item {
 
   private String name;
 

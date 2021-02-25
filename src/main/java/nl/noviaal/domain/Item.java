@@ -7,16 +7,13 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.ForeignKey;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Version;
@@ -34,7 +31,7 @@ import java.util.UUID;
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class BaseItem {
+public abstract class Item {
 
   @Id
   UUID id;
@@ -95,8 +92,8 @@ public abstract class BaseItem {
   @Override
   public boolean equals(Object o) {
     if (this == o) { return true; }
-    if (!(o instanceof BaseItem)) { return false; }
-    return Objects.equals(getId(), ((BaseItem) o).getId());
+    if (!(o instanceof Item)) { return false; }
+    return Objects.equals(getId(), ((Item) o).getId());
   }
 
   @Override

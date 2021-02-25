@@ -52,7 +52,7 @@ public class User {
 
   @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
   @JsonManagedReference
-  private Set<BaseItem> items = new HashSet<>();
+  private Set<Item> items = new HashSet<>();
 
   @OneToMany(mappedBy = "followed", cascade = CascadeType.ALL, orphanRemoval = true, targetEntity = Follow.class)
   @JsonManagedReference
@@ -101,14 +101,14 @@ public class User {
   public void setRoles(String roles) { this.roles = roles; }
   public String getRoles() { return roles; }
 
-  public void setItems(Set<BaseItem> items) { this.items = items; }
-  public Set<BaseItem> getItems() { return items; }
-  public BaseItem addItem(BaseItem item) {
+  public void setItems(Set<Item> items) { this.items = items; }
+  public Set<Item> getItems() { return items; }
+  public Item addItem(Item item) {
     items.add(item);
     item.setAuthor(this);
     return item;
   }
-  public void deleteItem(BaseItem item) {
+  public void deleteItem(Item item) {
     items.remove(item);
     item.setAuthor(null);
   }

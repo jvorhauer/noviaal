@@ -2,7 +2,7 @@ package nl.noviaal.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import nl.noviaal.domain.Follow;
-import nl.noviaal.model.response.NoteResponse;
+import nl.noviaal.model.response.ItemResponse;
 import nl.noviaal.model.response.UserDeletedResponse;
 import nl.noviaal.model.response.UserFollowedResponse;
 import nl.noviaal.model.response.UserResponse;
@@ -69,13 +69,13 @@ public class UserController extends AbstractController {
     return UserDeletedResponse.ofUser(user);
   }
 
-  @GetMapping("/notes")
-  public List<NoteResponse> notes(Authentication authentication) {
+  @GetMapping("/items")
+  public List<ItemResponse> notes(Authentication authentication) {
     log.info("notes");
     return findCurrentUser(authentication)
-             .getNotes()
+             .getItems()
              .stream()
-             .map(NoteResponse::fromNote)
+             .map(ItemResponse::ofItem)
              .collect(Collectors.toList());
   }
 
