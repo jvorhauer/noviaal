@@ -67,6 +67,10 @@ public class NoteControllerTests {
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.size()").value(0));
 
+    mockMvc.perform(get("/api/users/notes"))
+      .andExpect(status().isOk())
+      .andExpect(jsonPath("$.size()").value(0));
+
     MvcResult res = mockMvc.perform(post("/api/notes")
                       .contentType(MediaType.APPLICATION_JSON)
                       .content("{\"title\":\"test title\",\"body\":\"test body\"}"))
@@ -81,5 +85,9 @@ public class NoteControllerTests {
                       .content("{\"comment\":\"geen commentaar\",\"stars\":3}"))
       .andExpect(status().is2xxSuccessful())
       .andExpect(jsonPath("$.comment").value("geen commentaar"));
+
+    mockMvc.perform(get("/api/users/notes"))
+      .andExpect(status().isOk())
+      .andExpect(jsonPath("$.size()").value(1));
   }
 }

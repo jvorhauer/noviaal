@@ -28,7 +28,7 @@ public class Comment {
   @NotNull
   @Column(nullable = false)
   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "CET")
-  private Instant created;
+  private Instant created = ZonedDateTime.now(ZoneId.of("UTC")).toInstant();
 
   @NotBlank
   @Column(nullable = false)
@@ -64,7 +64,7 @@ public class Comment {
 
   public UUID getId() { return id; }
 
-  public Instant getCreated() { return created; }
+  public ZonedDateTime getCreated() { return created.atZone(ZoneId.of("CET")); }
   public void setCreated(Instant created) { this.created = created; }
 
   public String getComment() { return comment; }

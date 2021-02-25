@@ -8,9 +8,9 @@ public class CommentResponse {
 
   private final static DateTimeFormatter DTF = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-  private String comment;
-  private String created;
-  private String author;
+  private final String comment;
+  private final String created;
+  private final String author;
 
   public CommentResponse(String comment, String created, String author) {
     this.comment = comment;
@@ -31,6 +31,6 @@ public class CommentResponse {
   }
 
   public static CommentResponse ofComment(Comment comment) {
-    return new CommentResponse(comment.getComment(), DTF.format(comment.getCreated()), comment.getAuthor().getName());
+    return new CommentResponse(comment.getComment(), comment.getCreated().format(DTF), comment.getAuthor().getName());
   }
 }
