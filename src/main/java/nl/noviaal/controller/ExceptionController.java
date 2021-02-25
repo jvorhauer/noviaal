@@ -4,6 +4,7 @@ import nl.noviaal.exception.EmailAddressInUseException;
 import nl.noviaal.exception.InvalidCommand;
 import nl.noviaal.exception.MediaInvalidException;
 import nl.noviaal.exception.NoteNotFoundException;
+import nl.noviaal.exception.TagNotFoundException;
 import nl.noviaal.exception.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -49,6 +50,11 @@ public class ExceptionController {
   @ExceptionHandler(value = MediaInvalidException.class)
   public ResponseEntity<?> exception(MediaInvalidException e) {
     return exception(HttpStatus.BAD_REQUEST, e);
+  }
+
+  @ExceptionHandler(value = TagNotFoundException.class)
+  public ResponseEntity<?> exception(TagNotFoundException e) {
+    return ResponseEntity.notFound().build();
   }
 
   private ResponseEntity<?> exception(HttpStatus status, RuntimeException e) {

@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import nl.noviaal.domain.User;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;

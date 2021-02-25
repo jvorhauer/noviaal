@@ -1,6 +1,5 @@
 package nl.noviaal.controller;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -8,9 +7,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.jayway.jsonpath.JsonPath;
 import lombok.RequiredArgsConstructor;
-import nl.noviaal.domain.User;
-import nl.noviaal.repository.NoteRepository;
-import nl.noviaal.service.UserService;
 import nl.noviaal.support.Setup;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,9 +19,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-import java.util.UUID;
-
 @SpringBootTest
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @AutoConfigureMockMvc
@@ -33,8 +26,6 @@ public class NoteControllerTests {
 
   private final Setup setup;
   private final MockMvc mockMvc;
-  private final UserService userService;
-  private final NoteRepository noteRepository;
 
   @BeforeEach
   void before() {
@@ -87,6 +78,10 @@ public class NoteControllerTests {
       .andExpect(jsonPath("$.comment").value("geen commentaar"));
 
     mockMvc.perform(get("/api/users/notes"))
+      .andExpect(status().isOk())
+      .andExpect(jsonPath("$.size()").value(1));
+
+    mockMvc.perform(get("/api/notes/" + id + "/comments"))
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.size()").value(1));
   }

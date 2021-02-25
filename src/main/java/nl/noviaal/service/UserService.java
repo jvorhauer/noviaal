@@ -67,7 +67,7 @@ public class UserService {
 
   @Transactional
   public void addNote(User user, Note note) {
-    user.addNote(note);
+    user.addItem(note);
     userRepository.save(user);
   }
 

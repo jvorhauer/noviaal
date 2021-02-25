@@ -5,8 +5,12 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
 import javax.persistence.JoinTable;
@@ -27,8 +31,10 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
-@MappedSuperclass
-public class BaseItem {
+
+@Entity
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+public abstract class BaseItem {
 
   @Id
   UUID id;
@@ -53,7 +59,7 @@ public class BaseItem {
   @JoinTable(
     name = "item_tag",
     joinColumns = @JoinColumn(name = "item_id"),
-    inverseJoinColumns = @JoinColumn(name = "tag_id")
+    inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id")
   )
   private Set<Tag> tags = new HashSet<>();
 

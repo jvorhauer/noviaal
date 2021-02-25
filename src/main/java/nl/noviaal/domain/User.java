@@ -8,6 +8,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
@@ -19,9 +20,10 @@ import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Entity
-@Table(name = "users")      // sorry Nick, user is een reserved word in PostgreSQL.
+@Table(name = "users", indexes = @Index(name = "idx_email", unique = true, columnList = "email"))
 @ToString
 public class User {
 
@@ -50,10 +52,7 @@ public class User {
 
   @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
   @JsonManagedReference
-  private Set<Note> notes = new HashSet<>();
-
-  @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
-  private Set<Media> media = new HashSet<>();
+  private Set<BaseItem> items = new HashSet<>();
 
   @OneToMany(mappedBy = "followed", cascade = CascadeType.ALL, orphanRemoval = true, targetEntity = Follow.class)
   @JsonManagedReference
@@ -102,33 +101,44 @@ public class User {
   public void setRoles(String roles) { this.roles = roles; }
   public String getRoles() { return roles; }
 
-  public void setNotes(Set<Note> notes) { this.notes = notes; }
-  public Set<Note> getNotes() { return notes; }
+  public void setItems(Set<BaseItem> items) { this.items = items; }
+  public Set<BaseItem> getItems() { return items; }
+  public BaseItem addItem(BaseItem item) {
+    items.add(item);
+    item.setAuthor(this);
+    return item;
+  }
+  public void deleteItem(BaseItem item) {
+    items.remove(item);
+    item.setAuthor(null);
+  }
+
+  public Set<Note> getNotes() {
+    return items.stream()
+             .filter(item -> item instanceof Note)
+             .map(item -> (Note) item)
+             .collect(Collectors.toSet());
+  }
   public void addNote(Note note) {
-    this.notes.add(note);
-    note.setAuthor(this);
+    addItem(note);
   }
   public void deleteNote(Note note) {
-    this.notes.remove(note);
-    note.setAuthor(null);
+    deleteItem(note);
   }
 
   public Set<Media> getMedia() {
-    return media;
+    return items.stream()
+             .filter(item -> item instanceof Media)
+             .map(item -> (Media) item)
+             .collect(Collectors.toSet());
   }
   public void addMedia(Media media) {
-    this.media.add(media);
-    media.setAuthor(this);
-  }
-  public void removeMedia(Media media) {
-    this.media.remove(media);
-    media.setAuthor(null);
+    addItem(media);
   }
 
   public Set<Follow> getFollowers() { return this.followers; }
   public void addFollower(Follow follower) {
     this.followers.add(follower);
   }
-
   public Set<Follow> getFollowed() { return this.followed; }
 }

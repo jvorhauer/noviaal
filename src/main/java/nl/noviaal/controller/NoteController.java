@@ -8,7 +8,7 @@ import nl.noviaal.domain.User;
 import nl.noviaal.exception.InvalidCommand;
 import nl.noviaal.model.command.CreateComment;
 import nl.noviaal.model.command.CreateNote;
-import nl.noviaal.model.response.CommentCreatedResponse;
+import nl.noviaal.model.response.CommentResponse;
 import nl.noviaal.model.response.NoteResponse;
 import nl.noviaal.service.NoteService;
 import nl.noviaal.service.UserService;
@@ -60,7 +60,7 @@ public class NoteController extends AbstractController {
   }
 
 
-  @GetMapping(value = {"/", ""})
+  @GetMapping(value = {"", "/"})
   public List<NoteResponse> findAllForCurrentUser(Authentication authentication) {
     return convertNotesToResponse(findCurrentUser(authentication).getNotes());
   }
@@ -80,7 +80,7 @@ public class NoteController extends AbstractController {
   }
 
   @PostMapping("/{id}/comments")
-  public ResponseEntity<CommentCreatedResponse> addCommentToNote(
+  public ResponseEntity<CommentResponse> addCommentToNote(
     @RequestBody CreateComment createComment,
     @PathVariable("id") UUID id, Authentication authentication
   ) {
@@ -93,7 +93,15 @@ public class NoteController extends AbstractController {
     Note note = noteService.find(id);
     Comment comment = new Comment(createComment.getComment(), createComment.getStars() == null ? 0 : createComment.getStars());
     return noteService.addCommentToNote(note, user, comment)
-             .map(c -> ResponseEntity.status(HttpStatus.CREATED).body(CommentCreatedResponse.ofComment(c)))
+             .map(c -> ResponseEntity.status(HttpStatus.CREATED).body(CommentResponse.ofComment(c)))
              .orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
+  }
+
+  @GetMapping("/{id}/comments")
+  public List<CommentResponse> getComments(@PathVariable("id") UUID id) {
+    return noteService.find(id)
+             .getComments().stream()
+             .map(CommentResponse::ofComment)
+             .collect(Collectors.toList());
   }
 }
