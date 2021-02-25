@@ -3,6 +3,7 @@ package nl.noviaal.service;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import nl.noviaal.domain.Item;
 import nl.noviaal.exception.EmailAddressInUseException;
 import nl.noviaal.domain.Follow;
 import nl.noviaal.domain.Note;
@@ -18,9 +19,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.Valid;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -81,5 +84,14 @@ public class UserService {
     User savedUser = userRepository.save(user);
     log.info("follow: user {} now has {} follower(s)", savedUser.getName(), savedUser.getFollowers().size());
     return savedFollow;
+  }
+
+
+  public List<Item> timeline(User user) {
+    List<User> following = user.getFollowed().stream().map(Follow::getFollowed).collect(Collectors.toList());
+    return following.stream()
+             .flatMap(u -> u.getItems().stream())
+             .sorted(Comparator.comparing(Item::getCreated).reversed())
+             .collect(Collectors.toList());
   }
 }

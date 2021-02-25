@@ -2,6 +2,7 @@ package nl.noviaal.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import nl.noviaal.domain.Follow;
+import nl.noviaal.domain.User;
 import nl.noviaal.model.response.ItemResponse;
 import nl.noviaal.model.response.UserDeletedResponse;
 import nl.noviaal.model.response.UserFollowedResponse;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -98,7 +100,6 @@ public class UserController extends AbstractController {
              .collect(Collectors.toList());
   }
 
-
   @PutMapping("/{id}/promote")
   @Secured("ADMIN")
   public ResponseEntity<?> promote(@PathVariable("id") UUID id, Authentication authentication) {
@@ -109,4 +110,13 @@ public class UserController extends AbstractController {
     return ResponseEntity.status(HttpStatus.ACCEPTED).build();
   }
 
+  @GetMapping("/{id}/timeline")
+  public List<ItemResponse> timeline(@PathVariable("id") UUID id) {
+    Optional<User> ouser = userService.findById(id);
+    return ouser.map(user ->
+                       userService.timeline(user).stream()
+                         .map(ItemResponse::ofItem)
+                         .collect(Collectors.toList()))
+             .orElseGet(List::of);
+  }
 }
