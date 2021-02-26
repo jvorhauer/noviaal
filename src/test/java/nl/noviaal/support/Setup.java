@@ -18,7 +18,6 @@ public class Setup {
   @Transactional
   public void initDataStore() {
     if (userRepo.findAll().isEmpty()) {
-      userRepo.save(new User("Tester", "test@tester.com", "password"));
       userRepo.save(new User("Tester", "tester@test.com", "passwrd"));
       userRepo.save(new User("Another", "an@other.com", "password"));
 

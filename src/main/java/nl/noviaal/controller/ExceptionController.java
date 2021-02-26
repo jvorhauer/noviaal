@@ -3,6 +3,7 @@ package nl.noviaal.controller;
 import nl.noviaal.exception.EmailAddressInUseException;
 import nl.noviaal.exception.InvalidCommand;
 import nl.noviaal.exception.MediaInvalidException;
+import nl.noviaal.exception.MediaNotFoundException;
 import nl.noviaal.exception.NoteNotFoundException;
 import nl.noviaal.exception.TagNotFoundException;
 import nl.noviaal.exception.UserNotFoundException;
@@ -50,6 +51,11 @@ public class ExceptionController {
   @ExceptionHandler(value = MediaInvalidException.class)
   public ResponseEntity<?> exception(MediaInvalidException e) {
     return exception(HttpStatus.BAD_REQUEST, e);
+  }
+
+  @ExceptionHandler(value = MediaNotFoundException.class)
+  public ResponseEntity<?> exception(MediaNotFoundException e) {
+    return exception(HttpStatus.NOT_FOUND, e);
   }
 
   @ExceptionHandler(value = TagNotFoundException.class)

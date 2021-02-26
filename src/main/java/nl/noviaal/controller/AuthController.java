@@ -6,6 +6,7 @@ import nl.noviaal.domain.User;
 import nl.noviaal.model.auth.JwtResponse;
 import nl.noviaal.model.command.CreateUser;
 import nl.noviaal.model.command.LoginUser;
+import nl.noviaal.model.response.UserResponse;
 import nl.noviaal.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -44,12 +45,12 @@ public class AuthController {
       log.error("login: {}", loginRequest);
       throw new InvalidCommand("LoginUser");
     }
-    var res = authService.login(loginRequest.getUsername(), loginRequest.getPassword());
+    JwtResponse res = authService.login(loginRequest.getUsername(), loginRequest.getPassword());
     return ResponseEntity.ok(res);
   }
 
   @PostMapping(value = "/register")
-  public ResponseEntity<URI> register(@RequestBody CreateUser createUser) {
+  public ResponseEntity<UserResponse> register(@RequestBody CreateUser createUser) {
     var errors = validator.validate(createUser);
     if (errors.size() > 0) {
       log.error("register: invalid: {}", createUser);
@@ -58,16 +59,13 @@ public class AuthController {
       );
     }
 
-    var user = new User(createUser.getName(), createUser.getEmail(), createUser.getPassword());
+    User user = new User(createUser.getName(), createUser.getEmail(), createUser.getPassword());
     user.setPassword(passwordEncoder.encode(createUser.getPassword()));
-    var created = authService.register(user);
-    log.info("register: created: {}", created);
-    log.info("register: uris: {}", ServletUriComponentsBuilder.fromCurrentContextPath().toUriString());
-    URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+    User created = authService.register(user);
+    URI location = ServletUriComponentsBuilder.fromPath("/api/auth/login")
                      .path("/{id}")
                      .buildAndExpand(created.getId())
                      .toUri();
-    log.info("register: location: {}", location.toString());
-    return ResponseEntity.created(location).body(location);
+    return ResponseEntity.created(location).body(UserResponse.ofUser(created));
   }
 }

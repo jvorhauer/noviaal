@@ -1,0 +1,193 @@
+= Noviaal - NOVI Backend 2020
+Jurjen Vorhauer <j.vorhauer@novi-education.nl>
+:toc: macro
+:source-highlighter: pygments
+
+|======
+| Instelling    | NOVI HBO Software Development
+| Leerlijn      | BackEnd
+| Document      | Functioneel en Technisch Ontwerp voor de Eindopdracht
+| Docent        | Nick Stuivenberg
+| Datum         | 20 november 2020
+| Auteur        | Jurjen Vorhauer
+| Email         | J.Vorhauer@novi-education.nl
+| Studentnummer | 800009793
+| GitHub        | https://github.com/jvorhauer/noviaal
+| *Noviaal*     | Een Twitterig platform, de naam is een samentrekking van NOVI en Sociaal
+|======
+
+<<<
+
+toc::[]
+
+<<<
+
+:numbered:
+== Inleiding
+
+Een _platform_ om:
+
+* notities en media op te slaan,
+* om die notities en media te kunnen ophalen, lezen en taggen.
+* om andere gebruikers te volgen
+* om direct geïnformeerd te worden over nieuwe notities en media van die gevolgde gebruikers.
+
+De doelgroep is *iedereen* op het internet.
+
+Gebruikte techniek:
+
+* Java 11
+* Spring Boot 2.4.2
+* PostgreSQL
+* Docker
+
+Voor het ontwikkelen is gebruik gemaakt van
+
+* IntelliJ IDEA 2020.3.2 (Ultimate Edition)
+* Maven 3.6.3
+* Postman 7.36.5 en 8.0.6
+
+
+== Installatie
+
+Het installeren van Noviaal kan met de volgende stappen gerealiseerd worden:
+
+__ *NB*: Voor alle installatie stappen is een werkende breedband internet verbinding nodig__
+
+. Installeer *Docker*
+    .. Windows: https://docs.docker.com/docker-for-windows/install/[Instructies]
+    .. Mac: https://docs.docker.com/docker-for-mac/install/[Instructies]
+. Start Docker
+    .. Windows: https://docs.docker.com/docker-for-windows/[Gebruiksaanwijzing]
+    .. Mac: https://docs.docker.com/docker-for-mac/[Gebruiksaanwijzing]
+. Lees de "Getting Started" van Docker: https://docs.docker.com/get-started/[Docker Getting Started]
+. Installeer de Java Development Kit (JDK), versie *11*
+    .. Selecteer de juiste (Windows/Mac/Linux) versie van OpenJDK 11: https://adoptopenjdk.net/installation.html[AdoptOpenJDK]
+    .. Voer de stappen uit, zoals beschreven
+    .. Test of de installatie geslaagd is door in een Terminal of Command Process/Powershell `java -version` uit te voeren.
+. Installeer Maven om het project zo te gaan bouwen:
+    .. https://maven.apache.org/install.html[Installing Apache Maven]
+    .. en check of `mvn` werkt: https://maven.apache.org/run.html[Running Apache Maven]
+. Installeer `git`, de versie beheer client die gebruikt wordt:
+    .. Windows: https://git-scm.com/download/win[Downloading Git]
+    .. Mac: zie https://git-scm.com/book/en/v2/Getting-Started-Installing-Git[Getting Started] en dan kopje "Installing on macOS"
+. Met de geinstalleerde `git` client is het nu mogelijk om het project uit te checken:
+`git clone https://github.com/jvorhauer/noviaal.git`, maar alleen als de ingelogde gebruiker ook toegang heeft tot dit project.
+Om toegang te krijgen volstaat een email aan mailto:j.vorhauer@novi-education.nl[Jurjen Vorhauer], de auteur en eigenaar van dit project.
+    .. __alternatief__ : download het ZIP bestand dat ingeleverd werd via Teams. Pak dit ZIP bestand uit.
+
+. Na het succesvol clonen (of uitpakken van het ZIP bestand) van het project kan het gebouwd worden:
+    .. ga naar de directory/folder met het project: `cd noviaal` vanuit de directory/folder van waaruit het `git clone` commando is uitgevoerd.
+    .. voer `mvn verify` uit, zodat zeker is dat JDK en Maven installaties correct zijn uitgevoerd. *NB*: de eerste keer bouwen met Maven neemt veel tijd, aangezien alle gebruikte bibliotheken (afhankelijkheden benodigd voor de bouw) van Internet opgehaald worden.
+    .. voer nu `mvn package` uit, er zal nu een Java ARchive (JAR) bestand in de `target` directory/folder staan: `noviaal-1.0.0.jar`. Dit is de Noviaal applicatie.
+
+. Laatste stap: voer `docker-compose up --build` uit. Zodra het PostgreSQL Docker image gedownload is, de Docker image van de Noviaal applicatie gebouwd is de en twee containers op basis van die images draaien, is Noviaal klaar voor gebruik.
+
+== Gebruik
+
+Voor het benaderen van de endpoints van de Noviaal applicatie is het uitgangspunt dat de bovenstaande installatie stappen compleet en succesvol zijn uitgevoerd.
+
+De endpoints kunnen met een aantal tools of clients worden benaderd:
+
+. `Postman` is een veelgebruikte REST client
+. `IntelliJ IDEA, Ultimate Edition` heeft een meegeleverde en ingebouwde REST client.
+
+Voor IntelliJ zijn een aantal request bestanden meegeleverd in de directory/folder `src/test/requests`. De requests in deze bestanden zijn eenvoudig uit te voeren door op het groene driehoekje voor een specifiek request te klikken en te kiezen voor `Run https://localhost:8080`. De `request` bestanden eindigen in (hebben extensie) `.http`.
+
+Voor Postman is een collectie bewaard, in `src/test/requests/Noviaal.postman_collection.json`.
+
+Op basis van deze voorbeelden kunnen de endpoints aangestuurd worden en kunnen eenvoudig meer requests gedefinieerd en uitgevoerd worden.
+
+Zowel de IntelliJ als de Postman requests slaan het token van de laatste inlog actie op in een variabele. Dit token verloopt echter na 24 uur, dus het is noodzakelijk om minstens één keer per dag opnieuw in te loggen.
+
+== Endpoints
+
+=== Authenticatie
+
+[cols="1,1,4a"]
+|======
+| endpoint | http method | uitkomst
+
+| /api/auth/register | POST | * een <<CreateUser>> naar dit endpoint geeft een <<UserResponse>> van de nieuwe gebruiker.
+* Als de <<CreateUser>> JSON niet correct is, wordt een http 400 status teruggegeven.
+* Als het opgegeven email adres al in gebruik is door een andere gebruiker wordt een http 400 status teruggegeven.
+| /api/auth/login    | POST | * een <<LoginUser>> met email adres en password geeft een <<JwtResponse>> met daarin het token om beschermde endpoints te kunnen gebruiken (authenticatie)
+* Als de LoginUser JSON niet correct is, wordt een http 400 status teruggegeven
+* Als het email adres en/of password niet bekend zijn, wordt een http 401 status teruggegeven
+|======
+
+=== CreateUser
+
+[source, json]
+----
+{
+  "name": "Bilbo",
+  "email": "bilbo.baggins@hobbiton.shire",
+  "password": "password"
+}
+----
+
+=== LoginUser
+
+[source, json]
+----
+{
+  "username": "pippin@tuckborough.shire",
+  "password": "password"
+}
+----
+
+=== JwtResponse
+
+[source, json]
+----
+{
+    "token": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJwaXBwaW5AdHVja2Jvcm91Z2guc2hpcmUiLCJpYXQiOjE2MTQzMzc4ODMsImV4cCI6MTYxNDQyNDI4M30.i2Kms1FHePDS7B2zprNzFIcEHDoTeDqtlCyeNEs1z-g-emvKFb1adqvUnyHtH9KENU9mizj1lO-aAhIvr22WKQ",
+    "id": "030e5dac-2311-4179-a6d4-aa7f60838205",
+    "username": "Pippin",
+    "email": "pippin@tuckborough.shire",
+    "roles": [
+        "USER"
+    ],
+    "type": "Bearer"
+}
+----
+
+=== UserResponse
+
+[source, json]
+----
+{
+  "id": "030e5dac-2311-4179-a6d4-aa7f60838205",
+  "name": "Pippin",
+  "email": "pippin@tuckborough.shire",
+  "joined": "2021-02-26 12:10:44"
+}
+----
+
+=== Users
+
+Deze endpoints zijn alleen toegankelijk als je ingelogd bent.
+
+[cols="1,1,4a"]
+|======
+| endpoint | http method | uitkomst
+
+| /api/users/ | GET | Lijst van alle gebruikers in Noviaal in List<<<UserResponse>>> JSON, gepagineerd met als defaults de eerste pagina van 20 gebruikers.
+| /api/users/me | GET | Details van de ingelogde gebruiker in <<UserResponse>> JSON
+|======
+
+
+=== Notes
+
+Deze endpoints zijn alleen toegankelijk als je ingelogd bent.
+
+*NB*: Comments kunnen op zichzelf niet bestaan en worden daarom afgehandeld in de NoteController en de MediaController.
+
+=== Media
+
+Deze endpoints zijn alleen toegankelijk als je ingelogd bent.
+
+=== Tags
+
+Deze endpoints zijn alleen toegankelijk als je ingelogd bent.

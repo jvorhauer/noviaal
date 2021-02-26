@@ -42,7 +42,6 @@ public class AuthControllerIntegrationTests {
     mockMvc.perform(post("/api/auth/register")
                       .contentType(MediaType.APPLICATION_JSON)
                       .content("{\"name\":\"Frodo\",\"email\":\"frodo@hobbiton.shire\",\"password\":\"password\"}"))
-      .andDo(MockMvcResultHandlers.print())
       .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
       .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
 

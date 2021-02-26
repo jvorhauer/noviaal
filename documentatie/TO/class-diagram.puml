@@ -9,65 +9,38 @@ class User {
   - String   email
   - String   password
   - String   name
-  - Boolean  enabled
-  - Date     born
-  - Role     role
-  - DateTime since
+  - Role     roles
+  - DateTime joined
 }
 
 enum Role {
   USER
   ADMIN
-  REPORTER
 }
 
 User -- Role
 
-abstract class BaseItem {
+abstract class Item {
   - UUID id
   - DateTime created
-  - DateTime updated
 }
 
 together {
-  class Note extends BaseItem {
+  class Note extends Item {
     - String title
     - String body
   }
 
-  class Media extends BaseItem {
+  class Media extends Item {
     - Binary foto
     - String name
     - String contentType
-    - Long size
-  }
-
-  class Bookmark extends BaseItem {
-    - String title
-    - URL url
-    - String remark
   }
 }
-
-class Reminder {
-  - DateTime when
-  - DateTime created
-  - String reason
-}
-BaseItem -- Reminder
-Reminder -- User
-
-class Like {
-  - DateTime created
-  - String reason
-}
-BaseItem -- Like
-Like -- User
 
 class Follow {
+  - UUID id
   - DateTime since
-  - DateTime created
-  - String   reason
 }
 User -- Follow
 Follow -- User
@@ -75,14 +48,14 @@ Follow -- User
 class Tag {
   - String name
 }
-BaseItem -- Tag
+Item -- Tag
 
 class Comment {
   - DateTime created
   - String comment
   - Integer stars
 }
-BaseItem -- Comment
+Item -- Comment
 User -- Comment
 
 @enduml

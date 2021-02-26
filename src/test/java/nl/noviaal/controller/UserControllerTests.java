@@ -33,17 +33,17 @@ public class UserControllerTests {
   }
 
   @Test
-  @WithUserDetails("test@tester.com")
+  @WithUserDetails("tester@test.com")
   void givenLoggedInUser_getAllUsers_shouldSucceed() throws Exception {
     mockMvc.perform(get("/api/users").accept(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
-      .andExpect(jsonPath("$.size()").value(4));
+      .andExpect(jsonPath("$.size()").value(3));
   }
 
   @Test
-  @WithUserDetails("test@tester.com")
+  @WithUserDetails("tester@test.com")
   void givenLoggedInUser_getThisUserById_shouldSucceed() throws Exception {
-    var ouser = userRepo.findByEmail("test@tester.com");
+    var ouser = userRepo.findByEmail("tester@test.com");
     assertThat(ouser).isPresent();
     var user = ouser.get();
     mockMvc.perform(get("/api/users/" + user.getId()).accept(MediaType.APPLICATION_JSON))
@@ -52,7 +52,7 @@ public class UserControllerTests {
   }
 
   @Test
-  @WithUserDetails("test@tester.com")
+  @WithUserDetails("tester@test.com")
   void givenLoggedInUser_getOtherUserById_shouldSucceed() throws Exception {
     var ouser = userRepo.findByEmail("an@other.com");
     assertThat(ouser).isPresent();
@@ -63,7 +63,7 @@ public class UserControllerTests {
   }
 
   @Test
-  @WithUserDetails("test@tester.com")
+  @WithUserDetails("tester@test.com")
   void givenLoggedInNormalUser_promoteOtherUser_shouldFail() throws Exception {
     var ouser = userRepo.findByEmail("an@other.com");
     assertThat(ouser).isPresent();

@@ -39,7 +39,7 @@ public class UserRepositoryTests {
   }
 
   @Test
-  void saveUserShouldResultInNonNullID() {
+  void saveUser_shouldResultInNonNullID() {
     var user = new User("Frodo", "frodo@hobbiton.shire", "password");
     var frodo = userRepository.saveAndFlush(user);
     assertThat(frodo.getId()).isNotNull();
@@ -48,18 +48,17 @@ public class UserRepositoryTests {
   }
 
   @Test
-  void saveUserShouldHaveOneUserInFindAll() {
+  void saveUser_shouldHaveExcpetedUserInFindAll() {
     var user = new User("Frodo", "frodo@hobbiton.shire", "password");
     var frodo = userRepository.saveAndFlush(user);
     var list = userRepository.findAll();
-    assertThat(list).hasSize(5);
+    assertThat(list).hasSize(4);
   }
 
   @Test
-  void saveSameUserTwiceShouldSucceed() {
+  void saveSameUserTwice_shouldSucceed() {
     var user = new User("Frodo", "frodo@hobbiton.shire", "password");
     var frodo = userRepository.saveAndFlush(user);
-
     var frodo2 = userRepository.saveAndFlush(frodo);
     assertThat(frodo2.getId()).isEqualTo(frodo.getId());
   }
@@ -76,7 +75,7 @@ public class UserRepositoryTests {
   }
 
   @Test
-  void saveUserWithSpecificJoinedDate() {
+  void saveUserWithSpecificJoinedDate_shouldSucceed() {
     var ldt = LocalDateTime.of(2021, 1, 18, 9, 0);
     var user = new User("Frodo", "frodo@hobbiton.shire", "password");
     user.setJoined(ZonedDateTime.of(ldt, ZoneId.of("CET")));
@@ -85,7 +84,7 @@ public class UserRepositoryTests {
   }
 
   @Test
-  void saveUserWithExistingEmailShouldResultInException() {
+  void saveUserWithExistingEmail_shouldResultInException() {
     var user1 = new User("Frodo", "frodo@hobbiton.shire", "password");
     userRepository.saveAndFlush(user1);
     var user2 = new User("User2", "frodo@hobbiton.shire", "password");
@@ -93,19 +92,19 @@ public class UserRepositoryTests {
   }
 
   @Test
-  void saveUserWithoutNameShouldThrowException() {
+  void saveUserWithoutName_shouldThrowException() {
     var user = new User(null, "frodo@hobbiton.shire", "password");
     assertThrows(ConstraintViolationException.class, () -> userRepository.saveAndFlush(user));
   }
 
   @Test
-  void saveUserWithoutEmailShouldThrowException() {
+  void saveUserWithoutEmail_shouldThrowException() {
     var user = new User("Frodo", null, "password");
     assertThrows(ConstraintViolationException.class, () -> userRepository.saveAndFlush(user));
   }
 
   @Test
-  void saveUserWithOneNoteShouldSucceed() {
+  void saveUserWithOneNote_shouldSucceed() {
     var user = new User("Frodo", "frodo@hobbiton.shire", "password");
     var frodo = userRepository.saveAndFlush(user);
     frodo.addNote(new Note("About Hobbits", "Hobbits are actually quite nice!"));
@@ -115,7 +114,7 @@ public class UserRepositoryTests {
   }
 
   @Test
-  void saveUserWithNoteAndThenRemoveItShouldSucceed() {
+  void saveUserWithNoteAndThenRemoveIt_shouldSucceed() {
     var user = new User("Frodo", "frodo@hobbiton.shire", "password");
     var frodo = userRepository.saveAndFlush(user);
     frodo.addNote(new Note("About Hobbits", "Hobbits are actually quite nice!"));
@@ -130,7 +129,7 @@ public class UserRepositoryTests {
     assertThat(notNoted.getNotes()).hasSize(0);
 
     var list = userRepository.findAll();
-    assertThat(list).hasSize(5);
+    assertThat(list).hasSize(4);
 
     var ofound = userRepository.findByEmail("frodo@hobbiton.shire");
     assertThat(ofound).isPresent();

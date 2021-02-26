@@ -29,8 +29,8 @@ public class UserServiceTests {
 
   @Test
   void whenDatabaseInitial_thenFindAll_shouldReturnUserList() {
-    assertThat(userService.findAll().getTotalElements()).isEqualTo(4L);
-    assertThat(userService.findAll().getContent()).hasSize(4);
+    assertThat(userService.findAll().getTotalElements()).isEqualTo(3L);
+    assertThat(userService.findAll().getContent()).hasSize(3);
   }
 
   @Test
@@ -38,8 +38,8 @@ public class UserServiceTests {
     var user = new User("Frodo", "frodo@hobbiton.shire", "password");
     var saved = userService.save(user);
     assertThat(saved.getId()).isNotNull();
-    assertThat(userService.findAll().getTotalElements()).isEqualTo(5);
-    assertThat(userService.findAll().getContent()).hasSize(5);
+    assertThat(userService.findAll().getTotalElements()).isEqualTo(4L);
+    assertThat(userService.findAll().getContent()).hasSize(4);
   }
 
   @Test

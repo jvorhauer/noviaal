@@ -1,0 +1,136 @@
+= Verantwoording Noviaal - NOVI Backend 2020
+Jurjen Vorhauer <j.vorhauer@novi-education.nl>
+:toc: macro
+:toc-title: Inhoudsopgave
+:source-highlighter: pygments
+
+|======
+| Instelling    | NOVI HBO Software Development
+| Leerlijn      | BackEnd
+| Document      | Functioneel en Technisch Ontwerp voor de Eindopdracht
+| Docent        | Nick Stuivenberg
+| Datum         | 20 november 2020
+| Auteur        | Jurjen Vorhauer
+| Email         | J.Vorhauer@novi-education.nl
+| Studentnummer | 800009793
+| GitHub        | https://github.com/jvorhauer/noviaal
+| *Noviaal*     | Een Twitterig platform, de naam is een samentrekking van NOVI en Sociaal
+|======
+
+<<<
+
+toc::[]
+
+<<<
+
+:numbered:
+== Inleiding
+
+In dit document wordt een antwoord gegeven op de vragen
+* Welke technieken, producten en biblotheken zijn er gebruikt?
+* Is aan alle voorwaarden uit de opdracht voldaan?
+
+Conclusie: aan alle voorwaarden gesteld in de opdracht, `Integrale eindopdracht Backend 1.02.pdf` is voldaan. Er zijn alleen ingredienten gebruikt, die werden gevraagd.
+
+== Functioneel Ontwerp
+
+Zie `novi-backend-foto-jurjenvorhauer.pdf` in deze directory.
+
+== Tecnhisch Ontwerp
+
+Zie `novi-backend-foto-jurjenvorhauer.pdf` in deze directory.
+
+== Database
+
+Voor de database is gekozen voor PostgreSQL, een steeds populairdere oplossing voor Relationeel data opslag en beheer van die data.
+
+Door de ingebouwde ondersteuning van Spring Boot voor vele database producten via JDBC drivers, is het niet moeilijk om aan criterium
+"De backend en de database zijn gescheiden en kunnen los van elkaar op verschillende systemen draaien" te voldoen.
+Daarom zijn er in de directory/folder `src/main/resources` drie verschillende `application.properties` meegeleverd:
+
+. default, zonder profiel naam: `application.properties`, waarin de configuratie voor het gebruik met docker-compose
+en daarmee met een Docker-container met PostgreSQL beschiklbaar is
+. `application-local.properties` waarin de configuratie voor een H2 database die als bestand in de project folder wordt opgeslagen
+. `application-postgresql.properties` waarin een lokale, eerder geinstalleerde óf een extern gehoste PostgreSQL instantie
+geconfigureerd kan worden.
+
+Overigens zou in principe iedere Relationele Database Management System (RDBMS) gebruikt kunnen worden, maar er is alleen met
+H2 en PostgreSQL getest.
+
+Deze alternatieve configuratie bestanden kunnen geactiveerd worden door de Noviaal applicatie als volgt te starten:
+
+`./mvnw spring-boot:run -Dspring-boot.run.profiles=local`.
+
+of
+
+`./mvnw spring-boot:run -Dspring-boot.run.profiles=postgresql`.
+
+Vergeet niet om bij deze laatste optie ook de instellingen voor de database aan te passen aan de aanwezige situatie in het bestand `application-postgresql.properties`.
+
+== OOP, Java en Spring (Boot)
+
+Alle source code is standaard Java 11, met gebruik van de laatste versie van Spring Boot.
+
+=== OOP
+
+Op WikiPedia wordt Object-oriented Programming (OOP) omschreven als
+
+´
+[quote, https://en.wikipedia.org/wiki/Object-oriented_programming]
+Is een programmeer paradigma gebaseerd op het concept "Object", die zowel code als data kunnen bevatten: data in de vorm van velden (ook wel attribuut of property genoemd) en code, in de vorm van methoden.
+
+In de packages `domain`, sub-packages van `model`, `service`, `controller` is dit alles duidelijk te zien. Java noemt de definitie waarop Objecten gebaseerd worden Classes.
+
+=== Java
+
+Er zijn geen andere programmeertalen dan Java gebruikt.
+
+Er is wel gebruik gemaakt van markup-talen als YAML (Spring en Docker Compose) en XML (logback), maar dit zijn geen programmeertalen.
+
+=== Spring Boot
+
+Er is van het Spring Boot Framework gebruik gemaakt, en daarvan zijn de volgende modulen gebruikt:
+
+* Web
+* JPA
+* Security
+* Validation
+* Test
+
+== Relationele Database
+
+Noviaal is gebouwd tegen een RDBMS, met name H2 en PostgreSQL. Het domein model dat gebruikt wordt is relationeel: tussen de entiteiten zijn relaties gedefinieerd.
+
+== Git voor versiebeheer
+
+Zie https://github.com/jvorhauer/noviaal en de `.git` directory/folder van het project.
+
+== Maven voor builds
+
+* `pom.xml`
+* Voer bijvoorbeeld `./mvnw verify` uit in de project directory/folder.
+
+== Unit-testen
+
+Zie de directories/folders onder `src/test/java`.
+
+== Beveiliging
+
+Middels de door Nick aangeleverde code voor het implementeren van authenticatie met JSON Web Token (JWT) was het mogelijk om de endpoints te beveiligen met authenticate en authorisaties. Het verwijderen van een bestaande gebruiker en het promoveren van een gewone gebruiker (met alleen USER rol) naar een admin (met ook ADMIN rol) zijn beveiligd, zodat alleen gebruikers met de ADMIN rol deze acties kunnen uitvoeren.
+
+== Wat is er niet gedaan
+
+. Geen performance tests. Het is dus niet zeker wat er gebeurd als er grotere aantallen gebruikers grote hoeveelheden data gaan
+invoeren. Waarbij 'groter' dan nog gedefinieerd moet worden (niet erg meetbaar zo). Meer data heeft impact op het schijfruimtegebruik van de database en op de snelheid waarmee tabellen bevraagd worden.
+. Niet veel @MockBean gebruikt. Tijdens het ontwikkelen merkte ik dat ik een mock database, H2 in-memory, genoeg mock vindt en dat
+tests, met name complexe, met @MockBean er niet overzichtelijker op worden.
+. Het aantal rollen is nogal beperkt: USER en ADMIN, waarbij alle geregistreerde gebruikers altijd USER zijn. Overigens kun je als anonieme gebruiker wel registreren en, na registratie, ook inloggen. Dus er is eigenlijk wel een ANONYMOUS rol, maar die is niet expliciet gemaakt.
+. Het is niet mogelijk om alle mogelijke configuraties van Operating System, Java versies, geinstalleerde programma's, etc. te testen. Het kan dus zijn dat Noviaal niet uit te voeren is met `docker-compose`, zoals in de 'handleiding' beschreven is.
+. De gestelde kwaliteitseis van een test-coverage van 80% is niet gehaald.
+. meer Lombok gebruikt voor reductie van bolierplate code, zoals Setters/Getters, Builders, Constructors en mogelijk meer. Dat had ik graag gedaan, maar ik kreeg tijdens de lessen dat dat wellicht niet zo gewaardeerd zou gaan worden. In de test-sources is Lombok wel wat meer gebruikt alsmede ook het Java keyword `var` om ook daarmee overhead te voorkomen. Mocht dit inderdaad niet gewenst zijn, dan had ik dat graag iets explicieter willen terugvinden in de voorwaarden. Misschien een idee voor een volgend semester? Lombok kan veel extra code voorkomen, waardoor leesbaarheid en onderhoudbaarheid verbeterd worden.
+
+Er zijn een aantal goedbedoelde, maar technisch weinig waarde toevoegende, elementen uit het domein model gehaald:
+
+* Reminders: hebben niet veel zin in een REST service, want niet makkelijk aan te tonen zonder frontend
+* Likes: vergelijkbaar met Tags, maar dan zonder naam.
+* Een anonieme versie van de tijdlijn: als je niemand volgt, is een tijdlijn niets anders dan een lijst van alle Notes en Media. Alleen geregistreerde gebruikers kunnen andere gebruikers volgen.

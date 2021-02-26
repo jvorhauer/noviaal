@@ -17,7 +17,7 @@ public class UserResponse {
   String email;
   String joined;
 
-  public static UserResponse fromUser(User user) {
+  public static UserResponse ofUser(User user) {
     return new UserResponse(
       user.getId().toString(),
       user.getName(),

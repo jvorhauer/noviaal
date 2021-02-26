@@ -19,11 +19,10 @@
 
 Een _platform_ om:
 
-* notities op te slaan,
-* om die notities te kunnen vinden, lezen, taggen en liken.
+* notities en media op te slaan,
+* om die notities te kunnen vinden, lezen en taggen.
 * om andere gebruikers te volgen
 * om direct geïnformeerd te worden over nieuwe notities van gevolgde gebruikers.
-* om herinnerd te worden aan notities.
 
 De doelgroep is *iedereen* op het internet.
 
@@ -31,7 +30,7 @@ De doelgroep is *iedereen* op het internet.
 
 . Geregistreerde gebruiker (User),
 . Administrator (Admin) is een speciale geregistreerde gebruiker die niet-admin gebruikers kan blokkeren,
-. Anonieme gebruiker (Reader) kan een indruk krijgen van wat er allemaal gebeurd, maar kan alleen lezen.
+. Anonieme gebruiker kan registreren
 
 === Entiteiten
 
@@ -39,21 +38,22 @@ De belangrijkste entiteiten in Noviaal zijn:
 
 * Users, gebruikers en
 * Notes, notities
+* Media, binaire bestanden, zoals afbeeldingen en video's.
 
 Daarnaast zijn er een aantal aanvullende en/of ondersteunende entiteiten:
 
 * Tag, groepering van notities in een bepaalde categorie/met een bepaald label,
+* Comments, zowel aan Notities als Media kan de ingelogde gebruiker commentaar toevoegen.
 
 === Startpunten
 
 De geregistreerde gebruiker heeft vier hoofdingangen:
 
-. `/home` is de TimeLine pagina waarop alle notities van gevolgde gebruikers en de eigen notities worden getoond,
-. `/mine` geeft alle eigen notities met aantallen likes weer en de gebruikers gegevens,
-. `/likes` geeft alle ge-like-te (??) notities weer,
-. `/reminders` geeft alle notities waaraan de huidige gebruiker herinnerd wil worden,
-. `/followers` geeft alle mij volgende gebruikers weer,
-. `/following` geeft alle door mij gevolgde gebruikers weer.
+. `/api/users/timeline` is de TimeLine pagina waarop alle notities en media van gevolgde gebruikers worden getoond,
+. `/api/users/` geeft alle eigen notities met aantallen likes weer en de gebruikers gegevens,
+herinnerd wil worden,
+. `/api/users/followers` geeft alle mij volgende gebruikers weer,
+. `/api/users/following` geeft alle door mij gevolgde gebruikers weer.
 
 Vanuit ieder van die pagina's kan men naar de details:
 

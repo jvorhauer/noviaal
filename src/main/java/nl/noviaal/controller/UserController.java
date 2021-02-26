@@ -45,20 +45,20 @@ public class UserController extends AbstractController {
     log.info("findAll: by user: {}", getUserEmail(auth));
     return userService.findAll(pageable)
              .stream()
-             .map(UserResponse::fromUser)
+             .map(UserResponse::ofUser)
              .collect(Collectors.toList());
   }
 
   @GetMapping(path = "/me")
   public UserResponse findMe(Authentication authentication) {
     log.info("findMe");
-    return UserResponse.fromUser(findCurrentUser(authentication));
+    return UserResponse.ofUser(findCurrentUser(authentication));
   }
 
   @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   public UserResponse getById(@PathVariable("id") UUID id) {
     log.info("getById: {}", id);
-    return UserResponse.fromUser(findUserById(id));
+    return UserResponse.ofUser(findUserById(id));
   }
 
   @DeleteMapping("/{id}")
@@ -96,7 +96,7 @@ public class UserController extends AbstractController {
              .getFollowers()
              .stream()
              .map(Follow::getFollower)
-             .map(UserResponse::fromUser)
+             .map(UserResponse::ofUser)
              .collect(Collectors.toList());
   }
 

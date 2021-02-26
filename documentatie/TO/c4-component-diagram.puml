@@ -1,55 +1,49 @@
 @startuml
-!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/v2.0.1/C4_Component.puml
 
-LAYOUT_TOP_DOWN
+LAYOUT_TOP_DOWN()
 LAYOUT_WITH_LEGEND()
 
 title Componenten diagram voor Noviaal
 
-Person(person, "Gebruiker")
+Person(person, "User")
 Person(admin, "Administrator")
-Person(reader, "Anoniem")
+Person(reader, "Anonymous")
 
 Container_Boundary(noviaal, "Noviaal Applicatie") {
-  Component(authc, "Authenticatie", "Spring Security", "Verzorgt veilige login en logout")
-  Component(usersc, "GebruikersController", "Spring MVC", "Levert registratie, vergeet-mij en blokkeer mogelijkheid")
-  Component(notesc, "NotitiesController", "Spring MVC", "Maak nieuwe notities of update bestaabde, like een notitie, voeg een tag toe")
-  Component(searchc, "ZoekController", "Spring MVC", "Zoek in gebruikers, notities of tags")
+  Component(authc, "AuthController", "Spring Security", "Verzorgt veilige login en registratie")
+  Component(usersc, "UserController", "Spring MVC", "Levert registratie, vergeet-mij en blokkeer mogelijkheid")
+  Component(notesc, "NoteController", "Spring MVC", "Maak nieuwe notities of update bestaande")
+  Component(mediac, "MediaController", "Spring MVC", "Upload nieuwe media of download bestaande")
+  Component(tagsc, "TagController", "Spring MVC", "Maak nieuwe tags of toon alle Notes bij een tag")
 
-  Component(userss, "UsersService", "Spring/Java", "CRU")
-  Component(notess, "NotesService", "Spring/Java", "CRUD")
-  Component(likess, "LikesService", "Spring/Java", "CRD")
-  Component(reminderss, "RemindersService", "Spring/Java/Quartz", "CRUD")
-  Component(commentss, "CommentsService", "Spring/Java", "CRUD")
+  Component(auths, "AuthService", "Soring/Java", "CRUD")
+  Component(userss, "UserService", "Spring/Java", "CRUD")
+  Component(notess, "NoteService", "Spring/Java", "CRUD")
+  Component(medias, "MediaService", "Spring/Java", "CRUD")
+  Component(tags, "TagService", "Spring/Java", "CRUD")
 
-  Component(timelines, "TimeLineService", "Spring/Java", "ServerSide Events")
-
-  Rel(authc, userss, "gebruikt")
+  Rel(authc, auths, "gebruikt")
   Rel(usersc, userss, "gebruikt")
   Rel(notesc, notess, "gebruikt")
-  Rel(notesc, likess, "gebruikt")
-  Rel(notesc, reminderss, "gebruikt")
-  Rel(notesc, commentss, "gebruikt")
-  Rel(notesc, timelines, "gebruikt")
-  Rel(notess, timelines, "triggers")
+  Rel(mediac, medias, "gebruikt")
+  Rel(tagsc, tags, "gebruikt")
 }
 
 ComponentDb(db, "Database", "PostgreSQL", "Langdurige gegevens opslag")
 
 Rel(notess, db, "JDBC")
 Rel(userss, db, "JDBC")
-Rel(likess, db, "JDBC")
-Rel(reminderss, db, "JDBC")
-Rel(commentss, db, "JDBC")
-Rel(timelines, db, "JDBC")
+Rel(tags, db, "JDBC")
+Rel(medias, db, "JDBC")
+Rel(auths, db, "JDBC")
 
-Rel(person, authc, "http")
-Rel(person, usersc, "http")
-Rel(person, notesc, "http")
-Rel(person, searchc, "http")
-Rel(admin, usersc, "http")
-Rel(reader, usersc, "http")
-Rel(reader, notesc, "http")
-Rel(reader, searchc, "http")
+Rel(person, authc, "https")
+Rel(person, usersc, "https")
+Rel(person, notesc, "https")
+Rel(person, tagsc, "https")
+Rel(person, mediac, "https")
+Rel(admin, usersc, "https")
+Rel(reader, authc, "https")
 
 @enduml

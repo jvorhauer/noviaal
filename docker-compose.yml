@@ -5,10 +5,12 @@ services:
     restart: always
     ports:
       - 8080:8080
+    environment:
+      SERVER_SSL_KEY-STORE-PASSWORD: geheim-password-1
     depends_on:
       - postgres_db
   postgres_db:
-    image: "postgres:11.4"
+    image: "postgres:13.2"
     restart: always
     ports:
       - 5432:5432

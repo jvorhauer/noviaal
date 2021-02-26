@@ -33,7 +33,7 @@ public class MediaControllerTests {
   }
 
   @Test
-  @WithUserDetails("test@tester.com")
+  @WithUserDetails("tester@test.com")
   void whenUploadingFile_thenStoringThatFile_shouldReturnMediaUploadedResponse() throws Exception {
     try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("image.png")) {
       MockMultipartFile file = new MockMultipartFile("file", "image.png", MediaType.IMAGE_PNG_VALUE, inputStream);
@@ -44,14 +44,14 @@ public class MediaControllerTests {
   }
 
   @Test
-  @WithUserDetails("test@tester.com")
+  @WithUserDetails("tester@test.com")
   void whenUploadingNull_thenStoringThatNullFile_shouldThrowException() throws Exception {
       mockMvc.perform(post("/api/media").contentType(MediaType.MULTIPART_FORM_DATA))
         .andExpect(status().is4xxClientError());
   }
 
   @Test
-  @WithUserDetails("test@tester.com")
+  @WithUserDetails("tester@test.com")
   void whenUploadingFileWithEmptyName_thenSendingThatFile_shouldThrowException() throws Exception {
     try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("image.png")) {
       MockMultipartFile file = new MockMultipartFile("file", "", MediaType.IMAGE_PNG_VALUE, inputStream);
@@ -61,7 +61,7 @@ public class MediaControllerTests {
   }
 
   @Test
-  @WithUserDetails("test@tester.com")
+  @WithUserDetails("tester@test.com")
   void whenUploadingFileWithInvalidName_thenSendingThatFile_shouldThrowException() throws Exception {
     try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("image.png")) {
       MockMultipartFile file = new MockMultipartFile("file", "../image.png", MediaType.IMAGE_PNG_VALUE, inputStream);

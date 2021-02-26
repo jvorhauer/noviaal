@@ -400,14 +400,11 @@ Voor alle gebruikers (ingelogd of anoniem), behalve privé notities: deze zijn a
 Alleen voor ingelogde, huidige gebruiker:
 * maak een nieuwe notitie (NC1),
 * wijzig een bestaande, eigen notitie (titel en/of body) (NC3),
-* like een bepaalde notitie (IC4),
-* unlike een bepaalde notitie (IC5),
-* zet een reminder voor een bepaalde notitie (IC7),
-* zet de tag(s) van een bepaalde, eigen notitie (NC5).
+* zet de tag(s) van een eigen notitie (NC5).
 
 #### Users
 
-Voor alle gebruikers (ingelogd of anoniem):
+Voor alle gebruikers (ingelogd):
 * lijst van alle gebruikers
 * lijst van gebruikers die ik (de ingelogde, huidige gebruiker) volg (OC6)
 * lijst van gebruikers die mij (de ingelogde, huidige gebruiker) volgen (OC5)
@@ -424,13 +421,16 @@ Voor geregistreerde gebruilkers:
 
 #### TimeLine
 
-Voor alle gebruikers (ingelogd of anoniem):
+Voor alle ingelogde gebruikers:
 * Toon de TimeLine: notities van gebruikers die ik (de huidige, ingelogde gebruiker) volg of ik een reminder voor heb gezet én mijn eigen notities.
 
 ### Voorwaarden
 
 1. Installatie van Java 11 (meest recente versie) is aanwezig.
 2. Docker is geinstalleerd en werkzaam.
+3. Maven is geinstalleerd en werkzaam
+4. het project Noviaal is ge-cloned van Github of
+gedownload (als ZIP archief) van Teams.
 
 ### Hulpmiddelen etc.
 
@@ -439,5 +439,3 @@ Voor alle gebruikers (ingelogd of anoniem):
 [Spring Security](https://spring.io/projects/spring-security), versie 5.4.1
 
 [Maven](https://maven.apache.org), versie 3.6.3
-
-[TravisCI](https://travis-ci.com/getting_started)
