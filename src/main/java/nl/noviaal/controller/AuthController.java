@@ -1,8 +1,8 @@
 package nl.noviaal.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import nl.noviaal.exception.InvalidCommand;
 import nl.noviaal.domain.User;
+import nl.noviaal.exception.InvalidCommand;
 import nl.noviaal.model.auth.JwtResponse;
 import nl.noviaal.model.command.CreateUser;
 import nl.noviaal.model.command.LoginUser;
@@ -16,11 +16,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
-import java.net.URI;
 import java.util.stream.Collectors;
 
 @RestController
@@ -59,13 +57,13 @@ public class AuthController {
       );
     }
 
-    User user = new User(createUser.getName(), createUser.getEmail(), createUser.getPassword());
-    user.setPassword(passwordEncoder.encode(createUser.getPassword()));
+    String encryptedPassword = passwordEncoder.encode(createUser.getPassword());
+    User user = User.builder()
+                  .name(createUser.getName())
+                  .email(createUser.getEmail())
+                  .password(encryptedPassword)
+                  .build();
     User created = authService.register(user);
-    URI location = ServletUriComponentsBuilder.fromPath("/api/auth/login")
-                     .path("/{id}")
-                     .buildAndExpand(created.getId())
-                     .toUri();
-    return ResponseEntity.created(location).body(UserResponse.ofUser(created));
+    return ResponseEntity.ok(UserResponse.ofUser(created));
   }
 }

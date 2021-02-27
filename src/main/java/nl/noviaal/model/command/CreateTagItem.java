@@ -5,7 +5,7 @@ import java.util.UUID;
 
 public class CreateTagItem {
   @NotNull
-  private UUID itemId;
+  private final UUID itemId;
 
   public CreateTagItem(@NotNull UUID itemId) {
     this.itemId = itemId;

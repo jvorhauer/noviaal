@@ -55,6 +55,14 @@ public class UserController extends AbstractController {
     return UserResponse.ofUser(findCurrentUser(authentication));
   }
 
+  @GetMapping("/timeline")
+  public List<ItemResponse> timeline(Authentication authentication) {
+    User user = findCurrentUser(authentication);
+    return userService.timeline(user).stream()
+             .map(ItemResponse::ofItem)
+             .collect(Collectors.toList());
+  }
+
   @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   public UserResponse getById(@PathVariable("id") UUID id) {
     log.info("getById: {}", id);
@@ -108,15 +116,5 @@ public class UserController extends AbstractController {
     user.setRoles("USER,ADMIN");
     userService.save(user);
     return ResponseEntity.status(HttpStatus.ACCEPTED).build();
-  }
-
-  @GetMapping("/{id}/timeline")
-  public List<ItemResponse> timeline(@PathVariable("id") UUID id) {
-    Optional<User> ouser = userService.findById(id);
-    return ouser.map(user ->
-                       userService.timeline(user).stream()
-                         .map(ItemResponse::ofItem)
-                         .collect(Collectors.toList()))
-             .orElseGet(List::of);
   }
 }

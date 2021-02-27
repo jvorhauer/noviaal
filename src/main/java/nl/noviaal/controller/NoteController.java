@@ -4,13 +4,16 @@ import lombok.extern.slf4j.Slf4j;
 import nl.noviaal.domain.Item;
 import nl.noviaal.domain.Comment;
 import nl.noviaal.domain.Note;
+import nl.noviaal.domain.Tag;
 import nl.noviaal.domain.User;
 import nl.noviaal.exception.InvalidCommand;
+import nl.noviaal.exception.TagNotFoundException;
 import nl.noviaal.model.command.CreateComment;
 import nl.noviaal.model.command.CreateNote;
 import nl.noviaal.model.response.ItemResponse;
 import nl.noviaal.model.response.CommentResponse;
 import nl.noviaal.service.NoteService;
+import nl.noviaal.service.TagService;
 import nl.noviaal.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,10 +38,12 @@ import java.util.stream.Collectors;
 public class NoteController extends AbstractController {
 
   private final NoteService noteService;
+  private final TagService tagService;
 
-  public NoteController(UserService userService, NoteService noteService) {
+  public NoteController(UserService userService, NoteService noteService, TagService tagService) {
     super(userService);
     this.noteService = noteService;
+    this.tagService = tagService;
   }
 
   @PostMapping(value = {"", "/"})
@@ -99,5 +104,16 @@ public class NoteController extends AbstractController {
              .getComments().stream()
              .map(CommentResponse::ofComment)
              .collect(Collectors.toList());
+  }
+
+  @PostMapping("{id}/tag/{name}")
+  public ItemResponse tag(@PathVariable("id") UUID id, @PathVariable("name") String name, Authentication authentication) {
+    Optional<Tag> otag = tagService.find(name);
+    if (otag.isEmpty()) {
+      throw new TagNotFoundException(name);
+    }
+    Note note = noteService.find(id);
+    note.addTag(otag.get());
+    return ItemResponse.ofItem(noteService.save(note));
   }
 }

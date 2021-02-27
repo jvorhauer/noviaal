@@ -4,6 +4,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Index;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
@@ -21,6 +23,11 @@ public class Tag {
   private String name;
 
   @ManyToMany
+  @JoinTable(
+    name = "item_tag",
+    joinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id"),
+    inverseJoinColumns = @JoinColumn(name = "item_id")
+  )
   private Set<Item> items = new HashSet<>();
 
   @PrePersist

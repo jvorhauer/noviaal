@@ -71,6 +71,10 @@ public class User {
     this.roles = "USER";
   }
 
+  public static UserBuilder builder() {
+    return new UserBuilder();
+  }
+
   @PrePersist
   public void prePersist() {
     this.id = UUID.randomUUID();
@@ -136,9 +140,45 @@ public class User {
     addItem(media);
   }
 
-  public Set<Follow> getFollowers() { return this.followers; }
+  public Set<Follow> getFollowers() { return this.followed; }
   public void addFollower(Follow follower) {
     this.followers.add(follower);
   }
-  public Set<Follow> getFollowed() { return this.followed; }
+  public Set<Follow> getFollowed() { return this.followers; }
+
+
+  public static class UserBuilder {
+    private @NotNull String name;
+    private @NotNull String email;
+    private String password;
+    private @NotBlank String roles = "USER";
+
+    UserBuilder() {}
+
+    public UserBuilder name(@NotNull String name) {
+      this.name = name;
+      return this;
+    }
+
+    public UserBuilder email(@NotNull String email) {
+      this.email = email;
+      return this;
+    }
+
+    public UserBuilder password(String password) {
+      this.password = password;
+      return this;
+    }
+
+    public UserBuilder roles(@NotBlank String roles) {
+      this.roles = roles;
+      return this;
+    }
+
+    public User build() {
+      User newUser = new User(name, email, password);
+      newUser.setRoles(roles);
+      return newUser;
+    }
+  }
 }

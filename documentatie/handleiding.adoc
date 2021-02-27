@@ -25,34 +25,23 @@ toc::[]
 :numbered:
 == Inleiding
 
-Een _platform_ om:
+Noviaal is een applicatie die alleen REST endpoints presenteert aan de buitenwereld. Het is een applicatie die aan alle voorwaarden voor de eindopdracht van de module "Backend 2020/2021" van NOVI HBO Software Development voldoet.
+
+Noviaal is een _platform_ om:
 
 * notities en media op te slaan,
 * om die notities en media te kunnen ophalen, lezen en taggen.
-* om andere gebruikers te volgen
+* om andere Noviaal gebruikers te volgen
 * om direct geïnformeerd te worden over nieuwe notities en media van die gevolgde gebruikers.
 
 De doelgroep is *iedereen* op het internet.
-
-Gebruikte techniek:
-
-* Java 11
-* Spring Boot 2.4.2
-* PostgreSQL
-* Docker
-
-Voor het ontwikkelen is gebruik gemaakt van
-
-* IntelliJ IDEA 2020.3.2 (Ultimate Edition)
-* Maven 3.6.3
-* Postman 7.36.5 en 8.0.6
-
 
 == Installatie
 
 Het installeren van Noviaal kan met de volgende stappen gerealiseerd worden:
 
 __ *NB*: Voor alle installatie stappen is een werkende breedband internet verbinding nodig__
+__ *NB*: in de opdracht staat dat de applicatie binnen 30 minuten na een schone start van het installeren moet draaien, maar de doorlooptijd is van zo veel zaken afhankelijk, dat die voorwaarde nooit te garanderen is__
 
 . Installeer *Docker*
     .. Windows: https://docs.docker.com/docker-for-windows/install/[Instructies]
@@ -65,9 +54,6 @@ __ *NB*: Voor alle installatie stappen is een werkende breedband internet verbin
     .. Selecteer de juiste (Windows/Mac/Linux) versie van OpenJDK 11: https://adoptopenjdk.net/installation.html[AdoptOpenJDK]
     .. Voer de stappen uit, zoals beschreven
     .. Test of de installatie geslaagd is door in een Terminal of Command Process/Powershell `java -version` uit te voeren.
-. Installeer Maven om het project zo te gaan bouwen:
-    .. https://maven.apache.org/install.html[Installing Apache Maven]
-    .. en check of `mvn` werkt: https://maven.apache.org/run.html[Running Apache Maven]
 . Installeer `git`, de versie beheer client die gebruikt wordt:
     .. Windows: https://git-scm.com/download/win[Downloading Git]
     .. Mac: zie https://git-scm.com/book/en/v2/Getting-Started-Installing-Git[Getting Started] en dan kopje "Installing on macOS"
@@ -76,10 +62,10 @@ __ *NB*: Voor alle installatie stappen is een werkende breedband internet verbin
 Om toegang te krijgen volstaat een email aan mailto:j.vorhauer@novi-education.nl[Jurjen Vorhauer], de auteur en eigenaar van dit project.
     .. __alternatief__ : download het ZIP bestand dat ingeleverd werd via Teams. Pak dit ZIP bestand uit.
 
-. Na het succesvol clonen (of uitpakken van het ZIP bestand) van het project kan het gebouwd worden:
+. Na het succesvol clonen van het project of uitpakken van het ZIP bestand kan het gebouwd worden:
     .. ga naar de directory/folder met het project: `cd noviaal` vanuit de directory/folder van waaruit het `git clone` commando is uitgevoerd.
-    .. voer `mvn verify` uit, zodat zeker is dat JDK en Maven installaties correct zijn uitgevoerd. *NB*: de eerste keer bouwen met Maven neemt veel tijd, aangezien alle gebruikte bibliotheken (afhankelijkheden benodigd voor de bouw) van Internet opgehaald worden.
-    .. voer nu `mvn package` uit, er zal nu een Java ARchive (JAR) bestand in de `target` directory/folder staan: `noviaal-1.0.0.jar`. Dit is de Noviaal applicatie.
+    .. voer `./mvnw verify` (mac/linux) of `mvnw.cmd verify` (windows) uit, zodat zeker is dat JDK en Maven installaties correct zijn uitgevoerd. *NB*: de eerste keer bouwen met Maven neemt veel tijd, aangezien alle gebruikte bibliotheken (afhankelijkheden benodigd voor de bouw) van Internet opgehaald worden.
+    .. voer nu `./mvnw package` of `mvnw.cmd verify` uit, er zal nu een Java ARchive (JAR) bestand in de `target` directory/folder staan: `noviaal-1.0.0.jar`. Dit is de Noviaal applicatie.
 
 . Laatste stap: voer `docker-compose up --build` uit. Zodra het PostgreSQL Docker image gedownload is, de Docker image van de Noviaal applicatie gebouwd is de en twee containers op basis van die images draaien, is Noviaal klaar voor gebruik.
 
@@ -116,7 +102,9 @@ Zowel de IntelliJ als de Postman requests slaan het token van de laatste inlog a
 * Als het email adres en/of password niet bekend zijn, wordt een http 401 status teruggegeven
 |======
 
-=== CreateUser
+Deze endpoints zijn voor iedereen toegankelijk.
+
+==== CreateUser
 
 [source, json]
 ----
@@ -127,7 +115,7 @@ Zowel de IntelliJ als de Postman requests slaan het token van de laatste inlog a
 }
 ----
 
-=== LoginUser
+==== LoginUser
 
 [source, json]
 ----
@@ -137,7 +125,7 @@ Zowel de IntelliJ als de Postman requests slaan het token van de laatste inlog a
 }
 ----
 
-=== JwtResponse
+==== JwtResponse
 
 [source, json]
 ----
@@ -153,7 +141,7 @@ Zowel de IntelliJ als de Postman requests slaan het token van de laatste inlog a
 }
 ----
 
-=== UserResponse
+==== UserResponse
 
 [source, json]
 ----
@@ -175,19 +163,115 @@ Deze endpoints zijn alleen toegankelijk als je ingelogd bent.
 
 | /api/users/ | GET | Lijst van alle gebruikers in Noviaal in List<<<UserResponse>>> JSON, gepagineerd met als defaults de eerste pagina van 20 gebruikers.
 | /api/users/me | GET | Details van de ingelogde gebruiker in <<UserResponse>> JSON
+| /api/users/{id} | GET | Details van de geregistreerde gebruiker gekenmerkt door {id} levert een <<UserResponse>> van die gebruiker of een http status 404 als de gebruiker niet gevonden werd.
+| /api/users/items | GET | Lijst van Items, Notes en Media, van de ingelogde gebruiker in de vorm van een lijst van <<ItemResponse>>
+| /api/users/{id} | DELETE | Verwijder de gebruiker met {id}, kan alleen als de ingelogde gebruiker de ADMIN rol heeft.
+| /api/users/follow/{id} | POST | De huidige gebruiker gaat de gebruiker met {id} volgen en geeft een <<UserFollowedResponse>> terug.
+| /api/users/followers | GET | Lijst met <<UserResponse>> van alle gebruikers die de huidige ingelogde gebruiker volgen.
+| /api/users/{id}/promote | PUT | De user met {id} heeft na deze call ook de rol ADMIN; dit endpoint geeft http status 202 terug.
+| /api/users/timeline | GET | lijst met <<ItemResponse>> van alle Items van gebruikers die de huidige ingelogde gebruiker volgt.
 |======
 
+==== ItemResponse
+
+Er zijn twee varianten van een Item: Note en Media. De inhoud van die twee soorten verschilt enigszins en beide uitingen worden hier getoond:
+
+[source, json]
+----
+{
+  "id": "68fe87bd-6446-4504-862e-0d4cda040e60",
+  "created": "2021-02-26 15:19:17",
+  "type": "Note",
+  "title": "Note number One",
+  "body": "Nevermind that, my lad..."
+}
+----
+
+[source, json]
+----
+{
+  "id": "ff881164-7253-4974-afc6-6aa049f4e70a",
+  "created": "2021-02-26 15:48:22",
+  "type": "Media",
+  "name": "JDrivenLogoMailSmall-4.png",
+  "contentType": "image/png"
+}
+----
+
+==== UserFollowedResponse
+
+[source, json]
+----
+{
+  "userId": "307f446f-4f84-4c72-8bb5-fb2eed36c38f",
+  "followedId": "49899834-6467-4355-b3c2-e08f34d8b6a3"
+}
+----
 
 === Notes
 
 Deze endpoints zijn alleen toegankelijk als je ingelogd bent.
 
-*NB*: Comments kunnen op zichzelf niet bestaan en worden daarom afgehandeld in de NoteController en de MediaController.
+[cols="1,1,4a"]
+|======
+| endpoint | http method | uitkomst
+
+| /api/notes | POST | nieuwe note voor huidige ingelogde gebruiker, geeft een <<ItemResponse>> met die note terug
+| /api/notes | GET | lijst met <<ItemResponse>> van de notes van huidige gebruiker
+| /api/notes/{id} | GET | geeft <<ItemResponse>> van note met {id} terug
+| /api/notes/user/{id} | GET | geeft lijst van <<ItemResponse>> van notes van user met {id} terug
+| /api/notes/{id}/comments | POST | voeg een Comment toe aan note met {id}, geeft een <<CommentResponse>> terug
+| /api/notes/{id}/comments | GET | lijst met <<CommentResponse>> voor Note met {id}
+|======
+
+==== CommentResponse
+
+[source, json]
+----
+{
+  "comment": "test comment",
+  "created": "2021-02-26 16:15:02",
+  "author": "Pippin"
+}
+----
+
+*NB*: Comments kunnen op zichzelf niet bestaan en worden daarom afgehandeld in de NoteController.
 
 === Media
 
 Deze endpoints zijn alleen toegankelijk als je ingelogd bent.
 
+[cols="1,1,4a"]
+|======
+| endpoint | http method | uitkomst
+
+| /api/media | POST | upload bestand naar Noviaal en krijg een <<MediaUploadResponse>> terug. Maximale bestandsgrootte voor upload is terug te vinden in `application.properties` in de `src/main/resources` folder van dit project en is nu 200 MegaByte.
+| /api/media/{id} | GET | download een eerder ge-upload Media bestand met {id}, geeft een Resource terug met het juiste Content-Type terug.
+| /api/media/{userId}/list | GET | lijst met <<ItemResponse>> van Media van de user met {userId}.
+|======
+
+==== MediaUploadResponse
+
+[source, json]
+----
+{
+  "id": "0e16d227-295b-4494-943f-8c3a67648a44",
+  "name": "JDrivenLogoMailSmall-4.png",
+  "contentType": "image/png",
+  "size": 3823
+}
+----
+
 === Tags
+
+==== CreateTagResponse
+
+[source, json]
+----
+{
+  "id": "db8baaa0-2e15-4665-aa39-2be1500f7993",
+  "name": "personal"
+}
+----
 
 Deze endpoints zijn alleen toegankelijk als je ingelogd bent.

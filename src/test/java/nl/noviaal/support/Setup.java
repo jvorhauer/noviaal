@@ -23,7 +23,6 @@ public class Setup {
 
       var admin = new User("Admin", "admin@tester.com", "password");
       admin.setRoles("USER,ADMIN");
-//      admin.addNote(new Note("admin note", "as an admin I want a note"));
       var saved = userRepo.saveAndFlush(admin);
       var note = new Note("admin note", "as an admin I want a note");
       saved.addNote(note);

@@ -1,0 +1,34 @@
+### Login
+POST https://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin@tester.com",
+  "password": "password"
+}
+> {% client.global.set("authorized", response.body.token); %}
+
+
+### list all tags:
+GET https://localhost:8080/api/tags
+Authorization: Bearer {{ authorized }}
+
+
+### create a new Tag:
+POST https://localhost:8080/api/tags/
+Authorization: Bearer {{ authorized }}
+Content-Type: application/json
+
+{
+  "name" : "personal"
+}
+
+
+### get tag:
+GET https://localhost:8080/api/tags/personal
+Authorization: Bearer {{ authorized }}
+
+
+### get all items with tag
+GET https://localhost:8080/api/tags/personal/items
+Authorization: Bearer {{ authorized }}

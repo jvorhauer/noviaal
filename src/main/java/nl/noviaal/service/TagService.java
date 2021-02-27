@@ -5,6 +5,7 @@ import nl.noviaal.repository.TagRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -24,5 +25,10 @@ public class TagService {
   @Transactional(readOnly = true)
   public Optional<Tag> find(String name) {
     return tagRepository.findByName(name);
+  }
+
+  @Transactional(readOnly = true)
+  public List<Tag> findAll() {
+    return tagRepository.findAll();
   }
 }

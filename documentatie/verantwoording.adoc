@@ -97,6 +97,21 @@ Er is van het Spring Boot Framework gebruik gemaakt, en daarvan zijn de volgende
 * Validation
 * Test
 
+=== Gebruikte hulpmiddelen
+
+Voor het ontwikkelen is gebruik gemaakt van
+
+* IntelliJ IDEA 2020.3.2 (Ultimate Edition) met plugins:
+    ** AsciiDoc (in plaats van MarkDown dat nogal beperkt is)
+    ** PlantUML integration (voor sequence, use case en class diagrams)
+* Maven 3.6.3
+* Postman 7.36.5 en, vanaf 26 februari 2021, 8.0.6
+
+Voor het draaien van de applicatie en de bijbehorende database wordt gebruik maakt van:
+
+* Docker 20.10.2
+* Docker Compose 1.27.4
+
 == Relationele Database
 
 Noviaal is gebouwd tegen een RDBMS, met name H2 en PostgreSQL. Het domein model dat gebruikt wordt is relationeel: tussen de entiteiten zijn relaties gedefinieerd.
@@ -108,7 +123,7 @@ Zie https://github.com/jvorhauer/noviaal en de `.git` directory/folder van het p
 == Maven voor builds
 
 * `pom.xml`
-* Voer bijvoorbeeld `./mvnw verify` uit in de project directory/folder.
+* Voer bijvoorbeeld `./mvnw verify` (mac/linux) of `mvnw.cmd verify` (windows) uit in de project directory/folder.
 
 == Unit-testen
 

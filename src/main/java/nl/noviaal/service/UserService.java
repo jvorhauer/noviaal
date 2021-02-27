@@ -88,7 +88,7 @@ public class UserService {
 
 
   public List<Item> timeline(User user) {
-    List<User> following = user.getFollowed().stream().map(Follow::getFollowed).collect(Collectors.toList());
+    List<User> following = user.getFollowers().stream().map(Follow::getFollowed).collect(Collectors.toList());
     return following.stream()
              .flatMap(u -> u.getItems().stream())
              .sorted(Comparator.comparing(Item::getCreated).reversed())

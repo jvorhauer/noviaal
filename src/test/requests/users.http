@@ -47,16 +47,10 @@ Authorization: Bearer {{ authorized }}
 
 
 
-### add note:
-POST https://localhost:8080/api/notes
-Content-Type: application/json
+
+### get item(s):
+GET https://localhost:8080/api/users/items
 Authorization: Bearer {{ authorized }}
-
-{
-  "title": "Note number One",
-  "body": "Nevermind that, my lad..."
-}
-
 
 ### get note(s):
 GET https://localhost:8080/api/notes
@@ -69,5 +63,15 @@ Authorization: Bearer {{ authorized }}
 
 
 ### add follower:
-POST https://localhost:8080/api/users/follow/2ec59b9a-0d96-4deb-b117-8c50de3aebd0slack
+POST https://localhost:8080/api/users/follow/49899834-6467-4355-b3c2-e08f34d8b6a3
+Authorization: Bearer {{ authorized }}
+
+
+### get list of followers:
+GET https://localhost:8080/api/users/followers
+Authorization: Bearer {{ authorized }}
+
+
+### get timeline:
+GET https://localhost:8080/api/users/timeline
 Authorization: Bearer {{ authorized }}
