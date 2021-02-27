@@ -80,11 +80,15 @@ De endpoints kunnen met een aantal tools of clients worden benaderd:
 
 Voor IntelliJ zijn een aantal request bestanden meegeleverd in de directory/folder `src/test/requests`. De requests in deze bestanden zijn eenvoudig uit te voeren door op het groene driehoekje voor een specifiek request te klikken en te kiezen voor `Run https://localhost:8080`. De `request` bestanden eindigen in (hebben extensie) `.http`.
 
-Voor Postman is een collectie bewaard, in `src/test/requests/Noviaal.postman_collection.json`.
+Voor Postman is een collectie bewaard, in `src/test/requests/Noviaal.postman_collection.json`. Bij die collectie hoort ook een Postman environment bestand: `src/test/requests/Noviaal.postman_environment.json`.
 
 Op basis van deze voorbeelden kunnen de endpoints aangestuurd worden en kunnen eenvoudig meer requests gedefinieerd en uitgevoerd worden.
 
 Zowel de IntelliJ als de Postman requests slaan het token van de laatste inlog actie op in een variabele. Dit token verloopt echter na 24 uur, dus het is noodzakelijk om minstens één keer per dag opnieuw in te loggen.
+
+**NB**: het opslaan van het token in een environment variabele `bearer_token` lukt om onduidelijke redenen niet altijd. Mocht Postman 401 responses van Noviaal terug krijgen, dan moet helaas het token met de hand in de genoemde environment variabele gevuld worden, waarna een `Persist All` van het Noviaal environment nodig is.
+
+**NB 2**: verkeer naar Noviaal wordt beschermd door encryptie, geimplementeerd met een self-signed SSL certificate. Dit certificate moet voor iedere client, IntelliJ en Postman, eenmalig (als het goed is) geaccepteerd worden. Alle verkeer over https heeft het voordeel dat account gegevens niet (makkelijk) onderschept kunnen worden.
 
 == Endpoints
 
@@ -264,7 +268,25 @@ Deze endpoints zijn alleen toegankelijk als je ingelogd bent.
 
 === Tags
 
-==== CreateTagResponse
+[cols="1,1,4a"]
+|======
+| endpoint | http method | uitkomst
+| /api/tags | POST | maak een nieuwe Tag op basis van <<CreateTag>> input en antwoord met een <<TagResponse>> of een http status 400 als de Tag met de opgegeven naam al bestaat.
+| /api/tags | GET | Lijst met <<TagResponse>> van alle Tags in Noviaal.
+| /api/tags/{name}/items| GET | Lijst met <<ItemResponse>> van alle Notes en Media die de Tag met naam {name} hebben.
+
+|======
+
+==== CreateTag
+
+[source, json]
+----
+{
+  "name" : "test tag"
+}
+----
+
+==== TagResponse
 
 [source, json]
 ----

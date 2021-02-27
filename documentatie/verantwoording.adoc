@@ -149,3 +149,12 @@ Er zijn een aantal goedbedoelde, maar technisch weinig waarde toevoegende, eleme
 * Reminders: hebben niet veel zin in een REST service, want niet makkelijk aan te tonen zonder frontend
 * Likes: vergelijkbaar met Tags, maar dan zonder naam.
 * Een anonieme versie van de tijdlijn: als je niemand volgt, is een tijdlijn niets anders dan een lijst van alle Notes en Media. Alleen geregistreerde gebruikers kunnen andere gebruikers volgen.
+
+== Opmerkingen
+
+. Deze app is nog niet af. Ik heb nog plannen voor twee iteraties, waarin de functionaliteit verder verfijnd en enigszins uitgebreid wordt.
+. Een belangrijke verbetering zou het gebruik van de Webflux, de reactive variant van Spring Web, zijn, waardoor de annotaties niet meer nodig zijn. Tijdens het ontwikkelen van Noviaal viel me op dat annotaties
+    .. Niet te debuggen zijn
+    .. Geen handige foutmeldingen geven waarom ze niet werken zoals gepland
+. Het bedenken en ontwikkelen van Noviaal heeft me een hoop leerzaam plezier geleverd. De lessen van Nick, Peter en de andere docenten waren nuttig en prettig, een zeldzame combinatie.
+. Hoewel ik al vele jaren met Java (vanaf 1.0) en Spring (vanaf 2.5.x) werk, heb ik veel geleerd. Ik heb opzettelijk geen vrijstelling gevraagd om te leren.

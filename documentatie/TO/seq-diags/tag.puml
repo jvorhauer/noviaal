@@ -1,0 +1,20 @@
+@startuml
+
+title Tag een Note (of Media)
+
+actor Gebruiker
+
+Gebruiker --> NoteController: vraag Note met id
+NoteController --> NoteService: zoek Note op id
+NoteService --> database: query notes tabel op id
+database --> NoteService: Note (0 of 1)
+NoteService --> NoteController: Note (0 of 1)
+NotitieController --> Gebruiker: Note of 404
+
+Gebruiker --> NoteController: Tag Note
+NoteController --> TagService: zoek Tag met naam
+TagService --> NoteController: Tag (0 of 1)
+NoteController --> NoteService: sla Note met Tag op
+NoteController --> Gebruiker: ItemResponse
+
+@enduml

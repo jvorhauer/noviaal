@@ -1,8 +1,32 @@
-= Noviaal - Use Cases (Functioneel Ontwerp)
+= Noviaal - Functioneel Ontwerp met Use Cases
+:toc: macro
+
+|======
+| Instelling    | NOVI HBO Software Development
+| Leerlijn      | BackEnd
+| Document      | Functioneel en Technisch Ontwerp voor de Eindopdracht
+| Docent        | Nick Stuivenberg
+| Datum         | 20 november 2020
+| Auteur        | Jurjen Vorhauer
+| Email         | J.Vorhauer@novi-education.nl
+| Studentnummer | 800009793
+| GitHub        | https://github.com/jvorhauer/noviaal
+| *Noviaal*     | Een Twitterig platform, de naam is een samentrekking van NOVI en Sociaal
+|======
+
+<<<
+
+toc::[]
+
+<<<
+
+== Inleiding
 
 Dit document bevat de Use Cases die de functionaliteit van het BackEnd eindopdracht project "Noviaal" beschrijven.
 
 Noviaal maakt het mogelijk voor geregistreerde gebruikers om aantekeningen, Notes, te maken, wijzigen, bekijken en verwijderen.
+
+Na de Use Cases volgt een overzicht van Non Functional Requirements (NFRs) / Niet Functionele Eisen.
 
 == Actoren
 
@@ -10,7 +34,7 @@ Er worden drie rollen van gebruikers (Person) onderscheiden in het Noviaal syste
 
 . *User*, de geregistreerde gebruiker, die vrijwel alle functies kan uitvoeren.
 . *Admin*, de super gebruiker, die rapportages kan aanmaken en bekijken.
-. *Reader*, een niet-geregistreerde, dus _anonieme_ gebruiker met zeer beperkte functionaliteit ter beschikking.
+. *Anoniem*, een niet-geregistreerde, dus _anonieme_ gebruiker met zeer beperkte functionaliteit ter beschikking.
 
 Alles wat een User kan, kan een Admin ook.
 
@@ -20,19 +44,21 @@ Een Person wordt geïdentificeerd met zijn of haar email adres, dat dus uniek mo
 
 Een Note is een tekst met een titel. Een Note kan publiekelijk zichtbaar zijn, zodat ook Readers de Note kunnen lezen, alleen voor volgers (Followers) of privé (Private).
 
+== Media (afbeeldingen of video)
+
+Ook afbeeldingen kunnen worden opgeslagen in Noviaal.
+
 === Commentaar (comments)
 
 Bij een Note kunnen Users aantekeningen maken, behalve als de Note privé is. Bij een notitie wordt het commentaar getoond, dat bestaat uit tekst, de datum/tijd en de auteur van het commentaar.
 
-=== Reminder
+=== Tag
 
-Een User kan een herinnering, in de vorm van datum/tijd, zetten op een bepaalde notitie.
-
-=== Like
-
-Een User kan een Note liken. Liked notes kunnen opgehaald worden. Liked notes kunnen ge-unliked worden.
+Een Note of Media element kan voorzien worden van tags, vergelijkbaar met labels.
 
 == Use Cases
+
+image::use-cases.png[Use Cases diagram]
 
 === Authenticatie
 
@@ -506,3 +532,42 @@ Een User kan een Note liken. Liked notes kunnen opgehaald worden. Liked notes ku
 | Alternatieve flow
 | Als nog niemand gevolgd wordt, dan wordt dat gemeld.
 |===
+
+<<<
+
+== Niet-Functionele Eisen
+
+=== Kwaliteit
+
+Unit test coverage moet boven de 80% zijn. Dat wil zeggen dat 80% van de regels code in de applicatie automatisch getest moeten worden.
+Voor het rapporteren van de test coverage gaat gebruik gemaakt worden van https://www.eclemma.org/jacoco/[JaCoCo]. De test coverage wordt iedere keer dat de applicatie gebouwd wordt, getest en over gerapporteerd.
+
+Het project zal alleen release versies van gebruikte dependencies gebruiken. Deze dependencies zullen actief gecheckt worden, zodat mogelijke (veiligsheid) fouten direct opgelost worden, zodra een verbeterde versie ter beschikking is. Hiervoor wordt gebruik gemaakt van DependaBot van GitHub.
+
+Door het gebruik van Continuous Integration (CI) om het project te bouwen, iedere keer dat er een update gepushed wordt, is de kwaliteitsbewaking continue.
+
+=== Internet
+
+De Noviaal Applicatie kan lokaal op een PC of laptop gedraaid worden zonder internet verbinding.
+
+Voor het bouwen van het project tot een werkende applicatie is een internet verbinding nodig. De build tool (Maven) gaat de dependencies van repositories op internet ophalen.
+
+Aangezien er van Docker compose gebruik gemaakt gaat worden om de database en de applicatie op te starten, is er eenmalig
+een internet verbinding nodig om de PostgreSQL image en een standaard Linux image met Java te downloaden.
+
+Dus: voor bouwen en installeren is wel een internet verbinding nodig, voor het draaien van de Noviaal applicatie is geen internet verbinding nodig.
+
+=== Veiligheid
+
+Zolang de applicatie alleen lokaal gedraaid gaat worden is het niet nodig om SSL voor hhtps in te richten en is ook MultiFactor Authenticatioon (MFA) niet nodig.
+Inloggen is bedoeld om onderscheid te kunnen maken tussen de verschillende gebruikers, zodat de interactie tussen die gebruikers zichtbaar gemaakt kan worden.
+
+=== Performance
+
+Er zijn geen eisen gesteld aan de performance van het systeem. Er wordt dan ook vanuit gegaan dat er voldoende CPU en intern geheugen (RAM) in de machine waarop de Noviaal applicatie gedraaid wordt, aanwezig zijn.
+
+Ook voor response tijden zijn geen eisen gegeven. Er zijn dus geen performance tests, laat staan performance optimalisaties gepland voor Noviaal.
+
+=== Data recovery
+
+Er is geen backup van de database gepland.
