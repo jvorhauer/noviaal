@@ -3,18 +3,17 @@ package nl.noviaal.service;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import nl.noviaal.domain.Item;
-import nl.noviaal.exception.EmailAddressInUseException;
 import nl.noviaal.domain.Follow;
+import nl.noviaal.domain.Item;
 import nl.noviaal.domain.Note;
 import nl.noviaal.domain.User;
+import nl.noviaal.exception.EmailAddressInUseException;
 import nl.noviaal.repository.FollowRepository;
 import nl.noviaal.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -86,7 +85,7 @@ public class UserService {
     return savedFollow;
   }
 
-
+  @Transactional(readOnly = true)
   public List<Item> timeline(@Valid User user) {
     List<User> following = user.getFollowers().stream().map(Follow::getFollowed).collect(Collectors.toList());
     return following.stream()
