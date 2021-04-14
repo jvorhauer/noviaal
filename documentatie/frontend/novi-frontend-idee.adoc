@@ -1,0 +1,36 @@
+= NOVI - FrontEnd 2021/03 - Eindopdracht Idee
+Jurjen Vorhauer <j.vorhauer@novi-education.nl>
+
+[circle]
+* Student: Jurjen Vorhauer (800009793) / j.vorhauer@novi-education.nl
+* Datum: vrijdag 2 april 2021
+
+Voortbouwend op het resultaat van de eindopdracht voor `NOVI Backend 2020/09`, *Noviaal*, wordt een frontend ontwikkeld met React in JavaScript. Noviaal is een samentrekking van NOVI en sociaal.
+
+Deze backend levert een aantal API REST endpoints, die gebruikt gaan worden om een sociale notitie frontend te bouwen. Zie https://github.com/jvorhauer/noviaal/blob/main/documentatie/handleiding.pdf.
+
+Gebruikers moeten aangemeld zijn (login) bij Noviaal en kunnen daarvoor registreren als gebruiker van Noviaal. Niet-geregistreerde gebruikers kunnen niet inloggen, niet-ingelogde gebruikers kunnen een informatieve pagina bestuderen.
+
+Een aangemelde gebruiker zal in staat zijn om notities
+
+* aan te maken,
+* te bewerken,
+* van een tag te voorzien en
+* te verwijderen.
+
+_De opslag van de notities wordt verzorgd door de Noviaal backend_.
+
+Aan de lees-kant van Noviaal kan een aangemelde gebruiker ook
+
+* notities van andere gebruikers ophalen,
+* Indien de notities van een gebruiker vaker interesse opwekken bij de huidige gebruiker, kan de huidige gebruiker die andere gebruiker gaan volgen.
+* notities bij een bestaande tag ophalen.
+
+NB: De backend mist nog twee belangrijke functies, die het sociale karakter van Noviaal zouden verbeteren:
+
+. (push-)updates ontvangen van gevolgde gebruikers en
+. het kunnen zoeken én vinden van andere gebruikers.
+
+_Deze aanvullingen vallen buiten de scope van de opdracht en zullen alleen toegevoegd worden indien er tijd beschikbaar blijkt_.
+
+De Noviaal backend broncode is te vinden via https://github.com/jvorhauer/noviaal.
