@@ -76,7 +76,7 @@ public class UserService {
 
 
   @Transactional
-  public Follow follow(User user, User follow) {
+  public Follow follow(@Valid User user, @Valid User follow) {
     log.info("follow: user {} has {} followers", user.getName(), user.getFollowers().size());
     Follow following = new Follow(user, follow);
     Follow savedFollow = followRepository.save(following);
@@ -87,7 +87,7 @@ public class UserService {
   }
 
 
-  public List<Item> timeline(User user) {
+  public List<Item> timeline(@Valid User user) {
     List<User> following = user.getFollowers().stream().map(Follow::getFollowed).collect(Collectors.toList());
     return following.stream()
              .flatMap(u -> u.getItems().stream())

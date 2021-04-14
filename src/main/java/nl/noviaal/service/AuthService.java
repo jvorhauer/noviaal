@@ -48,9 +48,8 @@ public class AuthService {
 
   @Transactional
   public User register(User user) {
-    if (userRepository.findByEmail(user.getEmail()).isPresent()) {
-      throw new EmailAddressInUseException(user.getEmail());
-    }
-    return userRepository.save(user);
+    return userRepository.findByEmail(user.getEmail())
+             .map(userRepository::save)
+             .orElseThrow(() -> new EmailAddressInUseException(user.getEmail()));
   }
 }
