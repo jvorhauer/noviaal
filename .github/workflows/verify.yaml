@@ -5,7 +5,8 @@ name: CI with Maven
 
 on:
   push:
-    branches: [ main ]
+    branches-ignore:
+      - spike/**
   pull_request:
     branches: [ main ]
 
