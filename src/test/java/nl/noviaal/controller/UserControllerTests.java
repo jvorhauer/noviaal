@@ -27,9 +27,10 @@ public class UserControllerTests {
   @Test
   @WithUserDetails("tester@test.com")
   void givenLoggedInUser_getAllUsers_shouldSucceed() throws Exception {
+    var count = userRepo.count();
     mockMvc.perform(get("/api/users").accept(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
-      .andExpect(jsonPath("$.size()").value(3));
+      .andExpect(jsonPath("$.size()").value(count));
   }
 
   @Test
