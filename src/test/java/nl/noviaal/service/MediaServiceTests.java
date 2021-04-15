@@ -3,7 +3,6 @@ package nl.noviaal.service;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import lombok.RequiredArgsConstructor;
-import nl.noviaal.config.ApplicationReadyListener;
 import nl.noviaal.domain.Media;
 import nl.noviaal.domain.User;
 import nl.noviaal.repository.UserRepository;

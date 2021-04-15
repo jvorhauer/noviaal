@@ -13,6 +13,8 @@ import java.util.UUID;
 
 public abstract class AbstractController {
 
+  private final static String USER_CLASS = "org.springframework.security.core.userdetails.User";
+
   protected final UserService userService;
   private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
@@ -24,7 +26,9 @@ public abstract class AbstractController {
     if (authentication == null) {
       throw new AccessDeniedException("Authentication is null!");
     }
-    return ((UserDetailsImpl) authentication.getPrincipal()).getEmail();
+    return authentication.getPrincipal().getClass().getCanonicalName().equalsIgnoreCase(USER_CLASS) ?
+             ((org.springframework.security.core.userdetails.User) authentication.getPrincipal()).getUsername() :
+             ((UserDetailsImpl) authentication.getPrincipal()).getEmail();
   }
 
   protected User findUserById(UUID id) {
@@ -49,7 +53,7 @@ public abstract class AbstractController {
     }
   }
 
-  protected <T> boolean validate(T t) {
-    return validator.validate(t).isEmpty();
+  protected <T> boolean isInvalid(T t) {
+    return !validator.validate(t).isEmpty();
   }
 }

@@ -10,7 +10,6 @@ import nl.noviaal.model.response.TagResponse;
 import nl.noviaal.service.TagService;
 import nl.noviaal.service.UserService;
 import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,7 +37,7 @@ public class TagController extends AbstractController {
   public TagResponse save(@RequestBody CreateTag createTag, Authentication authentication) {
     assertIsAdmin(authentication);
     log.info("save: {}", createTag);
-    if (!validate(createTag)) {
+    if (isInvalid(createTag)) {
       log.error("save: createTag is invalid: {}", createTag);
       throw new InvalidCommand("Create Tag is invalid");
     }
@@ -63,8 +62,6 @@ public class TagController extends AbstractController {
 
   @GetMapping("/{name}/items")
   public Set<ItemResponse> getItems(@PathVariable("name") String name) {
-    log.info("getItems: tag: {}", tagService.find(name));
-    log.info("getItems: tag.getItems: {}", tagService.find(name).map(tag -> tag.getItems()).get());
     return tagService.find(name)
              .map(Tag::getItems)
              .map(setOfItems -> setOfItems.stream()

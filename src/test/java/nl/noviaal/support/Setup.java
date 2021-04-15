@@ -18,8 +18,8 @@ public class Setup {
   @Transactional
   public void initDataStore() {
     if (userRepo.findAll().isEmpty()) {
-      userRepo.save(new User("Tester", "tester@test.com", "passwrd"));
-      userRepo.save(new User("Another", "an@other.com", "password"));
+      userRepo.saveAndFlush(new User("Tester", "tester@test.com", "password"));
+      userRepo.saveAndFlush(new User("Another", "an@other.com", "password"));
 
       var admin = new User("Admin", "admin@tester.com", "password");
       admin.setRoles("USER,ADMIN");

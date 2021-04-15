@@ -1,5 +1,6 @@
 package nl.noviaal.controller;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -7,8 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.jayway.jsonpath.JsonPath;
 import lombok.RequiredArgsConstructor;
-import nl.noviaal.support.Setup;
-import org.junit.jupiter.api.BeforeEach;
+import nl.noviaal.NoviaalApplication;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -17,20 +17,16 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.transaction.annotation.Transactional;
 
-@SpringBootTest
+@SpringBootTest(
+  webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+  classes = NoviaalApplication.class
+)
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @AutoConfigureMockMvc
 public class NoteControllerTests {
 
-  private final Setup setup;
   private final MockMvc mockMvc;
-
-  @BeforeEach
-  void before() {
-    setup.initDataStore();
-  }
 
   @Test
   @WithUserDetails("tester@test.com")
@@ -40,19 +36,19 @@ public class NoteControllerTests {
       .andExpect(jsonPath("$.size()").value(0));
 
     mockMvc.perform(post("/api/notes")
+                      .with(user("tester@test.com").password("password"))
                       .contentType(MediaType.APPLICATION_JSON)
                       .content("{\"title\":\"test title\",\"body\":\"test body\"}"))
       .andExpect(status().is2xxSuccessful())
       .andExpect(jsonPath("$.title").value("test title"));
 
-    mockMvc.perform(get("/api/notes"))
+    mockMvc.perform(get("/api/notes").with(user("tester@test.com").password("password")))
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.size()").value(1));
   }
 
   @Test
   @WithUserDetails("an@other.com")
-  @Transactional
   void whenAddingCommentsToExistingNote_thenTheNumberOfComments_shouldIncreaseByOne() throws Exception {
     mockMvc.perform(get("/api/notes"))
       .andExpect(status().isOk())

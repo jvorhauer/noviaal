@@ -48,7 +48,7 @@ public class NoteController extends AbstractController {
 
   @PostMapping(value = {"", "/"})
   public ResponseEntity<ItemResponse> addNote(@RequestBody CreateNote createNote, Authentication authentication) {
-    if (!validate(createNote)) {
+    if (isInvalid(createNote)) {
       log.error("addNote: invalid: {}", createNote);
       throw new InvalidCommand("CreateNote");
     }
@@ -85,7 +85,7 @@ public class NoteController extends AbstractController {
     @RequestBody CreateComment createComment,
     @PathVariable("id") UUID id, Authentication authentication
   ) {
-    if (!validate(createComment)) {
+    if (isInvalid(createComment)) {
       log.error("addCommentToNote: invalid: {}", createComment);
       throw new InvalidCommand("CreateComment");
     }

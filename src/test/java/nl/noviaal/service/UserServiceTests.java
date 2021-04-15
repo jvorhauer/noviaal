@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import lombok.RequiredArgsConstructor;
-import nl.noviaal.config.ApplicationReadyListener;
 import nl.noviaal.domain.User;
 import nl.noviaal.exception.EmailAddressInUseException;
 import nl.noviaal.support.Setup;
