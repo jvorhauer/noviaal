@@ -29,7 +29,7 @@ public class UserControllerTests {
   void givenLoggedInUser_getAllUsers_shouldSucceed() throws Exception {
     mockMvc.perform(get("/api/users").accept(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
-      .andExpect(jsonPath("$.size()").value(4));
+      .andExpect(jsonPath("$.size()").value(3));
   }
 
   @Test
