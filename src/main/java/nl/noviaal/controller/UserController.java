@@ -13,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -44,9 +42,9 @@ public class UserController extends AbstractController {
   public List<UserResponse> findAll(Authentication auth, Pageable pageable) {
     log.info("findAll: by user: {}", getUserEmail(auth));
     return userService.findAll(pageable)
-             .stream()
-             .map(UserResponse::ofUser)
-             .collect(Collectors.toList());
+      .stream()
+      .map(UserResponse::ofUser)
+      .collect(Collectors.toList());
   }
 
   @GetMapping(path = "/me")
@@ -59,8 +57,8 @@ public class UserController extends AbstractController {
   public List<ItemResponse> timeline(Authentication authentication) {
     User user = findCurrentUser(authentication);
     return userService.timeline(user).stream()
-             .map(ItemResponse::ofItem)
-             .collect(Collectors.toList());
+      .map(ItemResponse::ofItem)
+      .collect(Collectors.toList());
   }
 
   @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -70,7 +68,6 @@ public class UserController extends AbstractController {
   }
 
   @DeleteMapping("/{id}")
-  @Secured("ADMIN")
   public UserDeletedResponse delete(@PathVariable("id") UUID id, Authentication authentication) {
     assertIsAdmin(authentication);
     log.info("delete: {}", id);
@@ -83,15 +80,15 @@ public class UserController extends AbstractController {
   public List<ItemResponse> notes(Authentication authentication) {
     log.info("notes");
     return findCurrentUser(authentication)
-             .getItems()
-             .stream()
-             .map(ItemResponse::ofItem)
-             .collect(Collectors.toList());
+      .getItems()
+      .stream()
+      .map(ItemResponse::ofItem)
+      .collect(Collectors.toList());
   }
 
   @PostMapping("/follow/{id}")
   public UserFollowedResponse follow(@PathVariable("id") UUID id, Authentication authentication) {
-    var user   = findCurrentUser(authentication);
+    var user = findCurrentUser(authentication);
     var follow = findUserById(id);
     log.info("follow: {} starts following {}", user.getName(), follow.getName());
     var followed = userService.follow(user, follow);
@@ -101,15 +98,14 @@ public class UserController extends AbstractController {
   @GetMapping("/followers")
   public List<UserResponse> followers(Authentication authentication) {
     return findCurrentUser(authentication)
-             .getFollowers()
-             .stream()
-             .map(Follow::getFollower)
-             .map(UserResponse::ofUser)
-             .collect(Collectors.toList());
+      .getFollowers()
+      .stream()
+      .map(Follow::getFollower)
+      .map(UserResponse::ofUser)
+      .collect(Collectors.toList());
   }
 
   @PutMapping("/{id}/promote")
-  @Secured("ADMIN")
   public ResponseEntity<?> promote(@PathVariable("id") UUID id, Authentication authentication) {
     assertIsAdmin(authentication);
     var user = findUserById(id);

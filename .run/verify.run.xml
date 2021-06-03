@@ -24,7 +24,6 @@
           <option name="delegateBuildToMaven" value="false" />
           <option name="environmentProperties">
             <map>
-              <entry key="SERVER_SSL_KEY-STORE-PASSWORD" value="geheim-password-1" />
               <entry key="spring_profiles_active" value="test" />
             </map>
           </option>
