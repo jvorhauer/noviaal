@@ -3,6 +3,7 @@ package nl.noviaal.config;
 import nl.noviaal.domain.User;
 import nl.noviaal.service.AuthService;
 import nl.noviaal.service.UserService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Profile;
@@ -19,6 +20,9 @@ public class ApplicationReadyListener implements ApplicationListener<Application
   private final UserService userService;
   private final PasswordEncoder passwordEncoder;
 
+  @Value("${server.ssl.key-store-type}")
+  private String ksType;
+
   public ApplicationReadyListener(
     AuthService authService, UserService userService, PasswordEncoder passwordEncoder
   ) {
@@ -34,6 +38,7 @@ public class ApplicationReadyListener implements ApplicationListener<Application
 
   @Transactional
   public void initDataStore() {
+    System.out.println("key-store-type: " + ksType);
     if (userService.findAll().isEmpty()) {
       String encryptedPassword = passwordEncoder.encode("password");
       authService.register(User.builder()
