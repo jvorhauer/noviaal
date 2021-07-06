@@ -55,7 +55,7 @@ public class NoteController extends AbstractController {
     User user = findCurrentUser(authentication);
     Note note = new Note(createNote.getTitle(), createNote.getBody());
     userService.addNote(user, note);
-    Optional<Note> last = user.getNotes().stream().min(Comparator.comparing(Item::getCreated));
+    Optional<Note> last = user.getNotes().stream().max(Comparator.comparing(Item::getCreated));
     return last.map(value -> ResponseEntity.status(HttpStatus.CREATED).body(ItemResponse.ofItem(value)))
              .orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
   }
