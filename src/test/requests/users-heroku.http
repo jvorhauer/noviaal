@@ -1,0 +1,103 @@
+### Create Frodo:
+POST https://sheltered-gorge-50410.herokuapp.com/api/auth/register
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Frodo",
+  "email": "frodo@hobbiton.shire",
+  "password": "password"
+}
+
+
+### Create Bilbo:
+POST https://sheltered-gorge-50410.herokuapp.com/api/auth/register
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Bilbo",
+  "email": "bilbo@hobbiton.shire",
+  "password": "password"
+}
+
+
+### Create Pippin:
+POST https://sheltered-gorge-50410.herokuapp.com/api/auth/register
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Pippin",
+  "email": "pippin@tuckborough.shire",
+  "password": "password"
+}
+
+### Login
+POST https://sheltered-gorge-50410.herokuapp.com/api/auth/login
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "pippin@tuckborough.shire",
+  "password": "password"
+}
+
+> {% client.global.set("authorized", response.body.token); %}
+
+### Get all users:
+GET https://sheltered-gorge-50410.herokuapp.com/api/users
+Authorization: Bearer {{ authorized }}
+
+
+
+
+### get item(s):
+GET https://sheltered-gorge-50410.herokuapp.com/api/users/items
+Authorization: Bearer {{ authorized }}
+
+
+
+### get note(s):
+GET https://sheltered-gorge-50410.herokuapp.com/api/notes
+Authorization: Bearer {{ authorized }}
+Accept: application/json
+
+
+
+### get notes for a user:
+GET https://sheltered-gorge-50410.herokuapp.com/api/users/7a16f71f-90dd-4e2f-b034-2d0ef04c3b7f/notes
+Authorization: Bearer {{ authorized }}
+
+
+### add follower:
+POST https://sheltered-gorge-50410.herokuapp.com/api/users/follow/49899834-6467-4355-b3c2-e08f34d8b6a3
+Authorization: Bearer {{ authorized }}
+
+
+### get list of followers:
+GET https://sheltered-gorge-50410.herokuapp.com/api/users/followers
+Authorization: Bearer {{ authorized }}
+
+
+### get timeline:
+GET https://sheltered-gorge-50410.herokuapp.com/api/users/timeline
+Authorization: Bearer {{ authorized }}
+
+
+### create note:
+POST https://sheltered-gorge-50410.herokuapp.com/api/notes
+Authorization: Bearer {{ authorized }}
+Content-Type: application/json
+
+{
+  "title": "Test",
+  "body" : "Dit is een test, geen aandacht aan bestedn gaat het vanzelf weg..."
+}
+
+
+
+### Retreive note with id be93fc71-7bf7-4cab-8161-8332e3f8bc42
+GET https://sheltered-gorge-50410.herokuapp.com/api/notes/be93fc71-7bf7-4cab-8161-8332e3f8bc42
+Authorization: Bearer {{ authorized }}
+Accept: application/json
