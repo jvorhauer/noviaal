@@ -91,8 +91,8 @@ Authorization: Bearer {{ authorized }}
 Content-Type: application/json
 
 {
-  "title": "Nog een keer",
-  "body" : "Er was eens een klein meisje met een rood kopje (koffie natuurlijk)"
+  "title": "Voor vandaag de laatste",
+  "body" : "Eens kijken of nu wel de correct Note eruit komt (max ipv min is eigenlijk best logisch)"
 }
 
 
