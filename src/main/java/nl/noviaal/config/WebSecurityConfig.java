@@ -38,20 +38,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Bean
   public CorsConfigurationSource corsConfigurationSource() {
-    var c = new CorsConfiguration();
-    c.setAllowedOrigins(List.of("*"));
-    c.setAllowedMethods(List.of("GET", "POST", "DELETE", "PUT", "OPTIONS"));
-    c.setAllowCredentials(true);
-    c.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
+//    var c = new CorsConfiguration();
+//    c.setAllowedOrigins(List.of("*"));
+//    c.setAllowedMethods(List.of("GET", "POST", "DELETE", "PUT", "OPTIONS"));
+//    c.setAllowCredentials(true);
+//    c.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
     var source = new UrlBasedCorsConfigurationSource();
-    source.registerCorsConfiguration("/**", c);
+    source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
     return source;
   }
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
-    http.csrf().disable()
-      .cors().and()
+    http.csrf().disable();
+    http.cors().and()
       .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
       .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
       .authorizeRequests()
