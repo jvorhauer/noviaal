@@ -50,12 +50,14 @@ GET https://sheltered-gorge-50410.herokuapp.com/api/users
 Authorization: Bearer {{ authorized }}
 
 
+### GET logged in user information:
+GET https://sheltered-gorge-50410.herokuapp.com/api/users/me
+Authorization: Bearer {{ authorized }}
 
 
 ### get item(s):
 GET https://sheltered-gorge-50410.herokuapp.com/api/users/items
 Authorization: Bearer {{ authorized }}
-
 
 
 ### get note(s):

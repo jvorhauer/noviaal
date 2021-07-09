@@ -3,7 +3,6 @@ package nl.noviaal.config;
 import nl.noviaal.domain.User;
 import nl.noviaal.service.AuthService;
 import nl.noviaal.service.UserService;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Profile;

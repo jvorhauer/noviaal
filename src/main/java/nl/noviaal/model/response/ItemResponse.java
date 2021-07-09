@@ -96,6 +96,14 @@ public class ItemResponse {
         this.contentType = contentType;
     }
 
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
+
+    public String getTags() {
+        return tags;
+    }
+
     public static ItemResponse ofItem(Item item) {
         final ItemResponse itemResponse = new ItemResponse(
                 item.getId().toString(),
