@@ -44,6 +44,10 @@ public abstract class Item {
   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "CET")
   Instant created;
 
+  @Column(nullable = false)
+  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "CET")
+  protected Instant updated;
+
   @NotNull
   @ManyToOne(fetch = FetchType.LAZY)
   @JsonBackReference
@@ -59,14 +63,6 @@ public abstract class Item {
     inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id")
   )
   private Set<Tag> tags = new HashSet<>();
-
-  @PrePersist
-  public void prePersistBase() {
-    this.id = UUID.randomUUID();
-    if (this.created == null) {
-      created = ZonedDateTime.now(ZoneId.of("UTC")).toInstant();
-    }
-  }
 
   public void setId(UUID id) { this.id = id; }
   public UUID getId() { return id; }
@@ -88,6 +84,11 @@ public abstract class Item {
   public void addTag(Tag tag) { this.tags.add(tag); }
   public Set<Tag> getTags() { return tags; }
 
+  public ZonedDateTime getUpdated() { return updated.atZone(ZoneId.of("CET")); }
+  public void setUpdated(Instant updated) { this.updated = updated; }
+  public void setUpdatedToNow() {
+    setUpdated(ZonedDateTime.now(ZoneId.of("UTC")).toInstant());
+  }
 
   @Override
   public boolean equals(Object o) {
@@ -98,4 +99,14 @@ public abstract class Item {
 
   @Override
   public int hashCode() { return Objects.hashCode(getClass()); }
+
+  void prePersist() {
+    id = UUID.randomUUID();
+    if (created == null) {
+      created = ZonedDateTime.now(ZoneId.of("UTC")).toInstant();
+    }
+    if (updated == null) {
+      updated = ZonedDateTime.now(ZoneId.of("UTC")).toInstant();
+    }
+  }
 }

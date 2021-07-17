@@ -27,6 +27,7 @@ public class MediaService {
     try {
       var video = new Media(filename, file.getContentType(), file.getBytes());
       video.setAuthor(user);
+      video.setUpdatedToNow();
       return repo.save(video);
     } catch (IOException e) {
       throw new MediaInvalidException("Could not store " + filename + ": " + e.getMessage());

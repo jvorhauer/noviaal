@@ -1,9 +1,12 @@
 package nl.noviaal.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
+import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.UUID;
@@ -21,10 +24,7 @@ public class Note extends Item {
 
   @PrePersist
   void prePersist() {
-    id = UUID.randomUUID();
-    if (created == null) {
-      created = ZonedDateTime.now(ZoneId.of("UTC")).toInstant();
-    }
+    super.prePersist();
   }
 
 
@@ -43,4 +43,5 @@ public class Note extends Item {
 
   public String getBody() { return body; }
   public void setBody(String body) { this.body = body; }
+
 }

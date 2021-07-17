@@ -4,7 +4,11 @@ import javax.persistence.Basic;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Lob;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "media")
@@ -25,6 +29,10 @@ public class Media extends Item {
     this.content = content;
   }
 
+  @PrePersist
+  void prePersist() {
+    super.prePersist();
+  }
 
   public void setName(String name) { this.name = name; }
   public String getName() { return name; }
