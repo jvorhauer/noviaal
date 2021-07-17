@@ -27,6 +27,7 @@ public class NoteService {
 
   @Transactional
   public Note save(Note note) {
+    note.setUpdatedToNow();
     return noteRepository.save(note);
   }
 

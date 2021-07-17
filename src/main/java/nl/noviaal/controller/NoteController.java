@@ -10,6 +10,7 @@ import nl.noviaal.exception.InvalidCommand;
 import nl.noviaal.exception.TagNotFoundException;
 import nl.noviaal.model.command.CreateComment;
 import nl.noviaal.model.command.CreateNote;
+import nl.noviaal.model.command.UpdateNote;
 import nl.noviaal.model.response.ItemResponse;
 import nl.noviaal.model.response.CommentResponse;
 import nl.noviaal.service.NoteService;
@@ -21,6 +22,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -58,6 +60,22 @@ public class NoteController extends AbstractController {
     Optional<Note> last = user.getNotes().stream().max(Comparator.comparing(Item::getCreated));
     return last.map(value -> ResponseEntity.status(HttpStatus.CREATED).body(ItemResponse.ofItem(value)))
              .orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
+  }
+
+  @PutMapping(value = {"", "/"})
+  public ResponseEntity<ItemResponse> updateNote(@RequestBody UpdateNote unote, Authentication auth) {
+    if (isInvalid(unote)) {
+      log.error("updateNote: invalid: {}", unote);
+      throw new InvalidCommand("UpdateNote: invalid");
+    }
+    User user = findCurrentUser(auth);
+    if (!unote.getUserId().equals(user.getId())) {
+      log.error("updateNote: note belongs to other user: {} <> {}", user.getId(), unote.getUserId());
+      throw new InvalidCommand("UpdateNote: wrong user");
+    }
+    Note note = noteService.find(unote.getId());
+    Note saved = noteService.save(note);
+    return ResponseEntity.ok(ItemResponse.ofItem(saved));
   }
 
 
