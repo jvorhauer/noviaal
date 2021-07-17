@@ -84,7 +84,7 @@ public abstract class Item {
   public void addTag(Tag tag) { this.tags.add(tag); }
   public Set<Tag> getTags() { return tags; }
 
-  public ZonedDateTime getUpdated() { return updated.atZone(ZoneId.of("CET")); }
+  public ZonedDateTime getUpdated() { return updated != null ? updated.atZone(ZoneId.of("CET")) : getCreated(); }
   public void setUpdated(Instant updated) { this.updated = updated; }
   public void setUpdatedToNow() {
     setUpdated(ZonedDateTime.now(ZoneId.of("UTC")).toInstant());
