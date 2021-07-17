@@ -58,7 +58,7 @@ public class ItemResponse {
                 .contentType(item.getClass().getSimpleName())
                 .name(item.getAuthor().getName())
                 .userId(item.getAuthor().getId().toString())
-                .updated(item.getUpdated().format(DTF))
+                .updated(item.getUpdated() != null ? item.getUpdated().format(DTF) : item.getCreated().format(DTF))
                 .build();
         for (Comment comment : item.getComments()) {
             itemResponse.addComment(comment);
