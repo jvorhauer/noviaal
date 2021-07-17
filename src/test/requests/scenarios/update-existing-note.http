@@ -1,0 +1,52 @@
+### Login Pippin
+POST https://sheltered-gorge-50410.herokuapp.com/api/auth/login
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "pippin@tuckborough.shire",
+  "password": "password"
+}
+
+> {% client.global.set("authorized", response.body.token); %}
+
+
+### Get current user:
+GET https://sheltered-gorge-50410.herokuapp.com/api/users/me
+Authorization: Bearer {{ authorized }}
+
+
+### get note(s):
+GET https://sheltered-gorge-50410.herokuapp.com/api/notes
+Authorization: Bearer {{ authorized }}
+Accept: application/json
+
+
+### Update the existing note with specified ID:
+# Pippin's ID: 1df84df2-add5-4b25-8b5f-4ddc587ba0f6
+# Note ID: be93fc71-7bf7-4cab-8161-8332e3f8bc42 (eerste note, oorspronkelijke titel is "Test"
+PUT https://sheltered-gorge-50410.herokuapp.com/api/notes/
+Authorization: Bearer {{ authorized }}
+Accept: application/json
+Content-Type: application/json
+
+{
+  "id": "be93fc71-7bf7-4cab-8161-8332e3f8bc42",
+  "title": "Geen test meer",
+  "body": "Nog steeds een test eigenlijk...",
+  "userId": "1df84df2-add5-4b25-8b5f-4ddc587ba0f6"
+}
+
+
+### Restore original content:
+PUT https://sheltered-gorge-50410.herokuapp.com/api/notes/
+Authorization: Bearer {{ authorized }}
+Accept: application/json
+Content-Type: application/json
+
+{
+  "id": "be93fc71-7bf7-4cab-8161-8332e3f8bc42",
+  "title": "Test",
+  "body": "Dit is een test, geen aandacht aan bestedn gaat het vanzelf weg...",
+  "userId": "1df84df2-add5-4b25-8b5f-4ddc587ba0f6"
+}

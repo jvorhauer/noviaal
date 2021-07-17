@@ -74,6 +74,8 @@ public class NoteController extends AbstractController {
       throw new InvalidCommand("UpdateNote: wrong user");
     }
     Note note = noteService.find(unote.getId());
+    note.setTitle(unote.getTitle());
+    note.setBody(unote.getBody());
     Note saved = noteService.save(note);
     return ResponseEntity.ok(ItemResponse.ofItem(saved));
   }
