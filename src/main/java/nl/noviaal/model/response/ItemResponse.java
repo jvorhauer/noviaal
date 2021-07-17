@@ -1,6 +1,8 @@
 package nl.noviaal.model.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Builder;
+import lombok.Data;
 import nl.noviaal.domain.Comment;
 import nl.noviaal.domain.Item;
 import nl.noviaal.domain.Media;
@@ -12,15 +14,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@Data
+@Builder
 public class ItemResponse {
 
     private final static DateTimeFormatter DTF = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     private final String id;
     private final String created;
+    private final String updated;
     private final String type;
     private final String username;
+    private String userId;
     private final List<CommentResponse> comments = new ArrayList<>();
     private String tags;
 
@@ -32,57 +38,6 @@ public class ItemResponse {
     private String name;
     private String contentType;
 
-
-    public ItemResponse(String id, String created, String type, String username) {
-        this.id = id;
-        this.created = created;
-        this.type = type;
-        this.username = username;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public String getCreated() {
-        return created;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public String getUsername() {
-      return username;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getBody() {
-        return body;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getContentType() {
-        return contentType;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setBody(String body) {
-        this.body = body;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public void addComment(Comment comment) {
         comments.add(CommentResponse.ofComment(comment));
@@ -96,21 +51,15 @@ public class ItemResponse {
         this.contentType = contentType;
     }
 
-    public void setTags(String tags) {
-        this.tags = tags;
-    }
-
-    public String getTags() {
-        return tags;
-    }
-
     public static ItemResponse ofItem(Item item) {
-        final ItemResponse itemResponse = new ItemResponse(
-                item.getId().toString(),
-                item.getCreated().format(DTF),
-                item.getClass().getSimpleName(),
-                item.getAuthor().getName()
-        );
+        final ItemResponse itemResponse = ItemResponse.builder()
+                .id(item.getId().toString())
+                .created(item.getCreated().format(DTF))
+                .contentType(item.getClass().getSimpleName())
+                .name(item.getAuthor().getName())
+                .userId(item.getAuthor().getId().toString())
+                .updated(item.getUpdated().format(DTF))
+                .build();
         for (Comment comment : item.getComments()) {
             itemResponse.addComment(comment);
         }

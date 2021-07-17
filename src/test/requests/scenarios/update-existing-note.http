@@ -47,6 +47,6 @@ Content-Type: application/json
 {
   "id": "be93fc71-7bf7-4cab-8161-8332e3f8bc42",
   "title": "Test",
-  "body": "Dit is een test, geen aandacht aan bestedn gaat het vanzelf weg...",
+  "body": "Dit is een test, geen aandacht aan besteden gaat het vanzelf weg...",
   "userId": "1df84df2-add5-4b25-8b5f-4ddc587ba0f6"
 }
