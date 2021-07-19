@@ -3,6 +3,7 @@ package nl.noviaal.controller;
 import lombok.extern.slf4j.Slf4j;
 import nl.noviaal.domain.Follow;
 import nl.noviaal.domain.User;
+import nl.noviaal.exception.InvalidCommand;
 import nl.noviaal.model.response.ItemResponse;
 import nl.noviaal.model.response.UserDeletedResponse;
 import nl.noviaal.model.response.UserFollowedResponse;
@@ -90,6 +91,10 @@ public class UserController extends AbstractController {
   public UserFollowedResponse follow(@PathVariable("id") UUID id, Authentication authentication) {
     var user = findCurrentUser(authentication);
     var follow = findUserById(id);
+    if (user.getId().equals(follow.getId())) {
+      log.error("follow: user tries to follow itself ({}: {})", user.getId(), user.getName());
+      throw new InvalidCommand("Follow: follower and followed are the same");
+    }
     log.info("follow: {} starts following {}", user.getName(), follow.getName());
     var followed = userService.follow(user, follow);
     return UserFollowedResponse.ofFollow(followed);

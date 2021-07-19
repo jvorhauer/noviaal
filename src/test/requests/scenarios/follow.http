@@ -30,6 +30,12 @@ Authorization: Bearer {{ authorized }}
 Accept: application/json
 
 
+### get all followed by current user:
+GET https://sheltered-gorge-50410.herokuapp.com/api/users/followed
+Authorization: Bearer {{ authorized }}
+Accept: application/json
+
+
 ### Login Bilbo
 POST https://sheltered-gorge-50410.herokuapp.com/api/auth/login
 Content-Type: application/json
