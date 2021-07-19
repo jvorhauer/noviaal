@@ -11,6 +11,20 @@ Accept: application/json
 > {% client.global.set("authorized", response.body.token); %}
 
 
+### Login Bilbo
+POST https://sheltered-gorge-50410.herokuapp.com/api/auth/login
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "bilbo@hobbiton.shire",
+  "password": "password"
+}
+
+> {% client.global.set("authorized", response.body.token); %}
+
+
+
 ### Get current user:
 GET https://sheltered-gorge-50410.herokuapp.com/api/users/me
 Authorization: Bearer {{ authorized }}

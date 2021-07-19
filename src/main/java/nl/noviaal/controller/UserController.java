@@ -100,9 +100,19 @@ public class UserController extends AbstractController {
     return findCurrentUser(authentication)
       .getFollowers()
       .stream()
-      .map(Follow::getFollower)
+      .map(Follow::getFollowed)
       .map(UserResponse::ofUser)
       .collect(Collectors.toList());
+  }
+
+  @GetMapping("/followed")
+  public List<UserResponse> followed(Authentication authentication) {
+    return findCurrentUser(authentication)
+            .getFollowed()
+            .stream()
+            .map(Follow::getFollower)
+            .map(UserResponse::ofUser)
+            .collect(Collectors.toList());
   }
 
   @PutMapping("/{id}/promote")

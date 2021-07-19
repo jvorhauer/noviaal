@@ -1,0 +1,49 @@
+### Login Pippin
+POST https://sheltered-gorge-50410.herokuapp.com/api/auth/login
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "pippin@tuckborough.shire",
+  "password": "password"
+}
+
+> {% client.global.set("authorized", response.body.token); %}
+
+
+### get all users
+GET https://sheltered-gorge-50410.herokuapp.com/api/users
+Authorization: Bearer {{ authorized }}
+Accept: application/json
+
+
+### current user (Pippin) starts following Bilbo:
+# ID of Bilbo: 81386868-96f0-4b1e-8d4f-51f853c29ec5
+POST https://sheltered-gorge-50410.herokuapp.com/api/users/follow/81386868-96f0-4b1e-8d4f-51f853c29ec5
+Authorization: Bearer {{ authorized }}
+Accept: application/json
+
+
+### get all followers of current user:
+GET https://sheltered-gorge-50410.herokuapp.com/api/users/followers
+Authorization: Bearer {{ authorized }}
+Accept: application/json
+
+
+### Login Bilbo
+POST https://sheltered-gorge-50410.herokuapp.com/api/auth/login
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "bilbo@hobbiton.shire",
+  "password": "password"
+}
+
+> {% client.global.set("authorized", response.body.token); %}
+
+
+### get all followers of current user:
+GET https://sheltered-gorge-50410.herokuapp.com/api/users/followers
+Authorization: Bearer {{ authorized }}
+Accept: application/json
