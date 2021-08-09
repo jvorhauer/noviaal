@@ -18,6 +18,9 @@ public record ItemsPage(long total, int pages, int current, List<ItemResponse> i
 
   @Override
   public String toString() {
-    return "ItemsPage(total: " + total + ",pages: " + pages + ", items: " + items.size() + ")";
+    return this.getClass().getName() + 
+           "(items: " + items.size() + "/" + total + 
+           ", page: " + current + " of " + pages + 
+           ")";
   }
 }

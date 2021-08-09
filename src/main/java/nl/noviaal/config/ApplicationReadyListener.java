@@ -3,6 +3,9 @@ package nl.noviaal.config;
 import nl.noviaal.domain.User;
 import nl.noviaal.service.AuthService;
 import nl.noviaal.service.UserService;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Profile;
@@ -14,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 @Profile("!mocked")
 public class ApplicationReadyListener implements ApplicationListener<ApplicationReadyEvent> {
+
+  private static final Logger logger = LoggerFactory.getLogger("ApplicationReadyListener");
 
   private final AuthService authService;
   private final UserService userService;
@@ -35,6 +40,7 @@ public class ApplicationReadyListener implements ApplicationListener<Application
   @Transactional
   public void initDataStore() {
     if (userService.findAll().isEmpty()) {
+      logger.info("initDataStore: creating test users...");
       String encryptedPassword = passwordEncoder.encode("password");
       authService.register(User.builder()
                              .name("Tester")
@@ -53,6 +59,8 @@ public class ApplicationReadyListener implements ApplicationListener<Application
                     .roles("USER,ADMIN")
                     .build();
       authService.register(admin);
+    } else {
+      logger.warn("initDataStore: already found one or more users in the test db???");
     }
   }
 }

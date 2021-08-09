@@ -1,4 +1,5 @@
 ### Login Pippin
+# @name login
 POST https://sheltered-gorge-50410.herokuapp.com/api/auth/login
 Content-Type: application/json
 Accept: application/json
@@ -8,6 +9,7 @@ Accept: application/json
   "password": "password"
 }
 
+@authorized = {{login.response.body.$.token}}
 > {% client.global.set("authorized", response.body.token); %}
 
 
