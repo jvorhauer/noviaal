@@ -2,11 +2,14 @@ package nl.noviaal.service;
 
 import lombok.RequiredArgsConstructor;
 import nl.noviaal.domain.Comment;
+import nl.noviaal.domain.Item;
 import nl.noviaal.domain.Note;
 import nl.noviaal.domain.User;
 import nl.noviaal.exception.NoteNotFoundException;
 import nl.noviaal.repository.NoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +32,11 @@ public class NoteService {
   public Note save(Note note) {
     note.setUpdatedToNow();
     return noteRepository.save(note);
+  }
+
+  @Transactional(readOnly = true)
+  public Page<Item> getNotesPageForUser(User user, Pageable pageable) {
+    return noteRepository.paginateNotes(user, pageable);
   }
 
   @Transactional

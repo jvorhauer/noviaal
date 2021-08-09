@@ -7,15 +7,20 @@ import nl.noviaal.domain.Note;
 import nl.noviaal.domain.Tag;
 import nl.noviaal.domain.User;
 import nl.noviaal.exception.InvalidCommand;
+import nl.noviaal.exception.NoteNotFoundException;
 import nl.noviaal.exception.TagNotFoundException;
+import nl.noviaal.exception.UserNotFoundException;
 import nl.noviaal.model.command.CreateComment;
 import nl.noviaal.model.command.CreateNote;
 import nl.noviaal.model.command.UpdateNote;
 import nl.noviaal.model.response.ItemResponse;
 import nl.noviaal.model.response.CommentResponse;
+import nl.noviaal.model.response.ItemsPage;
 import nl.noviaal.service.NoteService;
 import nl.noviaal.service.TagService;
 import nl.noviaal.service.UserService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -56,10 +61,8 @@ public class NoteController extends AbstractController {
     }
     User user = findCurrentUser(authentication);
     Note note = new Note(createNote.getTitle(), createNote.getBody());
-    userService.addNote(user, note);
-    Optional<Note> last = user.getNotes().stream().max(Comparator.comparing(Item::getCreated));
-    return last.map(value -> ResponseEntity.status(HttpStatus.CREATED).body(ItemResponse.ofItem(value)))
-             .orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
+    Note added = userService.addNote(user, note);
+    return ResponseEntity.status(HttpStatus.CREATED).body(ItemResponse.from(added));
   }
 
   @PutMapping(value = {"", "/"})
@@ -77,33 +80,44 @@ public class NoteController extends AbstractController {
     note.setTitle(unote.getTitle());
     note.setBody(unote.getBody());
     Note saved = noteService.save(note);
-    return ResponseEntity.ok(ItemResponse.ofItem(saved));
+    return ResponseEntity.ok(ItemResponse.from(saved));
   }
 
 
   @GetMapping(value = {"", "/"})
-  public List<ItemResponse> findAllForCurrentUser(Authentication authentication) {
-    return convertNotesToResponse(findCurrentUser(authentication).getNotes());
+  public ItemsPage findAllForCurrentUser(Pageable pageable, Authentication authentication) {
+    var user = findCurrentUser(authentication);
+    final ItemsPage itemsPage = ItemsPage.from(noteService.getNotesPageForUser(user, pageable));
+    log.info("findAllForCurrentUser: itemsPage: {}", itemsPage);
+    return itemsPage;
   }
 
   private List<ItemResponse> convertNotesToResponse(Set<Note> notes) {
-    return notes != null ? notes.stream().map(ItemResponse::ofItem).collect(Collectors.toList()) : List.of();
+    return notes != null ? notes.stream().map(ItemResponse::from).collect(Collectors.toList()) : List.of();
   }
 
   @GetMapping("/{id}")
   public ItemResponse find(@PathVariable("id") UUID noteId) {
-    return ItemResponse.ofItem(noteService.find(noteId));
+    return ItemResponse.from(noteService.find(noteId));
   }
 
   @GetMapping("/user/{id}")
-  public List<ItemResponse> findAllForSpecifiedUser(@PathVariable("id") UUID id) {
-    return convertNotesToResponse(findUserById(id).getNotes());
+  public ItemsPage findAllForSpecifiedUser(@PathVariable("id") UUID id, Pageable pageable) {
+    var user = userService.findById(id);
+    if (user.isPresent()) {
+      final ItemsPage itemsPage = ItemsPage.from(noteService.getNotesPageForUser(user.get(), pageable));
+      log.info("findAllForSpecifiedUser: itemsPage: {}", itemsPage);
+      return itemsPage;
+    } else {
+      throw new UserNotFoundException(id);
+    }
   }
 
   @PostMapping("/{id}/comments")
   public ResponseEntity<CommentResponse> addCommentToNote(
     @RequestBody CreateComment createComment,
-    @PathVariable("id") UUID id, Authentication authentication
+    @PathVariable("id") UUID id,
+    Authentication authentication
   ) {
     if (isInvalid(createComment)) {
       log.error("addCommentToNote: invalid: {}", createComment);
@@ -136,6 +150,6 @@ public class NoteController extends AbstractController {
     }
     Note note = noteService.find(id);
     note.addTag(otag.get());
-    return ItemResponse.ofItem(noteService.save(note));
+    return ItemResponse.from(noteService.save(note));
   }
 }

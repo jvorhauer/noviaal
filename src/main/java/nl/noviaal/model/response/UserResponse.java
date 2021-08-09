@@ -3,14 +3,11 @@ package nl.noviaal.model.response;
 import lombok.AllArgsConstructor;
 import lombok.Value;
 import nl.noviaal.domain.User;
-
-import java.time.format.DateTimeFormatter;
+import nl.noviaal.helper.Formatters;
 
 @Value
 @AllArgsConstructor
 public class UserResponse {
-
-  private final static DateTimeFormatter DTF = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
   String id;
   String name;
@@ -22,7 +19,7 @@ public class UserResponse {
       user.getId().toString(),
       user.getName(),
       user.getEmail(),
-      user.getJoined().format(DTF)
+      user.getJoined().format(Formatters.dateTimeFormatter())
     );
   }
 }

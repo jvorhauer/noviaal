@@ -77,7 +77,7 @@ public class MediaController extends AbstractController {
   public List<ItemResponse> listByUser(@PathVariable("userId") UUID userId) {
     return findUserById(userId)
              .getMedia().stream()
-             .map(ItemResponse::ofItem)
+             .map(ItemResponse::from)
              .collect(Collectors.toList());
   }
 }

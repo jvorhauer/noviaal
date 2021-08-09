@@ -5,9 +5,11 @@ import nl.noviaal.domain.Follow;
 import nl.noviaal.domain.User;
 import nl.noviaal.exception.InvalidCommand;
 import nl.noviaal.model.response.ItemResponse;
+import nl.noviaal.model.response.ItemsPage;
 import nl.noviaal.model.response.UserDeletedResponse;
 import nl.noviaal.model.response.UserFollowedResponse;
 import nl.noviaal.model.response.UserResponse;
+import nl.noviaal.repository.NoteRepository;
 import nl.noviaal.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -34,9 +36,12 @@ import java.util.stream.Collectors;
 @Slf4j
 public class UserController extends AbstractController {
 
+  private final NoteRepository noteRepository;
+
   @Autowired
-  public UserController(UserService userService) {
+  public UserController(UserService userService, NoteRepository noteRepository) {
     super(userService);
+    this.noteRepository = noteRepository;
   }
 
   @GetMapping(path = {"", "/"})
@@ -58,7 +63,7 @@ public class UserController extends AbstractController {
   public List<ItemResponse> timeline(Authentication authentication) {
     User user = findCurrentUser(authentication);
     return userService.timeline(user).stream()
-      .map(ItemResponse::ofItem)
+      .map(ItemResponse::from)
       .collect(Collectors.toList());
   }
 
@@ -78,13 +83,11 @@ public class UserController extends AbstractController {
   }
 
   @GetMapping("/items")
-  public List<ItemResponse> notes(Authentication authentication) {
-    log.info("notes");
-    return findCurrentUser(authentication)
-      .getItems()
-      .stream()
-      .map(ItemResponse::ofItem)
-      .collect(Collectors.toList());
+  public ItemsPage notes(Pageable pageable, Authentication authentication) {
+    var user = findCurrentUser(authentication);
+    final ItemsPage itemsPage = ItemsPage.from(noteRepository.paginateNotes(user, pageable));
+    log.info("notes: itemsPage: {}", itemsPage);
+    return itemsPage;
   }
 
   @PostMapping("/follow/{id}")
@@ -107,6 +110,7 @@ public class UserController extends AbstractController {
       .stream()
       .map(Follow::getFollowed)
       .map(UserResponse::ofUser)
+      .distinct()
       .collect(Collectors.toList());
   }
 

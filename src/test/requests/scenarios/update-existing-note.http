@@ -64,3 +64,9 @@ Content-Type: application/json
   "body": "Dit is een test, geen aandacht aan besteden gaat het vanzelf weg...",
   "userId": "1df84df2-add5-4b25-8b5f-4ddc587ba0f6"
 }
+
+
+### Get specific note:
+GET https://sheltered-gorge-50410.herokuapp.com/api/notes/be93fc71-7bf7-4cab-8161-8332e3f8bc42
+Authorization: Bearer {{ authorized }}
+Accept: application/json

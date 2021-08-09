@@ -65,7 +65,7 @@ public class TagController extends AbstractController {
     return tagService.find(name)
              .map(Tag::getItems)
              .map(setOfItems -> setOfItems.stream()
-                                  .map(ItemResponse::ofItem)
+                                  .map(ItemResponse::from)
                                   .collect(Collectors.toSet()))
              .orElse(Set.of());
   }

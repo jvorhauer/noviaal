@@ -2,13 +2,10 @@ package nl.noviaal.model.response;
 
 import lombok.Data;
 import nl.noviaal.domain.Comment;
-
-import java.time.format.DateTimeFormatter;
+import nl.noviaal.helper.Formatters;
 
 @Data
 public class CommentResponse {
-
-  private final static DateTimeFormatter DTF = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
   private final String comment;
   private final String created;
@@ -18,7 +15,7 @@ public class CommentResponse {
   public static CommentResponse ofComment(Comment comment) {
     return new CommentResponse(
             comment.getComment(),
-            comment.getCreated().format(DTF),
+            comment.getCreated().format(Formatters.dateTimeFormatter()),
             comment.getAuthor().getName(),
             comment.getStars()
     );

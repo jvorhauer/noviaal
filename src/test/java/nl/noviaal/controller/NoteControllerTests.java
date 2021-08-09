@@ -31,7 +31,7 @@ class NoteControllerTests {
   void whenAddingNewNote_thenTheNumberOfNotes_shouldEqualOneMore() throws Exception {
     mockMvc.perform(get("/api/notes"))
       .andExpect(status().isOk())
-      .andExpect(jsonPath("$.length()").value(0));
+      .andExpect(jsonPath("$.items.length()").value(0));
 
     mockMvc.perform(post("/api/notes")
                       .with(user("tester@test.com").password("password"))
@@ -43,7 +43,7 @@ class NoteControllerTests {
 
     mockMvc.perform(get("/api/notes").with(user("tester@test.com").password("password")))
       .andExpect(status().isOk())
-      .andExpect(jsonPath("$.length()").value(1))
+      .andExpect(jsonPath("$.items.length()").value(1))
       ;
   }
 
@@ -52,11 +52,11 @@ class NoteControllerTests {
   void whenAddingCommentsToExistingNote_thenTheNumberOfComments_shouldIncreaseByOne() throws Exception {
     mockMvc.perform(get("/api/notes"))
       .andExpect(status().isOk())
-      .andExpect(jsonPath("$.length()").value(0));
+      .andExpect(jsonPath("$.items.length()").value(0));
 
     mockMvc.perform(get("/api/users/items"))
       .andExpect(status().isOk())
-      .andExpect(jsonPath("$.length()").value(0));
+      .andExpect(jsonPath("$.items.length()").value(0));
 
     MvcResult res = mockMvc.perform(post("/api/notes")
                       .contentType(MediaType.APPLICATION_JSON)
@@ -75,7 +75,7 @@ class NoteControllerTests {
 
     mockMvc.perform(get("/api/users/items"))
       .andExpect(status().isOk())
-      .andExpect(jsonPath("$.length()").value(1));
+      .andExpect(jsonPath("$.items.length()").value(1));
 
     mockMvc.perform(get("/api/notes/" + id + "/comments"))
       .andExpect(status().isOk())

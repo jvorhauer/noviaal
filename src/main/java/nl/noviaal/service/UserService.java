@@ -3,12 +3,13 @@ package nl.noviaal.service;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import nl.noviaal.domain.Item;
-import nl.noviaal.exception.EmailAddressInUseException;
 import nl.noviaal.domain.Follow;
+import nl.noviaal.domain.Item;
 import nl.noviaal.domain.Note;
 import nl.noviaal.domain.User;
+import nl.noviaal.exception.EmailAddressInUseException;
 import nl.noviaal.repository.FollowRepository;
+import nl.noviaal.repository.NoteRepository;
 import nl.noviaal.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -31,6 +32,7 @@ public class UserService {
 
   private final UserRepository userRepository;
   private final FollowRepository followRepository;
+  private final NoteRepository noteRepository;
 
 
   @Transactional(readOnly = true)
@@ -68,9 +70,9 @@ public class UserService {
   }
 
   @Transactional
-  public void addNote(User user, Note note) {
-    user.addItem(note);
-    userRepository.save(user);
+  public Note addNote(User user, Note note) {
+    note.setAuthor(user);
+    return noteRepository.save(note);
   }
 
 
