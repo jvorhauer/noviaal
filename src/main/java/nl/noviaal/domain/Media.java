@@ -6,9 +6,6 @@ import javax.persistence.FetchType;
 import javax.persistence.Lob;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.UUID;
 
 @Entity
 @Table(name = "media")

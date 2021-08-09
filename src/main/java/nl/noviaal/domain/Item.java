@@ -15,7 +15,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.PrePersist;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
@@ -72,6 +71,10 @@ public abstract class Item {
 
   public User getAuthor() { return author; }
   public void setAuthor(User author) { this.author = author; }
+  public Item claim(User user) { 
+    this.author = user;
+    return this;
+  }
 
   public ZonedDateTime getCreated() { return created.atZone(ZoneId.of("CET")); }
   public void setCreated(ZonedDateTime created) { this.created = created.toInstant(); }

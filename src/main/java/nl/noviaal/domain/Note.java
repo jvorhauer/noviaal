@@ -1,15 +1,9 @@
 package nl.noviaal.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.UUID;
 
 @Entity
 @Table(name = "note")
@@ -44,4 +38,8 @@ public class Note extends Item {
   public String getBody() { return body; }
   public void setBody(String body) { this.body = body; }
 
+  public Note claim(User user) { 
+    this.author = user;
+    return this;
+  }
 }

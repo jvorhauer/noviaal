@@ -70,9 +70,8 @@ public class UserService {
   }
 
   @Transactional
-  public Note addNote(User user, Note note) {
-    note.setAuthor(user);
-    return noteRepository.save(note);
+  public Note addNote(@NonNull User user, @NonNull Note note) {
+    return noteRepository.save(note.claim(user));
   }
 
 
