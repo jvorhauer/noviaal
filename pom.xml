@@ -8,7 +8,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.5.2</version>
+    <version>2.5.3</version>
     <relativePath/> <!-- lookup parent from repository -->
   </parent>
 
@@ -46,7 +46,7 @@
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
-      <version>1.2.3</version>
+      <version>1.2.5</version>
     </dependency>
 
     <dependency>
@@ -67,7 +67,7 @@
     <dependency>
       <groupId>com.fasterxml.jackson.module</groupId>
       <artifactId>jackson-modules-java8</artifactId>
-      <version>2.12.3</version>
+      <version>2.12.4</version>
       <type>pom</type>
     </dependency>
     <dependency>
@@ -110,7 +110,7 @@
       <plugin>
         <groupId>org.asciidoctor</groupId>
         <artifactId>asciidoctor-maven-plugin</artifactId>
-        <version>1.5.8</version>
+        <version>1.6.0</version>
         <executions>
           <execution>
             <id>generate-docs</id>
@@ -154,24 +154,6 @@
         </executions>
       </plugin>
 
-      <plugin>
-        <groupId>org.jacoco</groupId>
-        <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.8.6</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>prepare-agent</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>generate-report</id>
-            <goals>
-              <goal>report</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
     </plugins>
   </build>
 </project>
