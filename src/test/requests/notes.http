@@ -1,5 +1,5 @@
 ### Login
-POST https://localhost:8080/api/auth/login
+POST http://localhost:8080/api/auth/login
 Content-Type: application/json
 
 {
@@ -10,12 +10,12 @@ Content-Type: application/json
 
 
 ### get all notes for current user:
-GET https://localhost:8080/api/notes
+GET http://localhost:8080/api/notes
 Authorization: Bearer {{ authorized }}
 
 
 ### add note:
-POST https://localhost:8080/api/notes
+POST http://localhost:8080/api/notes
 Content-Type: application/json
 Authorization: Bearer {{ authorized }}
 
@@ -27,7 +27,7 @@ Authorization: Bearer {{ authorized }}
 
 ### First find a Note with /api/users/items and use the id here
 ### Post a comment:
-POST https://localhost:8080/api/notes/5442d394-7272-4910-9b81-4ba1a880aab8/comments
+POST http://localhost:8080/api/notes/5442d394-7272-4910-9b81-4ba1a880aab8/comments
 Authorization: Bearer {{ authorized }}
 Content-Type: application/json
 
@@ -37,5 +37,10 @@ Content-Type: application/json
 
 
 ### add tag to note
-POST https://localhost:8080/api/notes/5442d394-7272-4910-9b81-4ba1a880aab8/tag/personal
+POST http://localhost:8080/api/notes/5442d394-7272-4910-9b81-4ba1a880aab8/tag/personal
+Authorization: Bearer {{ authorized }}
+
+
+### timeline
+GET http://localhost:8080/api/users/timeline
 Authorization: Bearer {{ authorized }}

@@ -30,18 +30,12 @@ public class LikeService {
   }
 
   public List<Note> liked(User user) {
-    var likedNoteIds = likeRepository.findByUserId(user.getId())
-      .stream()
-      .map(Like::getNoteId)
-      .collect(Collectors.toList());
+    var likedNoteIds = likeRepository.findByUserId(user.getId()).map(Like::getNoteId);
     return noteRepository.findAllById(likedNoteIds);
   }
 
   public List<User> liked(Note note) {
-    var likedByIds = likeRepository.findByNoteId(note.getId())
-      .stream()
-      .map(Like::getUserId)
-      .collect(Collectors.toList());
+    var likedByIds = likeRepository.findByNoteId(note.getId()).map(Like::getUserId);
     return userRepository.findAllById(likedByIds);
   }
 }

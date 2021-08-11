@@ -1,5 +1,5 @@
 ### Create Frodo:
-POST https://localhost:8080/api/auth/register
+POST http://localhost:8080/api/auth/register
 Content-Type: application/json
 
 {
@@ -10,7 +10,7 @@ Content-Type: application/json
 
 
 ### Create Bilbo:
-POST https://localhost:8080/api/auth/register
+POST http://localhost:8080/api/auth/register
 Content-Type: application/json
 
 {
@@ -21,7 +21,7 @@ Content-Type: application/json
 
 
 ### Create Pippin:
-POST https://localhost:8080/api/auth/register
+POST http://localhost:8080/api/auth/register
 Content-Type: application/json
 
 {
@@ -31,7 +31,7 @@ Content-Type: application/json
 }
 
 ### Login
-POST https://localhost:8080/api/auth/login
+POST http://localhost:8080/api/auth/login
 Content-Type: application/json
 
 {
@@ -42,36 +42,36 @@ Content-Type: application/json
 > {% client.global.set("authorized", response.body.token); %}
 
 ### Get all users:
-GET https://localhost:8080/api/users
+GET http://localhost:8080/api/users
 Authorization: Bearer {{ authorized }}
 
 
 
 
 ### get item(s):
-GET https://localhost:8080/api/users/items
+GET http://localhost:8080/api/users/items
 Authorization: Bearer {{ authorized }}
 
 ### get note(s):
-GET https://localhost:8080/api/notes
+GET http://localhost:8080/api/notes
 Authorization: Bearer {{ authorized }}
 
 
 ### get notes for a user:
-GET https://localhost:8080/api/users/7a16f71f-90dd-4e2f-b034-2d0ef04c3b7f/notes
+GET http://localhost:8080/api/users/7a16f71f-90dd-4e2f-b034-2d0ef04c3b7f/notes
 Authorization: Bearer {{ authorized }}
 
 
 ### add follower:
-POST https://localhost:8080/api/users/follow/49899834-6467-4355-b3c2-e08f34d8b6a3
+POST http://localhost:8080/api/users/follow/49899834-6467-4355-b3c2-e08f34d8b6a3
 Authorization: Bearer {{ authorized }}
 
 
 ### get list of followers:
-GET https://localhost:8080/api/users/followers
+GET http://localhost:8080/api/users/followers
 Authorization: Bearer {{ authorized }}
 
 
 ### get timeline:
-GET https://localhost:8080/api/users/timeline
+GET http://localhost:8080/api/users/timeline
 Authorization: Bearer {{ authorized }}

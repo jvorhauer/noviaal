@@ -43,9 +43,8 @@ public abstract class Item {
   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "CET")
   Instant created;
 
-  @Column(nullable = false)
   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "CET")
-  protected Instant updated;
+  Instant updated;
 
   @NotNull
   @ManyToOne(fetch = FetchType.LAZY)
@@ -71,7 +70,7 @@ public abstract class Item {
 
   public User getAuthor() { return author; }
   public void setAuthor(User author) { this.author = author; }
-  public Item claim(User user) { 
+  public Item claim(User user) {
     this.author = user;
     return this;
   }

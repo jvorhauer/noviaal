@@ -15,10 +15,13 @@ public class Note extends Item {
   @Column(length = 1024)
   private String body;
 
+  private Integer liked;
+
 
   @PrePersist
   void prePersist() {
     super.prePersist();
+    this.liked = 0;
   }
 
 
@@ -38,8 +41,13 @@ public class Note extends Item {
   public String getBody() { return body; }
   public void setBody(String body) { this.body = body; }
 
-  public Note claim(User user) { 
+  public Note claim(User user) {
     this.author = user;
     return this;
   }
+
+  public void incrementLikes() {
+    this.liked = this.liked + 1;
+  }
+  public Integer getLikeCount() { return this.liked; }
 }

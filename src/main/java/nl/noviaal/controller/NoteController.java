@@ -1,5 +1,10 @@
 package nl.noviaal.controller;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
 import lombok.extern.slf4j.Slf4j;
 import nl.noviaal.domain.Comment;
 import nl.noviaal.domain.Note;
@@ -11,12 +16,12 @@ import nl.noviaal.exception.UserNotFoundException;
 import nl.noviaal.model.command.CreateComment;
 import nl.noviaal.model.command.CreateNote;
 import nl.noviaal.model.command.UpdateNote;
-import nl.noviaal.model.response.ItemResponse;
 import nl.noviaal.model.response.CommentResponse;
-import nl.noviaal.model.response.ItemsPage;
+import nl.noviaal.model.response.ItemResponse;
 import nl.noviaal.service.NoteService;
 import nl.noviaal.service.TagService;
 import nl.noviaal.service.UserService;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,11 +33,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path = "/api/notes")
@@ -80,11 +80,9 @@ public class NoteController extends AbstractController {
 
 
   @GetMapping(value = {"", "/"})
-  public ItemsPage findAllForCurrentUser(Pageable pageable, Authentication authentication) {
+  public Page<ItemResponse> findAllForCurrentUser(Pageable pageable, Authentication authentication) {
     var user = findCurrentUser(authentication);
-    final ItemsPage itemsPage = ItemsPage.from(noteService.getNotesPageForUser(user, pageable));
-    log.info("findAllForCurrentUser: itemsPage: {}", itemsPage);
-    return itemsPage;
+    return noteService.getNotesPageForUser(user, pageable).map(ItemResponse::from);
   }
 
   @GetMapping("/{id}")
@@ -93,17 +91,11 @@ public class NoteController extends AbstractController {
   }
 
   @GetMapping("/user/{id}")
-  public ItemsPage findAllForSpecifiedUser(@PathVariable("id") UUID id, Pageable pageable, Authentication authentication) {
-    var requester = findCurrentUser(authentication);
-    log.info("findAllForSpecifiedUser: requester: {} for {}", requester.getId(), id);
-    var user = userService.findById(id);
-    if (user.isPresent()) {
-      final ItemsPage itemsPage = ItemsPage.from(noteService.getNotesPageForUser(user.get(), pageable));
-      log.info("findAllForSpecifiedUser: itemsPage: {}", itemsPage);
-      return itemsPage;
-    } else {
-      throw new UserNotFoundException(id);
-    }
+  public Page<ItemResponse> findAllForSpecifiedUser(@PathVariable("id") UUID id, Pageable pageable, Authentication authentication) {
+    check(authentication);
+    return userService.findById(id)
+                      .map(user -> noteService.getNotesPageForUser(user, pageable).map(ItemResponse::from))
+                      .orElseThrow(() -> new UserNotFoundException(id));
   }
 
   @PostMapping("/{id}/comments")
@@ -137,10 +129,18 @@ public class NoteController extends AbstractController {
              .collect(Collectors.toList());
   }
 
+  @PostMapping("/{id}/like")
+  public ItemResponse like(@PathVariable("id") UUID id, Authentication authentication) {
+    check(authentication);
+    var note = noteService.find(id);
+    note.incrementLikes();
+    var saved = noteService.save(note);
+    return ItemResponse.from(saved);
+  }
+
   @PostMapping("{id}/tag/{name}")
   public ItemResponse tag(@PathVariable("id") UUID id, @PathVariable("name") String name, Authentication authentication) {
-    var user = findCurrentUser(authentication);
-    log.info("tag: user: {}", user.getId());
+    check(authentication);
     Optional<Tag> otag = tagService.find(name);
     if (otag.isEmpty()) {
       throw new TagNotFoundException(name);

@@ -53,6 +53,11 @@ public abstract class AbstractController {
     }
   }
 
+  protected void check(Authentication authentication) {
+    var email = getUserEmail(authentication);
+    userService.findByEmail(email).orElseThrow(() -> new UserNotFoundException(email));
+  }
+
   protected <T> boolean isInvalid(T t) {
     return !validator.validate(t).isEmpty();
   }

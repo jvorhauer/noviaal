@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import nl.noviaal.domain.User;
 import nl.noviaal.repository.UserRepository;
 import nl.noviaal.service.AuthService;
-import nl.noviaal.service.UserService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,14 +25,12 @@ public class ApplicationReadyListener implements ApplicationListener<Application
   private static final Logger logger = LoggerFactory.getLogger("ApplicationReadyListener");
 
   private final AuthService authService;
-  private final UserService userService;
   private final PasswordEncoder passwordEncoder;
   private final UserRepository userRepo;
 
   @Override
   public void onApplicationEvent(@NonNull ApplicationReadyEvent event) {
     if (isEmptyDataStore()) {
-      logger.info("onApplicationEvent: creating test users...");
       initDataStore();
       try {
         Thread.sleep(500);

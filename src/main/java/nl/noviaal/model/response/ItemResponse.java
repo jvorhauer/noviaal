@@ -27,6 +27,7 @@ public class ItemResponse {
   private String userId;
   private final List<CommentResponse> comments = new ArrayList<>();
   private String tags;
+  private String likes;
 
   // Note content, leave null or empty to not include in JSON output
   private String title;
@@ -62,6 +63,7 @@ public class ItemResponse {
     if (item instanceof Note note) {
       itemResponse.setTitle(note.getTitle());
       itemResponse.setBody(note.getBody());
+      itemResponse.setLikes(note.getLikeCount().toString());
     }
     if (item instanceof Media media) {
       itemResponse.setName(media.getName());

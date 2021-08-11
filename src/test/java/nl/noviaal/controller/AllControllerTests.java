@@ -38,7 +38,7 @@ public class AllControllerTests {
     var count = userRepo.count();
     mockMvc.perform(get("/api/users").accept(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
-      .andExpect(jsonPath("$.size()").value(count));
+      .andExpect(jsonPath("$.totalElements").value(count));
   }
 
   @Test
@@ -90,7 +90,7 @@ public class AllControllerTests {
     var count = getNotesSize("tester@test.com");
     mockMvc.perform(get("/api/notes"))
       .andExpect(status().isOk())
-      .andExpect(jsonPath("$.total").value(count));
+      .andExpect(jsonPath("$.totalElements").value(count));
 
     mockMvc.perform(post("/api/notes")
         .contentType(MediaType.APPLICATION_JSON)
@@ -101,7 +101,7 @@ public class AllControllerTests {
 
     mockMvc.perform(get("/api/notes"))
       .andExpect(status().isOk())
-      .andExpect(jsonPath("$.total").value(count + 1));
+      .andExpect(jsonPath("$.totalElements").value(count + 1));
   }
 
   @Transactional(readOnly = true)
@@ -115,11 +115,11 @@ public class AllControllerTests {
   void whenAddingCommentsToExistingNote_thenTheNumberOfComments_shouldIncreaseByOne() throws Exception {
     mockMvc.perform(get("/api/notes"))
       .andExpect(status().isOk())
-      .andExpect(jsonPath("$.total").value(0));
+      .andExpect(jsonPath("$.totalElements").value(0));
 
     mockMvc.perform(get("/api/users/items"))
       .andExpect(status().isOk())
-      .andExpect(jsonPath("$.total").value(0));
+      .andExpect(jsonPath("$.totalElements").value(0));
 
     MvcResult res = mockMvc.perform(post("/api/notes")
         .contentType(MediaType.APPLICATION_JSON)
@@ -137,7 +137,7 @@ public class AllControllerTests {
 
     mockMvc.perform(get("/api/users/items"))
       .andExpect(status().isOk())
-      .andExpect(jsonPath("$.total").value(1));
+      .andExpect(jsonPath("$.totalElements").value(1));
 
     mockMvc.perform(get("/api/notes/" + id + "/comments"))
       .andExpect(status().isOk())

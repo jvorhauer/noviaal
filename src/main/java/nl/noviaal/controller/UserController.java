@@ -1,17 +1,21 @@
 package nl.noviaal.controller;
 
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
 import lombok.extern.slf4j.Slf4j;
 import nl.noviaal.domain.Follow;
 import nl.noviaal.domain.User;
 import nl.noviaal.exception.InvalidCommand;
 import nl.noviaal.model.response.ItemResponse;
-import nl.noviaal.model.response.ItemsPage;
 import nl.noviaal.model.response.UserDeletedResponse;
 import nl.noviaal.model.response.UserFollowedResponse;
 import nl.noviaal.model.response.UserResponse;
 import nl.noviaal.repository.NoteRepository;
 import nl.noviaal.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -25,10 +29,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Validated
 @RestController
@@ -45,12 +45,9 @@ public class UserController extends AbstractController {
   }
 
   @GetMapping(path = {"", "/"})
-  public List<UserResponse> findAll(Authentication auth, Pageable pageable) {
+  public Page<UserResponse> findAll(Authentication auth, Pageable pageable) {
     log.info("findAll: by user: {}", getUserEmail(auth));
-    return userService.findAll(pageable)
-      .stream()
-      .map(UserResponse::ofUser)
-      .collect(Collectors.toList());
+    return userService.findAll(pageable).map(UserResponse::ofUser);
   }
 
   @GetMapping(path = "/me")
@@ -60,9 +57,9 @@ public class UserController extends AbstractController {
   }
 
   @GetMapping("/timeline")
-  public List<ItemResponse> timeline(Authentication authentication) {
+  public List<ItemResponse> timeline(Authentication authentication, Pageable pageable) {
     User user = findCurrentUser(authentication);
-    return userService.timeline(user).stream()
+    return userService.timeline(user, pageable).stream()
       .map(ItemResponse::from)
       .collect(Collectors.toList());
   }
@@ -83,11 +80,9 @@ public class UserController extends AbstractController {
   }
 
   @GetMapping("/items")
-  public ItemsPage notes(Pageable pageable, Authentication authentication) {
+  public Page<ItemResponse> notes(Pageable pageable, Authentication authentication) {
     var user = findCurrentUser(authentication);
-    final ItemsPage itemsPage = ItemsPage.from(noteRepository.paginateNotes(user, pageable));
-    log.info("notes: itemsPage: {}", itemsPage);
-    return itemsPage;
+    return noteRepository.paginateNotes(user, pageable).map(ItemResponse::from);
   }
 
   @PostMapping("/follow/{id}")
