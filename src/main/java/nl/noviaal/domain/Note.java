@@ -49,5 +49,5 @@ public class Note extends Item {
   public void incrementLikes() {
     this.liked = this.liked + 1;
   }
-  public Integer getLikeCount() { return this.liked; }
+  public Integer getLikeCount() { return liked != null ? liked : 0; }
 }
