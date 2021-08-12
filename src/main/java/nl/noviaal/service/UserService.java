@@ -88,7 +88,7 @@ public class UserService {
 
 
   public Page<Item> timeline(User user, Pageable pageable) {
-    List<User> following = user.getFollowers().stream().map(Follow::getFollowed).collect(Collectors.toList());
+    List<User> following = user.getFollowed().stream().map(Follow::getFollower).collect(Collectors.toList());
     following.add(user);    // also display my own notes
     return noteRepository.timeline(following, pageable);
   }

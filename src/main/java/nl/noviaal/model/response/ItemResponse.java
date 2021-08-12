@@ -52,7 +52,7 @@ public class ItemResponse {
       .id(item.getId().toString())
       .created(item.getCreated().format(dtf))
       .contentType(item.getClass().getSimpleName())
-      .name(item.getAuthor().getName())
+      .username(item.getAuthor().getName())
       .userId(item.getAuthor().getId().toString())
       .updated(item.getUpdated() != null ? item.getUpdated().format(dtf) : item.getCreated().format(dtf))
       .build();

@@ -11,6 +11,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @ToString
 public class UserDetailsImpl implements UserDetails {
@@ -32,8 +33,7 @@ public class UserDetailsImpl implements UserDetails {
   }
 
   public static UserDetailsImpl build(User user) {
-    List<GrantedAuthority> authorities = List.of(user.getRoles().split(","))
-                                           .stream()
+    List<GrantedAuthority> authorities = Stream.of(user.getRoles() != null ? user.getRoles().split(",") : new String[]{"USER"})
                                            .map(SimpleGrantedAuthority::new)
                                            .collect(Collectors.toList());
     return new UserDetailsImpl(user.getId(), user.getName(), user.getEmail(), user.getPassword(), authorities);

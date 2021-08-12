@@ -8,7 +8,6 @@ Content-Type: application/json
   "password": "password"
 }
 
-
 ### Create Bilbo:
 POST http://localhost:8080/api/auth/register
 Content-Type: application/json
@@ -18,7 +17,6 @@ Content-Type: application/json
   "email": "bilbo@hobbiton.shire",
   "password": "password"
 }
-
 
 ### Create Pippin:
 POST http://localhost:8080/api/auth/register
@@ -34,18 +32,17 @@ Content-Type: application/json
 POST http://localhost:8080/api/auth/login
 Content-Type: application/json
 
-{
-  "username": "pippin@tuckborough.shire",
-  "password": "password"
-}
+{ "username": "frodo@hobbiton.shire", "password": "password" }
 
 > {% client.global.set("authorized", response.body.token); %}
+
+### GET my details (profile)
+GET http://localhost:8080/api/users/me
+Authorization: Bearer {{ authorized }}
 
 ### Get all users:
 GET http://localhost:8080/api/users
 Authorization: Bearer {{ authorized }}
-
-
 
 
 ### get item(s):
@@ -63,7 +60,7 @@ Authorization: Bearer {{ authorized }}
 
 
 ### add follower:
-POST http://localhost:8080/api/users/follow/49899834-6467-4355-b3c2-e08f34d8b6a3
+POST http://localhost:8080/api/users/follow/7a16f71f-90dd-4e2f-b034-2d0ef04c3b7f
 Authorization: Bearer {{ authorized }}
 
 

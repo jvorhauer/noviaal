@@ -111,6 +111,15 @@ public class AllControllerTests {
   }
 
   @Test
+  @WithUserDetails("tester@test.com")
+  void whenGettingTheTimeline_thenTheNumberOfNotesShouldBeOne() throws Exception {
+    var count = getNotesSize("tester@test.com");
+    mockMvc.perform(get("/api/users/timeline"))
+      .andExpect(status().isOk())
+      .andExpect(jsonPath("$.totalElements").value(count));
+  }
+
+  @Test
   @WithUserDetails("an@other.com")
   void whenAddingCommentsToExistingNote_thenTheNumberOfComments_shouldIncreaseByOne() throws Exception {
     mockMvc.perform(get("/api/notes"))
@@ -143,6 +152,7 @@ public class AllControllerTests {
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.length()").value(1));
   }
+
 
 
   /* ---- MediaController tests ---- */

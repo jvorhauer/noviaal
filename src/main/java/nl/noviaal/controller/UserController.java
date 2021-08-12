@@ -57,11 +57,9 @@ public class UserController extends AbstractController {
   }
 
   @GetMapping("/timeline")
-  public List<ItemResponse> timeline(Authentication authentication, Pageable pageable) {
+  public Page<ItemResponse> timeline(Authentication authentication, Pageable pageable) {
     User user = findCurrentUser(authentication);
-    return userService.timeline(user, pageable).stream()
-      .map(ItemResponse::from)
-      .collect(Collectors.toList());
+    return userService.timeline(user, pageable).map(ItemResponse::from);
   }
 
   @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
