@@ -7,38 +7,28 @@ Content-Type: application/json
 {"username": "pippin@tuckborough.shire", "password": "password"}
 > {% client.global.set("authorized", response.body.token); %}
 
-
 ### get all notes for current user:
 GET http://localhost:8080/api/notes
 Authorization: Bearer {{ authorized }}
-
 
 ### add note:
 POST http://localhost:8080/api/notes
 Content-Type: application/json
 Authorization: Bearer {{ authorized }}
 
-{
-  "title": "Note number One",
-  "body": "Nevermind that, my lad..."
-}
-
+{"title": "Note number One", "body": "Nevermind that, my lad..."}
 
 ### First find a Note with /api/users/items and use the id here
 ### Post a comment:
 POST http://localhost:8080/api/notes/5442d394-7272-4910-9b81-4ba1a880aab8/comments
-Authorization: Bearer {{ authorized }}
 Content-Type: application/json
+Authorization: Bearer {{ authorized }}
 
-{
-  "comment": "test comment"
-}
-
+{"comment": "test comment"}
 
 ### add tag to note
 POST http://localhost:8080/api/notes/5442d394-7272-4910-9b81-4ba1a880aab8/tag/personal
 Authorization: Bearer {{ authorized }}
-
 
 ### timeline
 GET http://localhost:8080/api/users/timeline
