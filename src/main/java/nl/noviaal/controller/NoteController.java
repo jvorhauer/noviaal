@@ -26,12 +26,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -48,7 +50,7 @@ public class NoteController extends AbstractController {
     this.tagService = tagService;
   }
 
-  @PostMapping(value = {"", "/"})
+  @PostMapping(value = { "", "/" })
   public ResponseEntity<ItemResponse> addNote(@RequestBody CreateNote createNote, Authentication authentication) {
     if (isInvalid(createNote)) {
       log.error("addNote: invalid: {}", createNote);
@@ -60,7 +62,8 @@ public class NoteController extends AbstractController {
     return ResponseEntity.status(HttpStatus.CREATED).body(ItemResponse.from(added));
   }
 
-  @PutMapping(value = {"", "/"})
+  @CrossOrigin(origins = "*", methods = { RequestMethod.PUT })
+  @PutMapping(value = { "", "/" })
   public ResponseEntity<ItemResponse> updateNote(@RequestBody UpdateNote unote, Authentication auth) {
     if (isInvalid(unote)) {
       log.error("updateNote: invalid: {}", unote);
@@ -78,8 +81,7 @@ public class NoteController extends AbstractController {
     return ResponseEntity.ok(ItemResponse.from(saved));
   }
 
-
-  @GetMapping(value = {"", "/"})
+  @GetMapping(value = { "", "/" })
   public Page<ItemResponse> findAllForCurrentUser(Pageable pageable, Authentication authentication) {
     var user = findCurrentUser(authentication);
     return noteService.getNotesPageForUser(user, pageable).map(ItemResponse::from);
@@ -91,19 +93,16 @@ public class NoteController extends AbstractController {
   }
 
   @GetMapping("/user/{id}")
-  public Page<ItemResponse> findAllForSpecifiedUser(@PathVariable("id") UUID id, Pageable pageable, Authentication authentication) {
+  public Page<ItemResponse> findAllForSpecifiedUser(@PathVariable("id") UUID id, Pageable pageable,
+      Authentication authentication) {
     check(authentication);
-    return userService.findById(id)
-                      .map(user -> noteService.getNotesPageForUser(user, pageable).map(ItemResponse::from))
-                      .orElseThrow(() -> new UserNotFoundException(id));
+    return userService.findById(id).map(user -> noteService.getNotesPageForUser(user, pageable).map(ItemResponse::from))
+        .orElseThrow(() -> new UserNotFoundException(id));
   }
 
   @PostMapping("/{id}/comments")
-  public ResponseEntity<CommentResponse> addCommentToNote(
-    @RequestBody CreateComment createComment,
-    @PathVariable("id") UUID id,
-    Authentication authentication
-  ) {
+  public ResponseEntity<CommentResponse> addCommentToNote(@RequestBody CreateComment createComment,
+      @PathVariable("id") UUID id, Authentication authentication) {
     if (isInvalid(createComment)) {
       log.error("addCommentToNote: invalid: {}", createComment);
       throw new InvalidCommand("CreateComment");
@@ -111,22 +110,18 @@ public class NoteController extends AbstractController {
 
     User user = findCurrentUser(authentication);
     Note note = noteService.find(id);
-    Comment comment = new Comment(
-            createComment.getComment(), createComment.getStars() == null ? 0 : createComment.getStars()
-    );
+    Comment comment = new Comment(createComment.getComment(),
+        createComment.getStars() == null ? 0 : createComment.getStars());
     return noteService.addCommentToNote(note, user, comment)
-             .map(c -> ResponseEntity.status(HttpStatus.CREATED).body(CommentResponse.ofComment(c)))
-             .orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
+        .map(c -> ResponseEntity.status(HttpStatus.CREATED).body(CommentResponse.ofComment(c)))
+        .orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
   }
 
   @GetMapping("/{id}/comments")
   public List<CommentResponse> getComments(@PathVariable("id") UUID id, Authentication authentication) {
     var user = findCurrentUser(authentication);
     log.info("getComments: user: {}", user.getId());
-    return noteService.find(id)
-             .getComments().stream()
-             .map(CommentResponse::ofComment)
-             .collect(Collectors.toList());
+    return noteService.find(id).getComments().stream().map(CommentResponse::ofComment).collect(Collectors.toList());
   }
 
   @PostMapping("/{id}/like")
@@ -139,7 +134,8 @@ public class NoteController extends AbstractController {
   }
 
   @PostMapping("{id}/tag/{name}")
-  public ItemResponse tag(@PathVariable("id") UUID id, @PathVariable("name") String name, Authentication authentication) {
+  public ItemResponse tag(@PathVariable("id") UUID id, @PathVariable("name") String name,
+      Authentication authentication) {
     check(authentication);
     Optional<Tag> otag = tagService.find(name);
     if (otag.isEmpty()) {
