@@ -1,5 +1,7 @@
 package nl.noviaal.config;
 
+import java.util.List;
+
 import nl.noviaal.model.auth.AuthEntryPointJwt;
 import nl.noviaal.model.auth.AuthTokenFilter;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -36,10 +38,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Bean
   public CorsConfigurationSource corsConfigurationSource() {
-    final var source = new UrlBasedCorsConfigurationSource();
-    source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
+    final CorsConfiguration configuration = new CorsConfiguration();
+    configuration.setAllowedOrigins(List.of("*"));
+    configuration.setAllowedMethods(List.of("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+    configuration.setAllowCredentials(true);
+    configuration.setAllowedHeaders(List.of("*"));
+    configuration.setExposedHeaders(List.of("X-Auth-Token","Authorization","Access-Control-Allow-Origin","Access-Control-Allow-Credentials"));
+    final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", configuration);
     return source;
   }
+
+
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
