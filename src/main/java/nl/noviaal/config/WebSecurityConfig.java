@@ -38,18 +38,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Bean
   public CorsConfigurationSource corsConfigurationSource() {
-    final CorsConfiguration configuration = new CorsConfiguration();
-    configuration.setAllowedOrigins(List.of("*"));
-    configuration.setAllowedMethods(List.of("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
-    configuration.setAllowCredentials(true);
-    configuration.setAllowedHeaders(List.of("*"));
-    configuration.setExposedHeaders(List.of("X-Auth-Token","Authorization","Access-Control-Allow-Origin","Access-Control-Allow-Credentials"));
+    final CorsConfiguration configuration = new CorsConfiguration().applyPermitDefaultValues();
+    configuration.addAllowedMethod("PUT");
+//    configuration.setAllowedOrigins(List.of("*"));
+//    configuration.setAllowedMethods(List.of("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+//    configuration.setAllowCredentials(true);
+//    configuration.setAllowedHeaders(List.of("*"));
+//    configuration.setExposedHeaders(List.of("*"));
     final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/**", configuration);
     return source;
   }
-
-
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
