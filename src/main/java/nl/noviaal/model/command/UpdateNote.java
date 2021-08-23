@@ -9,14 +9,12 @@ import java.util.UUID;
 
 @Value
 public class UpdateNote {
-    @NotNull
-    UUID id;
-
     @NotBlank
     @Size(max = 255)
     String title;
 
     @NotBlank
+    @Size(max = 1024)
     String body;
 
     @NotNull

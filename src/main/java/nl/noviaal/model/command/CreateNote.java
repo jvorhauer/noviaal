@@ -15,5 +15,6 @@ public class CreateNote {
   String title;
 
   @NotBlank
+  @Size(max = 1024)
   String body;
 }

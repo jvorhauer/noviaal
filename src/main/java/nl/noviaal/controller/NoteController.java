@@ -60,8 +60,8 @@ public class NoteController extends AbstractController {
     return ResponseEntity.status(HttpStatus.CREATED).body(ItemResponse.from(added));
   }
 
-  @PutMapping(value = { "", "/" })
-  public ResponseEntity<ItemResponse> updateNote(@RequestBody UpdateNote unote, Authentication auth) {
+  @PutMapping(value = { "/{id}" })
+  public ResponseEntity<ItemResponse> updateNote(@PathVariable("id") UUID id, @RequestBody UpdateNote unote, Authentication auth) {
     if (isInvalid(unote)) {
       log.error("updateNote: invalid: {}", unote);
       throw new InvalidCommand("UpdateNote: invalid");
@@ -71,7 +71,7 @@ public class NoteController extends AbstractController {
       log.error("updateNote: note belongs to other user: {} <> {}", user.getId(), unote.getUserId());
       throw new InvalidCommand("UpdateNote: wrong user");
     }
-    Note note = noteService.find(unote.getId());
+    Note note = noteService.find(id);
     note.setTitle(unote.getTitle());
     note.setBody(unote.getBody());
     Note saved = noteService.save(note);
