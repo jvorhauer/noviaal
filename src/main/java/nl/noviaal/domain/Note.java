@@ -9,7 +9,7 @@ import javax.persistence.Table;
 @Table(name = "note")
 public class Note extends Item {
 
-  @Column(nullable = false, length = 255)
+  @Column(nullable = false)
   private String title;
 
   @Column(length = 1024)
@@ -42,6 +42,9 @@ public class Note extends Item {
   public void setBody(String body) { this.body = body; }
 
   public Note claim(User user) {
+    if (user == null) {
+      throw new NullPointerException("user");
+    }
     this.author = user;
     return this;
   }

@@ -2,9 +2,7 @@ package nl.noviaal.controller;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
-import lombok.extern.slf4j.Slf4j;
 import nl.noviaal.domain.Follow;
 import nl.noviaal.domain.User;
 import nl.noviaal.exception.InvalidCommand;
@@ -14,6 +12,8 @@ import nl.noviaal.model.response.UserFollowedResponse;
 import nl.noviaal.model.response.UserResponse;
 import nl.noviaal.repository.NoteRepository;
 import nl.noviaal.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,8 +33,9 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 @RestController
 @RequestMapping("/api/users")
-@Slf4j
 public class UserController extends AbstractController {
+
+  private static final Logger logger = LoggerFactory.getLogger("UserController");
 
   private final NoteRepository noteRepository;
 
@@ -46,13 +47,13 @@ public class UserController extends AbstractController {
 
   @GetMapping(path = {"", "/"})
   public Page<UserResponse> findAll(Authentication auth, Pageable pageable) {
-    log.info("findAll: by user: {}", getUserEmail(auth));
+    logger.info("findAll: by user: {}", getUserEmail(auth));
     return userService.findAll(pageable).map(UserResponse::ofUser);
   }
 
   @GetMapping(path = "/me")
   public UserResponse findMe(Authentication authentication) {
-    log.info("findMe");
+    logger.info("findMe");
     return UserResponse.ofUser(findCurrentUser(authentication));
   }
 
@@ -64,14 +65,14 @@ public class UserController extends AbstractController {
 
   @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   public UserResponse getById(@PathVariable("id") UUID id) {
-    log.info("getById: {}", id);
+    logger.info("getById: {}", id);
     return UserResponse.ofUser(findUserById(id));
   }
 
   @DeleteMapping("/{id}")
   public UserDeletedResponse delete(@PathVariable("id") UUID id, Authentication authentication) {
     assertIsAdmin(authentication);
-    log.info("delete: {}", id);
+    logger.info("delete: {}", id);
     var user = findUserById(id);
     userService.delete(user);
     return UserDeletedResponse.ofUser(user);
@@ -88,10 +89,10 @@ public class UserController extends AbstractController {
     var user = findCurrentUser(authentication);
     var follow = findUserById(id);
     if (user.getId().equals(follow.getId())) {
-      log.error("follow: user tries to follow itself ({}: {})", user.getId(), user.getName());
+      logger.error("follow: user tries to follow itself ({}: {})", user.getId(), user.getName());
       throw new InvalidCommand("Follow: follower and followed are the same");
     }
-    log.info("follow: {} starts following {}", user.getName(), follow.getName());
+    logger.info("follow: {} starts following {}", user.getName(), follow.getName());
     var followed = userService.follow(user, follow);
     return UserFollowedResponse.ofFollow(followed);
   }
@@ -104,7 +105,7 @@ public class UserController extends AbstractController {
       .map(Follow::getFollowed)
       .map(UserResponse::ofUser)
       .distinct()
-      .collect(Collectors.toList());
+      .toList();
   }
 
   @GetMapping("/followed")
@@ -114,7 +115,7 @@ public class UserController extends AbstractController {
             .stream()
             .map(Follow::getFollower)
             .map(UserResponse::ofUser)
-            .collect(Collectors.toList());
+            .toList();
   }
 
   @PutMapping("/{id}/promote")

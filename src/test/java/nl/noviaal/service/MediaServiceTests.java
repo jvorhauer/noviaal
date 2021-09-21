@@ -2,7 +2,10 @@ package nl.noviaal.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import lombok.RequiredArgsConstructor;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Optional;
+
 import nl.noviaal.domain.Media;
 import nl.noviaal.domain.User;
 import nl.noviaal.repository.UserRepository;
@@ -15,18 +18,20 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Optional;
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class MediaServiceTests {
 
   private final MediaService mediaService;
   private final UserRepository userRepository;
   private final Setup setup;
+
+  @Autowired
+  public MediaServiceTests(MediaService mediaService, UserRepository userRepository, Setup setup) {
+    this.mediaService = mediaService;
+    this.userRepository = userRepository;
+    this.setup = setup;
+  }
 
   @BeforeEach
   void before() {

@@ -16,15 +16,15 @@ POST http://localhost:8080/api/notes
 Content-Type: application/json
 Authorization: Bearer {{ authorized }}
 
-{"title": "Note number One", "body": "Nevermind that, my lad..."}
+{"title": "Note number Two", "body": "We are two steps from hell!"}
 
 ### First find a Note with /api/users/items and use the id here
 ### Post a comment:
-POST http://localhost:8080/api/notes/5442d394-7272-4910-9b81-4ba1a880aab8/comments
+POST http://localhost:8080/api/notes/3e6cf2a8-8c36-41eb-ae70-7c9e8a314ef1/comments
 Content-Type: application/json
 Authorization: Bearer {{ authorized }}
 
-{"comment": "test comment"}
+{"comment": "correct comment", "stars":  2}
 
 ### add tag to note
 POST http://localhost:8080/api/notes/5442d394-7272-4910-9b81-4ba1a880aab8/tag/personal

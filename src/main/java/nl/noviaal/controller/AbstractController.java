@@ -53,6 +53,10 @@ public abstract class AbstractController {
     }
   }
 
+  /**
+   * make sure there is a valid email address, i.e. a authenticated user.
+   * @param authentication Authentication
+   */
   protected void check(Authentication authentication) {
     var email = getUserEmail(authentication);
     userService.findByEmail(email).orElseThrow(() -> new UserNotFoundException(email));

@@ -1,6 +1,9 @@
 package nl.noviaal.controller;
 
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
 import nl.noviaal.domain.Media;
 import nl.noviaal.exception.MediaInvalidException;
 import nl.noviaal.exception.MediaNotFoundException;
@@ -8,6 +11,8 @@ import nl.noviaal.model.response.ItemResponse;
 import nl.noviaal.model.response.MediaUploadResponse;
 import nl.noviaal.service.MediaService;
 import nl.noviaal.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -23,14 +28,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
 @RestController
 @RequestMapping("/api/media")
-@Slf4j
 public class MediaController extends AbstractController {
+
+  private static final Logger logger = LoggerFactory.getLogger("MediaController");
 
   private final MediaService mediaService;
 
@@ -43,22 +45,22 @@ public class MediaController extends AbstractController {
   @PostMapping(value = {"", "/"})
   public MediaUploadResponse upload(@RequestParam("file") MultipartFile file, Authentication authentication) {
     if (file == null) {
-      log.error("store: file is null");
+      logger.error("store: file is null");
       throw new MediaInvalidException("Media file is null");
     }
     if (!StringUtils.hasText(file.getOriginalFilename())) {
-      log.error("store: original file name is null or empty");
+      logger.error("store: original file name is null or empty");
       throw new MediaInvalidException("Media file name is null or empty");
     }
-    log.info("store: original file name: [{}]", file.getOriginalFilename());
+    logger.info("store: original file name: [{}]", file.getOriginalFilename());
     var filename = StringUtils.cleanPath(file.getOriginalFilename());
     if (filename.contains("..")) {
-      log.error("store: original file name contains illegal characters");
+      logger.error("store: original file name contains illegal characters");
       throw new MediaInvalidException("Media name contains characters that could be used for malicious purposes");
     }
 
     var user = findCurrentUser(authentication);
-    log.info("upload: {} by {}", filename, user.getEmail());
+    logger.info("upload: {} by {}", filename, user.getEmail());
     Media media = mediaService.store(file, user);
     return MediaUploadResponse.ofMedia(media, file.getSize());
   }

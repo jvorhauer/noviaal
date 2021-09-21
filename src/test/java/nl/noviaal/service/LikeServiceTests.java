@@ -6,26 +6,30 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
-import lombok.RequiredArgsConstructor;
 import nl.noviaal.domain.Like;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class LikeServiceTests {
 
-  private final LikeService service;
-  private final UserService users;
+  private final LikeService likeService;
+  private final UserService userService;
+
+  @Autowired
+  public LikeServiceTests(LikeService likeService, UserService userService) {
+    this.likeService = likeService;
+    this.userService = userService;
+  }
 
   @Test
   void addNewLike() {
-    var ouser = users.findByEmail("tester@test.com");
+    var ouser = userService.findByEmail("tester@test.com");
     assertThat(ouser).isPresent();
     var user = ouser.get();
     var noteId = UUID.randomUUID();
-    var saved = service.save(new Like(user.getId(), noteId));
+    var saved = likeService.save(new Like(user.getId(), noteId));
     assertThat(saved).isNotNull();
     assertThat(saved.getId()).isNotNull();
     assertThat(saved.getUserId()).isEqualTo(user.getId());

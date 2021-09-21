@@ -4,7 +4,6 @@ import java.util.Comparator;
 import java.util.Optional;
 import java.util.UUID;
 
-import lombok.RequiredArgsConstructor;
 import nl.noviaal.domain.Comment;
 import nl.noviaal.domain.Item;
 import nl.noviaal.domain.Note;
@@ -18,9 +17,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class NoteService {
   private final NoteRepository noteRepository;
+
+  @Autowired
+  public NoteService(NoteRepository noteRepository) {
+    this.noteRepository = noteRepository;
+  }
 
   @Transactional(readOnly = true)
   public Note find(UUID id) {
@@ -40,10 +43,9 @@ public class NoteService {
   }
 
   @Transactional
-  public Optional<Comment> addCommentToNote(Note note, User user, Comment comment) {
+  public Note addCommentToNote(Note note, User user, Comment comment) {
     note.addComment(comment);
     comment.setAuthor(user);
-    Note saved = save(note);
-    return saved.getComments().stream().min(Comparator.comparing(Comment::getCreated));
+    return save(note);
   }
 }

@@ -142,7 +142,8 @@ public class AllControllerTests {
         .contentType(MediaType.APPLICATION_JSON)
         .content("{\"comment\":\"geen commentaar\",\"stars\":3}"))
       .andExpect(status().is2xxSuccessful())
-      .andExpect(jsonPath("$.comment").value("geen commentaar"));
+      .andExpect(jsonPath("$.comments[0].comment").value("geen commentaar"))
+      .andExpect(jsonPath("$.comments[0].stars").value(3));
 
     mockMvc.perform(get("/api/users/items"))
       .andExpect(status().isOk())

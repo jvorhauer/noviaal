@@ -28,10 +28,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   private final UserDetailsService userDetailsService;
   private final AuthEntryPointJwt unauthorizedHandler;
 
-  public WebSecurityConfig(
-    @Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService,
-    AuthEntryPointJwt unauthorizedHandler
-  ) {
+  public WebSecurityConfig(@Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService,
+      AuthEntryPointJwt unauthorizedHandler) {
     this.userDetailsService = userDetailsService;
     this.unauthorizedHandler = unauthorizedHandler;
   }
@@ -47,13 +45,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
-    http.csrf().disable();      // TODO: enable before release!
-    http.cors().and()
-      .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
-      .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-      .authorizeRequests()
-      .antMatchers("/api/auth/**").permitAll()
-      .anyRequest().authenticated();
+    http.csrf().disable();
+    http.cors().and().exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and().sessionManagement()
+        .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests().antMatchers("/api/auth/**")
+        .permitAll().anyRequest().authenticated();
 
     http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
   }
@@ -73,7 +68,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   public AuthenticationManager authenticationManagerBean() throws Exception {
     return super.authenticationManagerBean();
   }
-
 
   @Bean
   public PasswordEncoder passwordEncoder() {

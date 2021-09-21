@@ -1,5 +1,8 @@
 package nl.noviaal.model.response;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Data;
@@ -9,10 +12,6 @@ import nl.noviaal.domain.Media;
 import nl.noviaal.domain.Note;
 import nl.noviaal.domain.Tag;
 import nl.noviaal.helper.Formatters;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
@@ -25,7 +24,7 @@ public class ItemResponse {
   private final String type;
   private final String username;
   private String userId;
-  private final List<CommentResponse> comments = new ArrayList<>();
+  private List<CommentResponse> comments;
   private String tags;
   private String likes;
 
@@ -54,11 +53,9 @@ public class ItemResponse {
       .contentType(item.getClass().getSimpleName())
       .username(item.getAuthor().getName())
       .userId(item.getAuthor().getId().toString())
+      .comments(item.getComments().stream().map(CommentResponse::ofComment).toList())
       .updated(item.getUpdated() != null ? item.getUpdated().format(dtf) : item.getCreated().format(dtf))
       .build();
-    for (Comment comment : item.getComments()) {
-      itemResponse.addComment(comment);
-    }
     itemResponse.tags = item.getTags().stream().map(Tag::getName).collect(Collectors.joining(", "));
     if (item instanceof Note note) {
       itemResponse.setTitle(note.getTitle());

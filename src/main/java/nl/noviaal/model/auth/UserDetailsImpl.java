@@ -1,17 +1,15 @@
 package nl.noviaal.model.auth;
 
+import java.util.Collection;
+import java.util.UUID;
+import java.util.stream.Stream;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.ToString;
 import nl.noviaal.domain.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @ToString
 public class UserDetailsImpl implements UserDetails {
@@ -33,9 +31,9 @@ public class UserDetailsImpl implements UserDetails {
   }
 
   public static UserDetailsImpl build(User user) {
-    List<GrantedAuthority> authorities = Stream.of(user.getRoles() != null ? user.getRoles().split(",") : new String[]{"USER"})
+    var authorities = Stream.of(user.getRoles() != null ? user.getRoles().split(",") : new String[]{"USER"})
                                            .map(SimpleGrantedAuthority::new)
-                                           .collect(Collectors.toList());
+                                           .toList();
     return new UserDetailsImpl(user.getId(), user.getName(), user.getEmail(), user.getPassword(), authorities);
   }
 

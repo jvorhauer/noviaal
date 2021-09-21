@@ -15,6 +15,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
@@ -52,6 +53,7 @@ public abstract class Item {
   User author;
 
   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+  @OrderBy("created DESC")
   private List<Comment> comments = new ArrayList<>();
 
   @ManyToMany

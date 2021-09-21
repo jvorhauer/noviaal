@@ -1,10 +1,8 @@
 package nl.noviaal.config;
 
-import lombok.RequiredArgsConstructor;
 import nl.noviaal.domain.User;
 import nl.noviaal.repository.UserRepository;
 import nl.noviaal.service.AuthService;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +16,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Profile("!mocked")
 public class ApplicationReadyListener implements ApplicationListener<ApplicationReadyEvent> {
 
@@ -27,6 +24,13 @@ public class ApplicationReadyListener implements ApplicationListener<Application
   private final AuthService authService;
   private final PasswordEncoder passwordEncoder;
   private final UserRepository userRepo;
+
+  @Autowired
+  public ApplicationReadyListener(AuthService authService, PasswordEncoder passwordEncoder, UserRepository userRepo) {
+    this.authService = authService;
+    this.passwordEncoder = passwordEncoder;
+    this.userRepo = userRepo;
+  }
 
   @Override
   public void onApplicationEvent(@NonNull ApplicationReadyEvent event) {
@@ -39,7 +43,7 @@ public class ApplicationReadyListener implements ApplicationListener<Application
       }
       logger.info("onApplicationEvent: users {}created", isEmptyDataStore() ? "NOT " : "");
     } else {
-      logger.warn("onApplicationEvent: already found one or more users in the test db???");
+      logger.info("onApplicationEvent: already found one or more users in the test db, no users added");
     }
   }
 

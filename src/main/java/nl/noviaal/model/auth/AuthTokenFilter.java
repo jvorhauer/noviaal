@@ -19,7 +19,7 @@ import java.io.IOException;
 
 public class AuthTokenFilter extends OncePerRequestFilter {
 
-  private static final Logger logger = LoggerFactory.getLogger(AuthTokenFilter.class);
+  private static final Logger logger = LoggerFactory.getLogger("AuthTokenFilter");
   private static final String TOKEN_TYPE = "Bearer ";
 
   @Autowired

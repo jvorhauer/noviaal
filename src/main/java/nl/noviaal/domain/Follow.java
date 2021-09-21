@@ -1,11 +1,5 @@
 package nl.noviaal.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,11 +14,13 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
+
 @Entity
 @Table(name = "follow")
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class Follow {
   @Id
   private UUID id = UUID.randomUUID();
@@ -45,6 +41,8 @@ public class Follow {
   private Instant since;
 
 
+  public Follow() {}
+
   public Follow(User user, User follower) {
     if (this.since == null) {
       this.since = ZonedDateTime.now(ZoneId.of("UTC")).toInstant();
@@ -52,6 +50,16 @@ public class Follow {
     this.followed = user;
     this.follower = follower;
   }
+
+  public Follow(UUID id, User followed, User follower, @NotNull Instant since) {
+    this.id = id;
+    this.followed = followed;
+    this.follower = follower;
+    this.since = since;
+  }
+
+  public User getFollower() { return follower; }
+  public User getFollowed() { return followed; }
 
   public UUID getFollowerId() { return follower.getId(); }
   public UUID getFollowedId() { return followed.getId(); }
