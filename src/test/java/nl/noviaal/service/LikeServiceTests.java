@@ -7,6 +7,7 @@ import java.time.ZonedDateTime;
 import java.util.UUID;
 
 import nl.noviaal.domain.Like;
+import nl.noviaal.domain.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,9 +26,7 @@ public class LikeServiceTests {
 
   @Test
   void addNewLike() {
-    var ouser = userService.findByEmail("tester@test.com");
-    assertThat(ouser).isPresent();
-    var user = ouser.get();
+    var user = userService.save(new User("Liker", "liker@test.com", "password"));
     var noteId = UUID.randomUUID();
     var saved = likeService.save(new Like(user.getId(), noteId));
     assertThat(saved).isNotNull();

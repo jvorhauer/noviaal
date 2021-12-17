@@ -7,13 +7,14 @@
           <option name="checksumPolicy" value="NOT_SET" />
           <option name="failureBehavior" value="NOT_SET" />
           <option name="localRepository" value="" />
-          <option name="mavenHome" value="Bundled (Maven 3)" />
+          <option name="mavenHome" value="/usr/local/Cellar/maven/3.8.4/libexec" />
           <option name="nonRecursive" value="false" />
           <option name="outputLevel" value="INFO" />
           <option name="pluginUpdatePolicy" value="DEFAULT" />
           <option name="printErrorStackTraces" value="false" />
           <option name="showDialogWithAdvancedSettings" value="false" />
           <option name="threads" value="1" />
+          <option name="useMavenConfig" value="false" />
           <option name="usePluginRegistry" value="false" />
           <option name="userSettingsFile" value="" />
           <option name="workOffline" value="false" />
@@ -27,7 +28,7 @@
               <entry key="spring_profiles_active" value="test" />
             </map>
           </option>
-          <option name="jreName" value="11" />
+          <option name="jreName" value="zulu-17" />
           <option name="mavenProperties">
             <map />
           </option>
