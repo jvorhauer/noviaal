@@ -1,7 +1,5 @@
 package nl.noviaal.config;
 
-import java.util.List;
-
 import nl.noviaal.model.auth.AuthEntryPointJwt;
 import nl.noviaal.model.auth.AuthTokenFilter;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -28,8 +26,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   private final UserDetailsService userDetailsService;
   private final AuthEntryPointJwt unauthorizedHandler;
 
-  public WebSecurityConfig(@Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService,
-      AuthEntryPointJwt unauthorizedHandler) {
+  public WebSecurityConfig(
+    @Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService,
+    AuthEntryPointJwt unauthorizedHandler
+  ) {
     this.userDetailsService = userDetailsService;
     this.unauthorizedHandler = unauthorizedHandler;
   }
