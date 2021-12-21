@@ -16,8 +16,10 @@ import java.util.UUID;
 @Repository
 public interface NoteRepository extends JpaRepository<Note, UUID> {
   @Query("select item from User u inner join u.items item where u=:user")
-  public Page<Item> paginateNotes(@Param("user") User user, Pageable pageable);
+  Page<Item> paginateNotes(@Param("user") User user, Pageable pageable);
 
   @Query("SELECT item FROM User u INNER JOIN u.items item WHERE u in :list ORDER BY item.updated DESC")
-  public Page<Item> timeline(@Param("list") List<User> list, Pageable pageable);
+  Page<Item> timeline(@Param("list") List<User> list, Pageable pageable);
+
+  // see https://dev.to/fabiothiroki/setup-spring-and-postgres-for-full-text-search-4n97
 }
