@@ -45,7 +45,6 @@
           </option>
           <option name="goals">
             <list>
-              <option value="-B" />
               <option value="clean" />
               <option value="verify" />
             </list>

@@ -30,6 +30,7 @@ public class UserServiceTests {
     System.out.println("before: " + userService.findAll().getTotalElements() + " users in database");
     setup.initDataStore();
     System.out.println("before: " + userService.findAll().getTotalElements() + " users in database");
+    userService.findAll().forEach(u -> System.out.println("  user: " + u.getEmail()));
   }
 
   @Test
