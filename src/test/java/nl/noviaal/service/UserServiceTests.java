@@ -8,6 +8,7 @@ import nl.noviaal.domain.User;
 import nl.noviaal.exception.EmailAddressInUseException;
 import nl.noviaal.support.Setup;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
@@ -26,16 +27,20 @@ public class UserServiceTests {
 
   @BeforeEach
   void before() {
+    System.out.println("before: " + userService.findAll().getTotalElements() + " users in database");
     setup.initDataStore();
+    System.out.println("before: " + userService.findAll().getTotalElements() + " users in database");
   }
 
   @Test
+  @Order(1)
   void whenDatabaseInitial_thenFindAll_shouldReturnUserList() {
     assertThat(userService.findAll().getTotalElements()).isEqualTo(3L);
     assertThat(userService.findAll().getContent()).hasSize(3);
   }
 
   @Test
+  @Order(2)
   void whenSaveOneUser_thenFindAll_shouldFindOne() {
     var user = new User("Frodo", "frodo@hobbiton.shire", "password");
     var saved = userService.save(user);
@@ -45,6 +50,7 @@ public class UserServiceTests {
   }
 
   @Test
+  @Order(3)
   void whenSaveUserAndSaveOtherUserWithSameEmailAgain_thenSave_shouldFailWithInvalidCommand() {
     var user1 = new User("Frodo", "frodo@hobbiton.shire", "password");
     userService.save(user1);
@@ -55,6 +61,7 @@ public class UserServiceTests {
   }
 
   @Test
+  @Order(4)
   void whenSavedAndThenDelete_thenTheUserShouldNotFindThatUser() {
     var user = userService.save(new User("Frodo", "frodo@hobbiton.shire", "password"));
     var id = user.getId();
