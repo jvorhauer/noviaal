@@ -6,6 +6,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
+import lombok.RequiredArgsConstructor;
 import nl.noviaal.domain.Like;
 import nl.noviaal.domain.User;
 import org.junit.jupiter.api.Test;
@@ -14,17 +15,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Transactional
 public class LikeServiceTests {
 
   private final LikeService likeService;
   private final UserService userService;
-
-  @Autowired
-  public LikeServiceTests(LikeService likeService, UserService userService) {
-    this.likeService = likeService;
-    this.userService = userService;
-  }
 
   @Test
   void addNewLike() {
