@@ -15,7 +15,7 @@ import java.util.UUID;
 
 @Repository
 public interface NoteRepository extends JpaRepository<Note, UUID> {
-  @Query("select item from User u inner join u.items item where u=:user")
+  @Query("SELECT item FROM User u INNER JOIN u.items item WHERE u=:user ORDER BY item.updated DESC")
   Page<Item> paginateNotes(@Param("user") User user, Pageable pageable);
 
   @Query("SELECT item FROM User u INNER JOIN u.items item WHERE u in :list ORDER BY item.updated DESC")
