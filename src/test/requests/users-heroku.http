@@ -69,7 +69,7 @@ Accept: application/json
 
 ### get notes for a user:
 # id: be93fc71-7bf7-4cab-8161-8332e3f8bc42
-GET https://sheltered-gorge-50410.herokuapp.com/api/users/7a16f71f-90dd-4e2f-b034-2d0ef04c3b7f/notes
+GET https://sheltered-gorge-50410.herokuapp.com/api/users/23dd3904-173b-42f3-9baf-6599c1aea881/notes
 Authorization: Bearer {{ authorized }}
 
 
