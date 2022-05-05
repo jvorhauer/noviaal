@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 public class User {
 
   @Id
+  @Column(columnDefinition = "uuid")
   private UUID id;
 
   @NotNull

@@ -23,6 +23,7 @@ import lombok.Data;
 @Data
 public class Follow {
   @Id
+  @Column(columnDefinition = "uuid")
   private UUID id = UUID.randomUUID();
 
   @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)

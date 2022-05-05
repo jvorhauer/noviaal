@@ -62,7 +62,7 @@ public abstract class AbstractController {
     userService.findByEmail(email).orElseThrow(() -> new UserNotFoundException(email));
   }
 
-  protected <T> boolean isInvalid(T t) {
-    return !validator.validate(t).isEmpty();
+  protected <T> boolean isValid(T t) {
+    return validator.validate(t).isEmpty();
   }
 }

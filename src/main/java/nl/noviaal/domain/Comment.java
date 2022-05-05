@@ -23,6 +23,7 @@ import java.util.UUID;
 @Table(name = "comment")
 public class Comment {
   @Id
+  @Column(columnDefinition = "uuid")
   private UUID id;
 
   @NotNull

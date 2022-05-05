@@ -38,7 +38,7 @@ public class TagController extends AbstractController {
   public TagResponse save(@RequestBody CreateTag createTag, Authentication authentication) {
     assertIsAdmin(authentication);
     logger.info("save: {}", createTag);
-    if (isInvalid(createTag)) {
+    if (!isValid(createTag)) {
       logger.error("save: createTag is invalid: {}", createTag);
       throw new InvalidCommand("Create Tag is invalid");
     }

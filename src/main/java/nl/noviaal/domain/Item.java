@@ -34,6 +34,7 @@ import java.util.UUID;
 public abstract class Item {
 
   @Id
+  @Column(columnDefinition = "uuid")
   UUID id;
 
   @Version

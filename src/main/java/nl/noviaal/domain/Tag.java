@@ -17,6 +17,7 @@ import java.util.UUID;
 @Table(name = "tag", indexes = @Index(name = "idx_name", unique = true, columnList = "name"))
 public class Tag {
   @Id
+  @Column(columnDefinition = "uuid")
   private UUID id;
 
   @Column(nullable = false, unique = true)
@@ -28,7 +29,7 @@ public class Tag {
     joinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id"),
     inverseJoinColumns = @JoinColumn(name = "item_id")
   )
-  private Set<Item> items = new HashSet<>();
+  private final Set<Item> items = new HashSet<>();
 
   @PrePersist
   public void prePersist() {

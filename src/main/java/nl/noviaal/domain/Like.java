@@ -19,6 +19,7 @@ import lombok.Data;
 @Table(name = "likes")
 public class Like {
   @Id
+  @Column(columnDefinition = "uuid")
   private UUID id;
 
   @NotNull
