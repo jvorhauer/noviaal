@@ -11,6 +11,7 @@ import nl.noviaal.model.command.CreateUser;
 import nl.noviaal.model.command.LoginUser;
 import nl.noviaal.model.response.UserResponse;
 import nl.noviaal.service.AuthService;
+import org.owasp.encoder.Encode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +61,7 @@ public class AuthController {
     }
 
     String encryptedPassword = passwordEncoder.encode(createUser.password());
-    User user = new User(createUser.name(),createUser.email(), encryptedPassword);
+    User user = new User(Encode.forHtml(createUser.name()), Encode.forHtml(createUser.email()), encryptedPassword);
     User created = authService.register(user);
     return ResponseEntity.ok(UserResponse.ofUser(created));
   }

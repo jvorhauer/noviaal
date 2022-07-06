@@ -12,6 +12,7 @@ import nl.noviaal.model.response.ItemResponse;
 import nl.noviaal.model.response.TagResponse;
 import nl.noviaal.service.TagService;
 import nl.noviaal.service.UserService;
+import org.owasp.encoder.Encode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -46,7 +47,7 @@ public class TagController extends AbstractController {
       logger.error("save: tag with name {} already exists", createTag.name());
       throw new InvalidCommand("Create Tag for existing tag " + createTag.name());
     }
-    return TagResponse.ofTag(tagService.save(new Tag(createTag.name())));
+    return TagResponse.ofTag(tagService.save(new Tag(Encode.forHtml(createTag.name()))));
   }
 
   @GetMapping(value = {"", "/"})

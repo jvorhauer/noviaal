@@ -104,6 +104,17 @@ public class AllControllerTests {
       .andExpect(jsonPath("$.totalElements").value(count + 1));
   }
 
+  @Test
+  @WithUserDetails("tester@test.com")
+  void whenAddingNewNoteWithHtml_thenTheNewNoteShouldBeEncoded() throws Exception {
+    mockMvc.perform(post("/api/notes")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content("{\"title\":\"test & title'\",\"body\":\"<h1>h1</h1>\"}"))
+      .andExpect(status().is2xxSuccessful())
+      .andExpect(jsonPath("$.title").value("test &amp; title&#39;"))
+      .andExpect(jsonPath("$.body").value("&lt;h1&gt;h1&lt;/h1&gt;"));
+  }
+
   @Transactional(readOnly = true)
   public int getNotesSize(String email) {
     var user = userRepo.findByEmail(email);

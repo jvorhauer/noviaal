@@ -19,6 +19,7 @@ import nl.noviaal.model.response.ItemResponse;
 import nl.noviaal.service.NoteService;
 import nl.noviaal.service.TagService;
 import nl.noviaal.service.UserService;
+import org.owasp.encoder.Encode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -56,7 +57,7 @@ public class NoteController extends AbstractController {
       throw new InvalidCommand("CreateNote");
     }
     User user = findCurrentUser(authentication);
-    Note added = userService.addNote(user, createNote.title(), createNote.body());
+    Note added = userService.addNote(user, Encode.forHtml(createNote.title()), Encode.forHtml(createNote.body()));
     return ResponseEntity.status(HttpStatus.CREATED).body(ItemResponse.from(added));
   }
 
@@ -72,8 +73,8 @@ public class NoteController extends AbstractController {
       throw new InvalidCommand("UpdateNote: wrong user");
     }
     Note note = noteService.find(id);
-    note.setTitle(unote.title());
-    note.setBody(unote.body());
+    note.setTitle(Encode.forHtml(unote.title()));
+    note.setBody(Encode.forHtml(unote.body()));
     Note saved = noteService.save(note);
     return ResponseEntity.ok(ItemResponse.from(saved));
   }
@@ -115,7 +116,7 @@ public class NoteController extends AbstractController {
 
     User user = findCurrentUser(authentication);
     Note note = noteService.find(id);
-    Comment comment = new Comment(createComment.comment(), createComment.stars() == null ? 0 : createComment.stars());
+    Comment comment = new Comment(Encode.forHtml(createComment.comment()), createComment.stars() == null ? 0 : createComment.stars());
     return ItemResponse.from(noteService.addCommentToNote(note, user, comment));
   }
 
