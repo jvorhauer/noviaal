@@ -1,0 +1,75 @@
+### Create Frodo:
+POST http://localhost:8080/api/auth/register
+Content-Type: application/json
+
+{
+  "name": "Frodo",
+  "email": "frodo@hobbiton.shire",
+  "password": "password"
+}
+
+### Create Bilbo:
+POST http://localhost:8080/api/auth/register
+Content-Type: application/json
+
+{
+  "name": "Bilbo",
+  "email": "bilbo@hobbiton.shire",
+  "password": "password"
+}
+
+### Create Pippin:
+POST http://localhost:8080/api/auth/register
+Content-Type: application/json
+
+{
+  "name": "Pippin",
+  "email": "pippin@tuckborough.shire",
+  "password": "password"
+}
+
+### Login
+# @name login
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{ "username": "frodo@hobbiton.shire", "password": "password" }
+
+@authorized = {{login.response.body.token}}
+
+### GET my details (profile)
+GET http://localhost:8080/api/users/me
+Authorization: Bearer {{ authorized }}
+
+### Get all users:
+GET http://localhost:8080/api/users
+Authorization: Bearer {{ authorized }}
+
+
+### get item(s):
+GET http://localhost:8080/api/users/items
+Authorization: Bearer {{ authorized }}
+
+### get note(s):
+GET http://localhost:8080/api/notes
+Authorization: Bearer {{ authorized }}
+
+
+### get notes for a user:
+GET http://localhost:8080/api/users/7a16f71f-90dd-4e2f-b034-2d0ef04c3b7f/notes
+Authorization: Bearer {{ authorized }}
+
+
+### add follower:
+POST http://localhost:8080/api/users/follow/7a16f71f-90dd-4e2f-b034-2d0ef04c3b7f
+Authorization: Bearer {{ authorized }}
+
+
+### get list of followers:
+GET http://localhost:8080/api/users/followers
+Authorization: Bearer {{ authorized }}
+
+
+### get timeline:
+GET http://localhost:8080/api/users/timeline
+Authorization: Bearer {{ authorized }}

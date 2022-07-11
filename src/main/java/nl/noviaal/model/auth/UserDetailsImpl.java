@@ -32,8 +32,8 @@ public class UserDetailsImpl implements UserDetails {
 
   public static UserDetailsImpl build(User user) {
     var authorities = Stream.of(user.getRoles() != null ? user.getRoles().split(",") : new String[]{"USER"})
-                                           .map(SimpleGrantedAuthority::new)
-                                           .toList();
+                            .map(SimpleGrantedAuthority::new)
+                            .toList();
     return new UserDetailsImpl(user.getId(), user.getName(), user.getEmail(), user.getPassword(), authorities);
   }
 

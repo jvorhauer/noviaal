@@ -1,5 +1,5 @@
 ### Create Frodo:
-POST https://sheltered-gorge-50410.herokuapp.com/api/auth/register
+POST https://server.vorhauer.nl/api/auth/register
 Content-Type: application/json
 Accept: application/json
 
@@ -11,7 +11,7 @@ Accept: application/json
 
 
 ### Create Bilbo:
-POST https://sheltered-gorge-50410.herokuapp.com/api/auth/register
+POST https://server.vorhauer.nl/api/auth/register
 Content-Type: application/json
 Accept: application/json
 
@@ -23,7 +23,7 @@ Accept: application/json
 
 
 ### Create Pippin:
-POST https://sheltered-gorge-50410.herokuapp.com/api/auth/register
+POST https://server.vorhauer.nl/api/auth/register
 Content-Type: application/json
 Accept: application/json
 
@@ -34,7 +34,7 @@ Accept: application/json
 }
 
 ### Login Pippin
-POST https://sheltered-gorge-50410.herokuapp.com/api/auth/login
+POST https://server.vorhauer.nl/api/auth/login
 Content-Type: application/json
 Accept: application/json
 
@@ -46,22 +46,22 @@ Accept: application/json
 > {% client.global.set("authorized", response.body.token); %}
 
 ### Get all users:
-GET https://sheltered-gorge-50410.herokuapp.com/api/users
+GET https://server.vorhauer.nl/api/users
 Authorization: Bearer {{ authorized }}
 
 
 ### GET logged in user information:
-GET https://sheltered-gorge-50410.herokuapp.com/api/users/me
+GET https://server.vorhauer.nl/api/users/me
 Authorization: Bearer {{ authorized }}
 
 
 ### get item(s):
-GET https://sheltered-gorge-50410.herokuapp.com/api/users/items
+GET https://server.vorhauer.nl/api/users/items
 Authorization: Bearer {{ authorized }}
 
 
 ### get note(s):
-GET https://sheltered-gorge-50410.herokuapp.com/api/notes
+GET https://server.vorhauer.nl/api/notes
 Authorization: Bearer {{ authorized }}
 Accept: application/json
 
@@ -69,27 +69,27 @@ Accept: application/json
 
 ### get notes for a user:
 # id: be93fc71-7bf7-4cab-8161-8332e3f8bc42
-GET https://sheltered-gorge-50410.herokuapp.com/api/users/23dd3904-173b-42f3-9baf-6599c1aea881/notes
+GET https://server.vorhauer.nl/api/users/23dd3904-173b-42f3-9baf-6599c1aea881/notes
 Authorization: Bearer {{ authorized }}
 
 
 ### add follower:
-POST https://sheltered-gorge-50410.herokuapp.com/api/users/follow/49899834-6467-4355-b3c2-e08f34d8b6a3
+POST https://server.vorhauer.nl/api/users/follow/49899834-6467-4355-b3c2-e08f34d8b6a3
 Authorization: Bearer {{ authorized }}
 
 
 ### get list of followers:
-GET https://sheltered-gorge-50410.herokuapp.com/api/users/followers
+GET https://server.vorhauer.nl/api/users/followers
 Authorization: Bearer {{ authorized }}
 
 
 ### get timeline:
-GET https://sheltered-gorge-50410.herokuapp.com/api/users/timeline
+GET https://server.vorhauer.nl/api/users/timeline
 Authorization: Bearer {{ authorized }}
 
 
 ### create note:
-POST https://sheltered-gorge-50410.herokuapp.com/api/notes
+POST https://server.vorhauer.nl/api/notes
 Authorization: Bearer {{ authorized }}
 Content-Type: application/json
 
@@ -101,6 +101,6 @@ Content-Type: application/json
 
 
 ### Retreive note with id be93fc71-7bf7-4cab-8161-8332e3f8bc42
-GET https://sheltered-gorge-50410.herokuapp.com/api/notes/24c8fe05-4397-41e2-8dd6-eb0d0c8ccc95
+GET https://server.vorhauer.nl/api/notes/24c8fe05-4397-41e2-8dd6-eb0d0c8ccc95
 Authorization: Bearer {{ authorized }}
 Accept: application/json

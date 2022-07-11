@@ -14,7 +14,6 @@ import nl.noviaal.service.AuthService;
 import org.owasp.encoder.Encode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,7 +32,6 @@ public class AuthController {
   private final Validator validator;
   private final PasswordEncoder passwordEncoder;
 
-  @Autowired
   public AuthController(AuthService authService, Validator validator, PasswordEncoder pe) {
     this.authService = authService;
     this.validator   = validator;

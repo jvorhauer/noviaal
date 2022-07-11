@@ -32,6 +32,7 @@ The following guides illustrate how to use some features concretely:
 * https://vladmihalcea.com/how-to-inherit-properties-from-a-base-class-entity-using-mappedsuperclass-with-jpa-and-hibernate/[Mapped superclass and inheritance]
 * https://technicalsand.com/spring-boot-multipart-file-upload-example-postman/[File uploads in Spring Boot and Postman]
 * https://spring.io/guides/gs/rest-hateoas/[REST and HATEOS]
+* https://help.heroku.com/CKVOUPSY/how-to-switch-deployment-method-from-github-to-heroku-git-with-all-the-changes-app-code-available-in-a-github-repo[Deploy to Heroku]
 
 [discrete]
 === Testing
