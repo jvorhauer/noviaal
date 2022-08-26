@@ -69,8 +69,8 @@ Accept: application/json
 
 
 ### get notes for a user:
-# id: be93fc71-7bf7-4cab-8161-8332e3f8bc42
-GET https://server.vorhauer.nl/api/users/23dd3904-173b-42f3-9baf-6599c1aea881/notes
+# id: 3acc169a-aa37-43b7-8b66-01aab225a878 is Pippin
+GET https://server.vorhauer.nl/api/users/3acc169a-aa37-43b7-8b66-01aab225a878/notes
 Authorization: Bearer {{ authorized }}
 
 

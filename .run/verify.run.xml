@@ -28,7 +28,7 @@
               <entry key="spring_profiles_active" value="test" />
             </map>
           </option>
-          <option name="jreName" value="zulu-17" />
+          <option name="jreName" value="17" />
           <option name="mavenProperties">
             <map />
           </option>

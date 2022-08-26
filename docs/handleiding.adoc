@@ -38,6 +38,10 @@ De doelgroep is *iedereen* op het internet.
 
 == Installatie
 
+Deze handleiding bevat instructies voor het installeren op Docker of op een (virtual private) server / Linux PC.
+
+=== Docker
+
 Het installeren van Noviaal kan met de volgende stappen gerealiseerd worden:
 
 __ *NB*: Voor alle installatie stappen is een werkende breedband internet verbinding nodig__
@@ -68,6 +72,24 @@ Om toegang te krijgen volstaat een email aan mailto:j.vorhauer@novi-education.nl
     .. voer nu `./mvnw package` of `mvnw.cmd verify` uit, er zal nu een Java ARchive (JAR) bestand in de `target` directory/folder staan: `noviaal-1.0.0.jar`. Dit is de Noviaal applicatie.
 
 . Laatste stap: voer `docker-compose up --build` uit. Zodra het PostgreSQL Docker image gedownload is, de Docker image van de Noviaal applicatie gebouwd is de en twee containers op basis van die images draaien, is Noviaal klaar voor gebruik.
+
+=== Lokaal
+
+Voordat Noviaal gebruikt kan worden, moeten eerst twee environment variabelen gezet worden (bash, zsh):
+
+```shell
+export SPRING_DATASOURCE_USERNAME=<<<Geheim>>>
+export SPRING_DATASOURCE_PASSWORD=<<<Geheim>>>
+```
+
+of (Fish)
+
+```shell
+set -x SPRING_DATASOURCE_USERNAME <<<Geheim>>>
+set -x SPRING_DATASOURCE_PASSWORD <<<Geheim>>>
+```
+
+Deze geheimen zijn op verzoek leverbaar.
 
 == Gebruik
 
