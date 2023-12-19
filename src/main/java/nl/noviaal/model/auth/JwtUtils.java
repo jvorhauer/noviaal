@@ -1,52 +1,46 @@
 package nl.noviaal.model.auth;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.UnsupportedJwtException;
-import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-import java.security.Key;
+import javax.crypto.SecretKey;
 import java.util.Date;
 
 @Component
 public class JwtUtils {
 
   private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
-  private static final Key KEY = Keys.secretKeyFor(SignatureAlgorithm.HS512);
+  private static final SecretKey KEY = Jwts.SIG.HS512.key().build();
 
   @Value("${noviaal.jwt.expiration.ms}")
   private int jwtExpirationMs;
 
 
   public String generateJwtToken(Authentication authentication) {
+
     UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
     Date now = new Date();
     return Jwts.builder()
-             .setSubject((userPrincipal.getEmail()))
-             .setIssuedAt(now)
-             .setExpiration(new Date(now.getTime() + jwtExpirationMs))
+             .subject((userPrincipal.getEmail()))
+             .issuedAt(now)
+             .expiration(new Date(now.getTime() + jwtExpirationMs))
              .signWith(KEY)
              .compact();
   }
 
   public String getUserNameFromJwtToken(String token) {
-    return parseJwtToken(token).getBody().getSubject();
+    return parseJwtToken(token).getPayload().getSubject();
   }
 
   private Jws<Claims> parseJwtToken(String token) {
-    return Jwts.parserBuilder()
-             .setSigningKey(KEY)
+    return Jwts.parser()
+             .verifyWith(KEY)
              .build()
-             .parseClaimsJws(token);
+             .parseSignedClaims(token);
   }
 
   public boolean validateJwtToken(String token) {
