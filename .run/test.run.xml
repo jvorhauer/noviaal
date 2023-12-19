@@ -1,5 +1,5 @@
-<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="clean test" type="MavenRunConfiguration" factoryName="Maven">
+﻿<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="test" type="MavenRunConfiguration" factoryName="Maven">
     <MavenSettings>
       <option name="myGeneralSettings" />
       <option name="myRunnerSettings">
@@ -20,20 +20,24 @@
       </option>
       <option name="myRunnerParameters">
         <MavenRunnerParameters>
+          <option name="cmdOptions" />
           <option name="profiles">
             <set />
           </option>
           <option name="goals">
             <list>
-              <option value="clean" />
               <option value="test" />
             </list>
           </option>
+          <option name="multimoduleDir" />
           <option name="pomFileName" />
           <option name="profilesMap">
             <map>
               <entry key="spring" value="true" />
             </map>
+          </option>
+          <option name="projectsCmdOptionValues">
+            <list />
           </option>
           <option name="resolveToWorkspace" value="false" />
           <option name="workingDirPath" value="$PROJECT_DIR$" />
